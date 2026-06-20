@@ -185,11 +185,47 @@ def load_apocrypha(client: Client, apocrypha_dir: Path):
             log.info(f"  [{work['id']}] {len(sections)} secções carregadas")
 
 
+def load_creeds(client: Client, creeds_dir: Path):
+    """Carrega credos e confissões."""
+    for work_file in creeds_dir.glob("*.json"):
+        if work_file.name == "summary.json":
+            continue
+        work = json.loads(work_file.read_text(encoding="utf-8"))
+
+        client.table("creeds_confessions").upsert({
+            "id":         work["id"],
+            "title":      work["title"],
+            "title_pt":   work["title_pt"],
+            "type":       work["type"],
+            "tradition":  work["tradition"],
+            "year":       work["year"],
+            "source_url": work["source_url"],
+            "language":   work["language"],
+            "license":    work["license"],
+        }).execute()
+
+        sections = [
+            {
+                "work_id":     work["id"],
+                "section_num": s["section"],
+                "text":        s["text"],
+            }
+            for s in work.get("sections", [])
+        ]
+        for i in range(0, len(sections), BATCH_SIZE):
+            client.table("creeds_confessions_sections").upsert(
+                sections[i:i+BATCH_SIZE], on_conflict="work_id,section_num"
+            ).execute()
+
+        log.info(f"  [{work['id']}] {len(sections)} secções carregadas")
+
+
 def run(
     bible_dir:      str = "output/bible",
     crossrefs_dir:  str = "output/crossrefs",
     patristics_dir: str = "output/patristics",
     apocrypha_dir:  str = "output/apocrypha",
+    creeds_dir:     str = "output/creeds",
 ):
     client = get_client()
     log.info("Ligado ao Supabase.")
@@ -211,6 +247,10 @@ def run(
     if Path(apocrypha_dir).exists():
         log.info("\n--- Apócrifos ---")
         load_apocrypha(client, Path(apocrypha_dir))
+
+    if Path(creeds_dir).exists():
+        log.info("\n--- Credos e confissões ---")
+        load_creeds(client, Path(creeds_dir))
 
     log.info("\nCarga concluída!")
 
