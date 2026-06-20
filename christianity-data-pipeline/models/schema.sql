@@ -216,6 +216,35 @@ CREATE TABLE IF NOT EXISTS biblical_places (
 CREATE INDEX IF NOT EXISTS biblical_places_name_idx ON biblical_places (name);
 
 -- ============================================================
+-- 3e. LÉXICO STRONG'S (hebraico/aramaico/grego)
+-- ============================================================
+
+-- Fonte: STEPBible-Data / Tyndale House Cambridge (CC BY 4.0 — requer
+-- atribuição, não é domínio público puro).
+CREATE TABLE IF NOT EXISTS lexicon_entries (
+    id              BIGSERIAL PRIMARY KEY,
+    e_strong        TEXT NOT NULL,        -- Extended Strong (compatível com Strong's original), ex: "H0001"
+    d_strong        TEXT NOT NULL UNIQUE, -- Disambiguated Strong (sub-sentido específico), ex: "H0001G"
+    u_strong        TEXT,                 -- Unified Strong (agrupa variantes/grafias do mesmo termo)
+    language        TEXT NOT NULL,        -- "hebrew" | "aramaic" | "greek" | "name"
+    word            TEXT NOT NULL,        -- palavra original (hebraico/grego)
+    transliteration TEXT,
+    morph           TEXT,                 -- código morfológico (ex: "H:N-M")
+    gloss           TEXT,                 -- tradução curta
+    definition      TEXT,                 -- definição completa
+    license         TEXT NOT NULL DEFAULT 'licensed',
+    source_url      TEXT,
+    search_vec      TSVECTOR GENERATED ALWAYS AS (
+        to_tsvector('english',
+            coalesce(transliteration, '') || ' ' || coalesce(gloss, '') || ' ' || coalesce(definition, '')
+        )
+    ) STORED
+);
+
+CREATE INDEX IF NOT EXISTS lexicon_entries_estrong_idx ON lexicon_entries (e_strong);
+CREATE INDEX IF NOT EXISTS lexicon_entries_search_idx ON lexicon_entries USING GIN (search_vec);
+
+-- ============================================================
 -- 4. FUNÇÕES DE PESQUISA
 -- ============================================================
 
@@ -253,6 +282,37 @@ RETURNS TABLE (
     LIMIT lim;
 $$;
 
+-- Concordância: TODAS as ocorrências de uma palavra, em ordem canónica
+-- (livro/capítulo/versículo) — ao contrário de search_verses_pt(), que
+-- limita e ordena por relevância. É a diferença entre "pesquisar" e
+-- "ver todas as ocorrências de uma palavra", o uso clássico de uma
+-- concordância bíblica.
+CREATE OR REPLACE FUNCTION concordance(word TEXT, version TEXT DEFAULT NULL)
+RETURNS TABLE (
+    version_id TEXT, testament TEXT, book TEXT,
+    chapter SMALLINT, verse SMALLINT, text TEXT
+) LANGUAGE SQL AS $$
+    SELECT version_id, testament, book, chapter, verse, text
+    FROM verses
+    WHERE search_vec @@ to_tsquery('portuguese', immutable_unaccent(word))
+      AND (version IS NULL OR version_id = version)
+    ORDER BY version_id, book, chapter, verse;
+$$;
+
+-- Pesquisa no léxico Strong's (hebraico/aramaico/grego)
+CREATE OR REPLACE FUNCTION search_lexicon(query TEXT, lim INT DEFAULT 20)
+RETURNS TABLE (
+    e_strong TEXT, d_strong TEXT, language TEXT, word TEXT,
+    transliteration TEXT, gloss TEXT, definition TEXT, rank REAL
+) LANGUAGE SQL AS $$
+    SELECT e_strong, d_strong, language, word, transliteration, gloss, definition,
+           ts_rank(search_vec, to_tsquery('english', query)) AS rank
+    FROM lexicon_entries
+    WHERE search_vec @@ to_tsquery('english', query)
+    ORDER BY rank DESC
+    LIMIT lim;
+$$;
+
 -- ============================================================
 -- 5. ROW LEVEL SECURITY (básico — ajustar conforme auth)
 -- ============================================================
@@ -269,6 +329,7 @@ ALTER TABLE creeds_confessions          ENABLE ROW LEVEL SECURITY;
 ALTER TABLE creeds_confessions_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE glossary_terms              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE biblical_places              ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lexicon_entries              ENABLE ROW LEVEL SECURITY;
 
 -- Leitura pública para todos os textos (são domínio público)
 CREATE POLICY "public_read_verses"     ON verses              FOR SELECT USING (true);
@@ -283,3 +344,4 @@ CREATE POLICY "public_read_creeds"     ON creeds_confessions          FOR SELECT
 CREATE POLICY "public_read_creeds_sec" ON creeds_confessions_sections FOR SELECT USING (true);
 CREATE POLICY "public_read_glossary"   ON glossary_terms              FOR SELECT USING (true);
 CREATE POLICY "public_read_places"     ON biblical_places              FOR SELECT USING (true);
+CREATE POLICY "public_read_lexicon"    ON lexicon_entries              FOR SELECT USING (true);
