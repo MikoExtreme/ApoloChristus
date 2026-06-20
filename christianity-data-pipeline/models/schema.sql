@@ -210,10 +210,25 @@ CREATE TABLE IF NOT EXISTS biblical_places (
     verses          TEXT[],               -- referências bíblicas em texto livre, ex: {"Gen 35:8"}
     comment         TEXT,
     license         TEXT NOT NULL DEFAULT 'licensed',  -- CC-BY, não domínio público
-    source_url      TEXT
+    source_url      TEXT,
+    confidence_pct  SMALLINT,             -- 0-100, confiança da identificação (openbibleinfo/Bible-Geocoding-Data)
+    sources         TEXT[]                -- fontes académicas citadas para esta identificação
 );
 
 CREATE INDEX IF NOT EXISTS biblical_places_name_idx ON biblical_places (name);
+
+-- Atualização em lote de confidence_pct/sources (geography_confidence_fetcher.py).
+-- Necessário porque um upsert parcial (só name+confidence_pct+sources) falha
+-- com NOT NULL em lat/lon: o Postgres valida as colunas NOT NULL do "candidate
+-- row" de um INSERT...ON CONFLICT ANTES de decidir se há conflito, mesmo
+-- quando a linha já existe e a operação resultante seria só um UPDATE.
+CREATE OR REPLACE FUNCTION bulk_update_place_confidence(updates JSONB)
+RETURNS void LANGUAGE SQL AS $$
+    UPDATE biblical_places AS bp
+    SET confidence_pct = u.confidence_pct, sources = u.sources
+    FROM jsonb_to_recordset(updates) AS u(name TEXT, confidence_pct SMALLINT, sources TEXT[])
+    WHERE bp.name = u.name;
+$$;
 
 -- ============================================================
 -- 3e. LÉXICO STRONG'S (hebraico/aramaico/grego)
