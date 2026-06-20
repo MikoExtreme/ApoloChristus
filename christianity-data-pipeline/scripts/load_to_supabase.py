@@ -249,6 +249,40 @@ def load_geography(client: Client, geography_dir: Path):
         log.info(f"  [biblical_places] {i+len(batch)}/{len(places)} locais")
 
 
+def load_geography_confidence(client: Client, geography_dir: Path):
+    """
+    Atualiza confidence_pct/sources nos locais já existentes em
+    biblical_places. Só processa nomes que já existem (filtrados primeiro)
+    — evita criar linhas novas incompletas (sem lat/lon, que são
+    NOT NULL) para nomes do dataset mais recente que não batem certo
+    com os do merged.txt mais antigo (ver geography_confidence_fetcher.py).
+    """
+    conf_file = geography_dir / "geography_confidence.json"
+    if not conf_file.exists():
+        return
+
+    enrichments = json.loads(conf_file.read_text(encoding="utf-8"))
+
+    existing_names = set()
+    offset = 0
+    while True:
+        r = client.table("biblical_places").select("name").range(offset, offset + 999).execute()
+        if not r.data:
+            break
+        existing_names.update(row["name"] for row in r.data)
+        offset += 1000
+
+    matched = [e for e in enrichments if e["name"] in existing_names]
+    log.info(f"  {len(matched)}/{len(enrichments)} nomes correspondem a locais já carregados")
+
+    # Usa uma função RPC (UPDATE puro) em vez de upsert: um upsert parcial
+    # falharia com NOT NULL em lat/lon (ver nota em schema.sql).
+    for i in range(0, len(matched), BATCH_SIZE):
+        batch = matched[i:i + BATCH_SIZE]
+        client.rpc("bulk_update_place_confidence", {"updates": batch}).execute()
+        log.info(f"  [biblical_places confidence] {i+len(batch)}/{len(matched)} atualizados")
+
+
 def load_lexicon(client: Client, lexicon_dir: Path):
     """Carrega o léxico de Strong's em batches."""
     entries_file = lexicon_dir / "lexicon_entries.json"
@@ -356,6 +390,8 @@ def run(
     if Path(geography_dir).exists():
         log.info("\n--- Geografia ---")
         load_geography(client, Path(geography_dir))
+        log.info("\n--- Geografia (confiança/fontes) ---")
+        load_geography_confidence(client, Path(geography_dir))
 
     if Path(lexicon_dir).exists():
         log.info("\n--- Léxico Strong's ---")
