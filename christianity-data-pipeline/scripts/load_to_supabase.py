@@ -249,6 +249,23 @@ def load_geography(client: Client, geography_dir: Path):
         log.info(f"  [biblical_places] {i+len(batch)}/{len(places)} locais")
 
 
+def load_lexicon(client: Client, lexicon_dir: Path):
+    """Carrega o léxico de Strong's em batches."""
+    entries_file = lexicon_dir / "lexicon_entries.json"
+    if not entries_file.exists():
+        return
+
+    entries = json.loads(entries_file.read_text(encoding="utf-8"))
+    source_url = "https://github.com/STEPBible/STEPBible-Data/tree/master/Lexicons"
+    for e in entries:
+        e["source_url"] = source_url
+
+    for i in range(0, len(entries), BATCH_SIZE):
+        batch = entries[i:i + BATCH_SIZE]
+        client.table("lexicon_entries").upsert(batch, on_conflict="d_strong").execute()
+        log.info(f"  [lexicon_entries] {i+len(batch)}/{len(entries)} entradas")
+
+
 def run(
     bible_dir:      str = "output/bible",
     crossrefs_dir:  str = "output/crossrefs",
@@ -257,6 +274,7 @@ def run(
     creeds_dir:     str = "output/creeds",
     glossary_dir:   str = "output/glossary",
     geography_dir:  str = "output/geography",
+    lexicon_dir:    str = "output/lexicon",
 ):
     client = get_client()
     log.info("Ligado ao Supabase.")
@@ -290,6 +308,10 @@ def run(
     if Path(geography_dir).exists():
         log.info("\n--- Geografia ---")
         load_geography(client, Path(geography_dir))
+
+    if Path(lexicon_dir).exists():
+        log.info("\n--- Léxico Strong's ---")
+        load_lexicon(client, Path(lexicon_dir))
 
     log.info("\nCarga concluída!")
 
