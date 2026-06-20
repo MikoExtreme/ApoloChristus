@@ -273,6 +273,40 @@ CREATE TABLE IF NOT EXISTS interlinear_words (
 CREATE INDEX IF NOT EXISTS interlinear_words_ref_idx ON interlinear_words (book, chapter, verse);
 
 -- ============================================================
+-- 3g. CITAÇÕES PATRÍSTICAS (Pai da Igreja → versículo citado)
+-- ============================================================
+
+-- Gerado por extração (regex + validação contra `verses`) do texto já
+-- carregado em patristic_sections — não é uma fonte externa. Ver
+-- fetchers/citations_fetcher.py para a metodologia e as suas limitações
+-- (livros ambíguos sem dígito ordinal são ignorados, não adivinhados).
+CREATE TABLE IF NOT EXISTS patristic_citations (
+    id          BIGSERIAL PRIMARY KEY,
+    section_id  BIGINT NOT NULL REFERENCES patristic_sections(id) ON DELETE CASCADE,
+    book        TEXT NOT NULL,
+    chapter     SMALLINT NOT NULL,
+    verse       SMALLINT NOT NULL,
+    UNIQUE (section_id, book, chapter, verse)
+);
+
+CREATE INDEX IF NOT EXISTS patristic_citations_verse_idx ON patristic_citations (book, chapter, verse);
+CREATE INDEX IF NOT EXISTS patristic_citations_section_idx ON patristic_citations (section_id);
+
+-- Que Pais da Igreja citaram um determinado versículo
+CREATE OR REPLACE FUNCTION verses_cited_by_fathers(p_book TEXT, p_chapter SMALLINT, p_verse SMALLINT)
+RETURNS TABLE (
+    author_name TEXT, work_title TEXT, section_num INT, section_text TEXT
+) LANGUAGE SQL AS $$
+    SELECT pa.name_en, pw.title, ps.section_num, ps.text
+    FROM patristic_citations pc
+    JOIN patristic_sections ps ON ps.id = pc.section_id
+    JOIN patristic_works pw ON pw.id = ps.work_id
+    JOIN patristic_authors pa ON pa.id = pw.author_id
+    WHERE pc.book = p_book AND pc.chapter = p_chapter AND pc.verse = p_verse
+    ORDER BY pa.name_en, pw.title, ps.section_num;
+$$;
+
+-- ============================================================
 -- 4. FUNÇÕES DE PESQUISA
 -- ============================================================
 
@@ -359,6 +393,7 @@ ALTER TABLE glossary_terms              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE biblical_places              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE lexicon_entries              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interlinear_words            ENABLE ROW LEVEL SECURITY;
+ALTER TABLE patristic_citations          ENABLE ROW LEVEL SECURITY;
 
 -- Leitura pública para todos os textos (são domínio público)
 CREATE POLICY "public_read_verses"     ON verses              FOR SELECT USING (true);
@@ -375,3 +410,4 @@ CREATE POLICY "public_read_glossary"   ON glossary_terms              FOR SELECT
 CREATE POLICY "public_read_places"     ON biblical_places              FOR SELECT USING (true);
 CREATE POLICY "public_read_lexicon"    ON lexicon_entries              FOR SELECT USING (true);
 CREATE POLICY "public_read_interlinear" ON interlinear_words            FOR SELECT USING (true);
+CREATE POLICY "public_read_citations"   ON patristic_citations           FOR SELECT USING (true);
