@@ -172,6 +172,29 @@ CREATE INDEX IF NOT EXISTS creeds_confessions_sections_search_idx
     ON creeds_confessions_sections USING GIN (search_vec);
 
 -- ============================================================
+-- 3c. GLOSSÁRIO / DICIONÁRIO BÍBLICO
+-- ============================================================
+
+-- Dados estruturados por NEUU (github.com/neuu-org/bible-dictionary-dataset),
+-- CC-BY 4.0, a partir de 5 dicionários bíblicos clássicos em domínio público
+-- (Easton 1897, Smith 1863, Hastings c.1900, Hitchcock c.1869, Schaff c.1880).
+CREATE TABLE IF NOT EXISTS glossary_terms (
+    id              BIGSERIAL PRIMARY KEY,
+    term            TEXT NOT NULL,
+    source          TEXT NOT NULL,        -- "easton" | "smith" | "hastings" | "hitchcock" | "schaff"
+    definition      TEXT NOT NULL,
+    scripture_refs  TEXT[],                -- ex: {"Genesis 1:1", "John 3:16"}
+    license         TEXT NOT NULL DEFAULT 'public_domain',
+    search_vec      TSVECTOR GENERATED ALWAYS AS (
+        to_tsvector('english', immutable_unaccent(term) || ' ' || immutable_unaccent(definition))
+    ) STORED,
+    UNIQUE (term, source)
+);
+
+CREATE INDEX IF NOT EXISTS glossary_terms_search_idx ON glossary_terms USING GIN (search_vec);
+CREATE INDEX IF NOT EXISTS glossary_terms_term_idx ON glossary_terms (term);
+
+-- ============================================================
 -- 4. FUNÇÕES DE PESQUISA
 -- ============================================================
 
@@ -223,6 +246,7 @@ ALTER TABLE apocryphal_works     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE apocryphal_sections  ENABLE ROW LEVEL SECURITY;
 ALTER TABLE creeds_confessions          ENABLE ROW LEVEL SECURITY;
 ALTER TABLE creeds_confessions_sections ENABLE ROW LEVEL SECURITY;
+ALTER TABLE glossary_terms              ENABLE ROW LEVEL SECURITY;
 
 -- Leitura pública para todos os textos (são domínio público)
 CREATE POLICY "public_read_verses"     ON verses              FOR SELECT USING (true);
@@ -235,3 +259,4 @@ CREATE POLICY "public_read_works_p"    ON patristic_works     FOR SELECT USING (
 CREATE POLICY "public_read_works_a"    ON apocryphal_works    FOR SELECT USING (true);
 CREATE POLICY "public_read_creeds"     ON creeds_confessions          FOR SELECT USING (true);
 CREATE POLICY "public_read_creeds_sec" ON creeds_confessions_sections FOR SELECT USING (true);
+CREATE POLICY "public_read_glossary"   ON glossary_terms              FOR SELECT USING (true);

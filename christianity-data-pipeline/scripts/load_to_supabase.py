@@ -220,12 +220,26 @@ def load_creeds(client: Client, creeds_dir: Path):
         log.info(f"  [{work['id']}] {len(sections)} secções carregadas")
 
 
+def load_glossary(client: Client, glossary_dir: Path):
+    """Carrega o glossário/dicionário bíblico em batches."""
+    terms_file = glossary_dir / "glossary_terms.json"
+    if not terms_file.exists():
+        return
+
+    terms = json.loads(terms_file.read_text(encoding="utf-8"))
+    for i in range(0, len(terms), BATCH_SIZE):
+        batch = terms[i:i + BATCH_SIZE]
+        client.table("glossary_terms").upsert(batch, on_conflict="term,source").execute()
+        log.info(f"  [glossary_terms] {i+len(batch)}/{len(terms)} termos")
+
+
 def run(
     bible_dir:      str = "output/bible",
     crossrefs_dir:  str = "output/crossrefs",
     patristics_dir: str = "output/patristics",
     apocrypha_dir:  str = "output/apocrypha",
     creeds_dir:     str = "output/creeds",
+    glossary_dir:   str = "output/glossary",
 ):
     client = get_client()
     log.info("Ligado ao Supabase.")
@@ -251,6 +265,10 @@ def run(
     if Path(creeds_dir).exists():
         log.info("\n--- Credos e confissões ---")
         load_creeds(client, Path(creeds_dir))
+
+    if Path(glossary_dir).exists():
+        log.info("\n--- Glossário ---")
+        load_glossary(client, Path(glossary_dir))
 
     log.info("\nCarga concluída!")
 
