@@ -245,6 +245,34 @@ CREATE INDEX IF NOT EXISTS lexicon_entries_estrong_idx ON lexicon_entries (e_str
 CREATE INDEX IF NOT EXISTS lexicon_entries_search_idx ON lexicon_entries USING GIN (search_vec);
 
 -- ============================================================
+-- 3f. INTERLINEAR (texto original palavra-a-palavra ligado a Strong's)
+-- ============================================================
+
+-- Fonte: STEPBible-Data "Translators Amalgamated" (Tyndale House Cambridge,
+-- CC BY 4.0). Cobre as 425 437 palavras do hebraico (AT) e grego (NT)
+-- originais, uma linha por posição de palavra em cada versículo — a leitura
+-- mais bem atestada quando há variantes de manuscrito (não é um aparato
+-- crítico completo).
+CREATE TABLE IF NOT EXISTS interlinear_words (
+    id              BIGSERIAL PRIMARY KEY,
+    book            TEXT NOT NULL,
+    chapter         SMALLINT NOT NULL,
+    verse           SMALLINT NOT NULL,
+    word_position   SMALLINT NOT NULL,
+    language        TEXT NOT NULL,        -- "hebrew" | "greek"
+    original_word   TEXT NOT NULL,        -- pode ter "/" a separar prefixo+raiz (hebraico)
+    transliteration TEXT,
+    gloss           TEXT,                 -- tradução contextual desta palavra/instância
+    strong_numbers  TEXT[],               -- um ou mais (hebraico composto pode ter vários)
+    grammar         TEXT,                 -- código morfológico
+    license         TEXT NOT NULL DEFAULT 'licensed',
+    source_url      TEXT,
+    UNIQUE (book, chapter, verse, word_position, language)
+);
+
+CREATE INDEX IF NOT EXISTS interlinear_words_ref_idx ON interlinear_words (book, chapter, verse);
+
+-- ============================================================
 -- 4. FUNÇÕES DE PESQUISA
 -- ============================================================
 
@@ -330,6 +358,7 @@ ALTER TABLE creeds_confessions_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE glossary_terms              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE biblical_places              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE lexicon_entries              ENABLE ROW LEVEL SECURITY;
+ALTER TABLE interlinear_words            ENABLE ROW LEVEL SECURITY;
 
 -- Leitura pública para todos os textos (são domínio público)
 CREATE POLICY "public_read_verses"     ON verses              FOR SELECT USING (true);
@@ -345,3 +374,4 @@ CREATE POLICY "public_read_creeds_sec" ON creeds_confessions_sections FOR SELECT
 CREATE POLICY "public_read_glossary"   ON glossary_terms              FOR SELECT USING (true);
 CREATE POLICY "public_read_places"     ON biblical_places              FOR SELECT USING (true);
 CREATE POLICY "public_read_lexicon"    ON lexicon_entries              FOR SELECT USING (true);
+CREATE POLICY "public_read_interlinear" ON interlinear_words            FOR SELECT USING (true);

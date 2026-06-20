@@ -260,3 +260,7 @@ user_reading_plans (id, user_id, plan_type, progress_json, created_at)
 - **Rate limiting**: delays de 0.3–1.5s entre requests conforme a fonte; backoff exponencial em erros.
 - **Morfologia**: STEPBible disponibiliza ficheiros TSV no GitHub — não precisa de scraping, só download e parse.
 - **Cross-references**: OpenBible disponibiliza TSV com 340k refs com votos de qualidade — filtrar por `votes >= 3` para qualidade.
+
+## Pendente (fazer antes do frontend)
+
+- [ ] **Geografia bíblica — confiança e fontes por local**: o `merged.txt` do OpenBible.info que usámos só tem nome/coordenadas/versículos. Cada local tem uma página individual (`/geo/ancient/{hash}/{nome}`) com percentagem de confiança da identificação e lista de fontes académicas (Anchor Yale Bible Dictionary, ESV Bible Atlas, etc.) — implica scraping de ~1232 páginas individuais em vez do ficheiro único. Adicionar `confidence_pct` e `sources TEXT[]` à tabela `biblical_places`.

@@ -266,6 +266,38 @@ def load_lexicon(client: Client, lexicon_dir: Path):
         log.info(f"  [lexicon_entries] {i+len(batch)}/{len(entries)} entradas")
 
 
+def load_interlinear(client: Client, interlinear_dir: Path):
+    """Carrega o texto interlinear em batches."""
+    words_file = interlinear_dir / "interlinear_words.json"
+    if not words_file.exists():
+        return
+
+    words = json.loads(words_file.read_text(encoding="utf-8"))
+    source_url = "https://github.com/STEPBible/STEPBible-Data/tree/master/Translators%20Amalgamated%20OT%2BNT"
+    rows = [
+        {
+            "book":            w["book"],
+            "chapter":         w["chapter"],
+            "verse":           w["verse"],
+            "word_position":   w["position"],
+            "language":        w["language"],
+            "original_word":   w["original_word"],
+            "transliteration": w["transliteration"],
+            "gloss":           w["gloss"],
+            "strong_numbers":  w["strong_numbers"],
+            "grammar":         w["grammar"],
+            "source_url":      source_url,
+        }
+        for w in words
+    ]
+
+    on_conflict = "book,chapter,verse,word_position,language"
+    for i in range(0, len(rows), BATCH_SIZE):
+        batch = rows[i:i + BATCH_SIZE]
+        client.table("interlinear_words").upsert(batch, on_conflict=on_conflict).execute()
+        log.info(f"  [interlinear_words] {i+len(batch)}/{len(rows)} palavras")
+
+
 def run(
     bible_dir:      str = "output/bible",
     crossrefs_dir:  str = "output/crossrefs",
@@ -275,6 +307,7 @@ def run(
     glossary_dir:   str = "output/glossary",
     geography_dir:  str = "output/geography",
     lexicon_dir:    str = "output/lexicon",
+    interlinear_dir: str = "output/interlinear",
 ):
     client = get_client()
     log.info("Ligado ao Supabase.")
@@ -312,6 +345,10 @@ def run(
     if Path(lexicon_dir).exists():
         log.info("\n--- Léxico Strong's ---")
         load_lexicon(client, Path(lexicon_dir))
+
+    if Path(interlinear_dir).exists():
+        log.info("\n--- Interlinear ---")
+        load_interlinear(client, Path(interlinear_dir))
 
     log.info("\nCarga concluída!")
 
