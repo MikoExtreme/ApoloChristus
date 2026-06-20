@@ -298,6 +298,20 @@ def load_interlinear(client: Client, interlinear_dir: Path):
         log.info(f"  [interlinear_words] {i+len(batch)}/{len(rows)} palavras")
 
 
+def load_citations(client: Client, citations_dir: Path):
+    """Carrega as citações bíblicas patrísticas em batches."""
+    citations_file = citations_dir / "patristic_citations.json"
+    if not citations_file.exists():
+        return
+
+    citations = json.loads(citations_file.read_text(encoding="utf-8"))
+    on_conflict = "section_id,book,chapter,verse"
+    for i in range(0, len(citations), BATCH_SIZE):
+        batch = citations[i:i + BATCH_SIZE]
+        client.table("patristic_citations").upsert(batch, on_conflict=on_conflict).execute()
+        log.info(f"  [patristic_citations] {i+len(batch)}/{len(citations)} citações")
+
+
 def run(
     bible_dir:      str = "output/bible",
     crossrefs_dir:  str = "output/crossrefs",
@@ -308,6 +322,7 @@ def run(
     geography_dir:  str = "output/geography",
     lexicon_dir:    str = "output/lexicon",
     interlinear_dir: str = "output/interlinear",
+    citations_dir:  str = "output/citations",
 ):
     client = get_client()
     log.info("Ligado ao Supabase.")
@@ -349,6 +364,10 @@ def run(
     if Path(interlinear_dir).exists():
         log.info("\n--- Interlinear ---")
         load_interlinear(client, Path(interlinear_dir))
+
+    if Path(citations_dir).exists():
+        log.info("\n--- Citações patrísticas ---")
+        load_citations(client, Path(citations_dir))
 
     log.info("\nCarga concluída!")
 
