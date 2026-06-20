@@ -141,6 +141,37 @@ CREATE INDEX IF NOT EXISTS apocryphal_sections_search_idx
     ON apocryphal_sections USING GIN (search_vec);
 
 -- ============================================================
+-- 3b. CREDOS E CONFISSÕES
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS creeds_confessions (
+    id          TEXT PRIMARY KEY,        -- ex: "apostles_creed"
+    title       TEXT NOT NULL,
+    title_pt    TEXT,
+    type        TEXT NOT NULL,           -- "creed" | "confession" | "catechism"
+    tradition   TEXT,                    -- "ecumenical" | "catholic" | "orthodox" | "lutheran" | "reformed" | "anglican" | "baptist" | "congregational"
+    year        TEXT,
+    source_url  TEXT,
+    language    TEXT NOT NULL DEFAULT 'en',
+    license     TEXT NOT NULL DEFAULT 'public_domain',
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS creeds_confessions_sections (
+    id          BIGSERIAL PRIMARY KEY,
+    work_id     TEXT NOT NULL REFERENCES creeds_confessions(id) ON DELETE CASCADE,
+    section_num INT NOT NULL,
+    text        TEXT NOT NULL,
+    search_vec  TSVECTOR GENERATED ALWAYS AS (
+        to_tsvector('english', text)
+    ) STORED,
+    UNIQUE (work_id, section_num)
+);
+
+CREATE INDEX IF NOT EXISTS creeds_confessions_sections_search_idx
+    ON creeds_confessions_sections USING GIN (search_vec);
+
+-- ============================================================
 -- 4. FUNÇÕES DE PESQUISA
 -- ============================================================
 
@@ -190,6 +221,8 @@ ALTER TABLE patristic_works      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE patristic_sections   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE apocryphal_works     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE apocryphal_sections  ENABLE ROW LEVEL SECURITY;
+ALTER TABLE creeds_confessions          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE creeds_confessions_sections ENABLE ROW LEVEL SECURITY;
 
 -- Leitura pública para todos os textos (são domínio público)
 CREATE POLICY "public_read_verses"     ON verses              FOR SELECT USING (true);
@@ -200,3 +233,5 @@ CREATE POLICY "public_read_meta"       ON bible_versions      FOR SELECT USING (
 CREATE POLICY "public_read_authors"    ON patristic_authors   FOR SELECT USING (true);
 CREATE POLICY "public_read_works_p"    ON patristic_works     FOR SELECT USING (true);
 CREATE POLICY "public_read_works_a"    ON apocryphal_works    FOR SELECT USING (true);
+CREATE POLICY "public_read_creeds"     ON creeds_confessions          FOR SELECT USING (true);
+CREATE POLICY "public_read_creeds_sec" ON creeds_confessions_sections FOR SELECT USING (true);
