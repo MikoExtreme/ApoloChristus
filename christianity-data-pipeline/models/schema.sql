@@ -195,6 +195,27 @@ CREATE INDEX IF NOT EXISTS glossary_terms_search_idx ON glossary_terms USING GIN
 CREATE INDEX IF NOT EXISTS glossary_terms_term_idx ON glossary_terms (term);
 
 -- ============================================================
+-- 3d. GEOGRAFIA BÍBLICA
+-- ============================================================
+
+-- Fonte: OpenBible.info (CC-BY 4.0 — requer atribuição a OpenBible.info,
+-- não é domínio público puro).
+CREATE TABLE IF NOT EXISTS biblical_places (
+    id              BIGSERIAL PRIMARY KEY,
+    name            TEXT NOT NULL UNIQUE,
+    root_name       TEXT,                 -- localização-base usada para resolver coordenadas indiretas
+    lat             DOUBLE PRECISION NOT NULL,
+    lon             DOUBLE PRECISION NOT NULL,
+    is_approximate  BOOLEAN NOT NULL DEFAULT FALSE,
+    verses          TEXT[],               -- referências bíblicas em texto livre, ex: {"Gen 35:8"}
+    comment         TEXT,
+    license         TEXT NOT NULL DEFAULT 'licensed',  -- CC-BY, não domínio público
+    source_url      TEXT
+);
+
+CREATE INDEX IF NOT EXISTS biblical_places_name_idx ON biblical_places (name);
+
+-- ============================================================
 -- 4. FUNÇÕES DE PESQUISA
 -- ============================================================
 
@@ -247,6 +268,7 @@ ALTER TABLE apocryphal_sections  ENABLE ROW LEVEL SECURITY;
 ALTER TABLE creeds_confessions          ENABLE ROW LEVEL SECURITY;
 ALTER TABLE creeds_confessions_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE glossary_terms              ENABLE ROW LEVEL SECURITY;
+ALTER TABLE biblical_places              ENABLE ROW LEVEL SECURITY;
 
 -- Leitura pública para todos os textos (são domínio público)
 CREATE POLICY "public_read_verses"     ON verses              FOR SELECT USING (true);
@@ -260,3 +282,4 @@ CREATE POLICY "public_read_works_a"    ON apocryphal_works    FOR SELECT USING (
 CREATE POLICY "public_read_creeds"     ON creeds_confessions          FOR SELECT USING (true);
 CREATE POLICY "public_read_creeds_sec" ON creeds_confessions_sections FOR SELECT USING (true);
 CREATE POLICY "public_read_glossary"   ON glossary_terms              FOR SELECT USING (true);
+CREATE POLICY "public_read_places"     ON biblical_places              FOR SELECT USING (true);
