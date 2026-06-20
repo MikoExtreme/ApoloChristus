@@ -233,6 +233,22 @@ def load_glossary(client: Client, glossary_dir: Path):
         log.info(f"  [glossary_terms] {i+len(batch)}/{len(terms)} termos")
 
 
+def load_geography(client: Client, geography_dir: Path):
+    """Carrega os locais bíblicos em batches."""
+    places_file = geography_dir / "biblical_places.json"
+    if not places_file.exists():
+        return
+
+    places = json.loads(places_file.read_text(encoding="utf-8"))
+    for p in places:
+        p["source_url"] = "https://www.openbible.info/geo/data/merged.txt"
+
+    for i in range(0, len(places), BATCH_SIZE):
+        batch = places[i:i + BATCH_SIZE]
+        client.table("biblical_places").upsert(batch, on_conflict="name").execute()
+        log.info(f"  [biblical_places] {i+len(batch)}/{len(places)} locais")
+
+
 def run(
     bible_dir:      str = "output/bible",
     crossrefs_dir:  str = "output/crossrefs",
@@ -240,6 +256,7 @@ def run(
     apocrypha_dir:  str = "output/apocrypha",
     creeds_dir:     str = "output/creeds",
     glossary_dir:   str = "output/glossary",
+    geography_dir:  str = "output/geography",
 ):
     client = get_client()
     log.info("Ligado ao Supabase.")
@@ -269,6 +286,10 @@ def run(
     if Path(glossary_dir).exists():
         log.info("\n--- Glossário ---")
         load_glossary(client, Path(glossary_dir))
+
+    if Path(geography_dir).exists():
+        log.info("\n--- Geografia ---")
+        load_geography(client, Path(geography_dir))
 
     log.info("\nCarga concluída!")
 
