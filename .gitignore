@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Segredos
+.env
+
+# Dados gerados pelo pipeline (não versionar — recriáveis via fetchers)
+christianity-data-pipeline/output/
+
+# Node / frontend
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,2016 @@
+[
+  {
+    "id": "alexander_of_alexandria",
+    "name": "Alexander of Alexandria",
+    "name_en": "Alexander of Alexandria",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Epistles on the Arian Heresy and the Deposition of Arius",
+        "url": "https://www.newadvent.org/fathers/0622.htm"
+      }
+    ]
+  },
+  {
+    "id": "alexander_of_lycopolis",
+    "name": "Alexander of Lycopolis",
+    "name_en": "Alexander of Lycopolis",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Of the Manicheans",
+        "url": "https://www.newadvent.org/fathers/0618.htm"
+      }
+    ]
+  },
+  {
+    "id": "ambrose_milan",
+    "name": "Ambrósio de Milão",
+    "name_en": "Ambrose of Milan",
+    "period": "post_nicene",
+    "dates": "340–397",
+    "tradition": "western",
+    "works": [
+      {
+        "title": "On the Christian Faith (De fide)",
+        "url": "https://www.newadvent.org/fathers/3404.htm"
+      },
+      {
+        "title": "On the Holy Spirit",
+        "url": "https://www.newadvent.org/fathers/3402.htm"
+      },
+      {
+        "title": "On the Mysteries",
+        "url": "https://www.newadvent.org/fathers/3405.htm"
+      },
+      {
+        "title": "On Repentance",
+        "url": "https://www.newadvent.org/fathers/3406.htm"
+      },
+      {
+        "title": "On the Duties of the Clergy",
+        "url": "https://www.newadvent.org/fathers/3401.htm"
+      },
+      {
+        "title": "Concerning Virgins",
+        "url": "https://www.newadvent.org/fathers/3407.htm"
+      },
+      {
+        "title": "Concerning Widows",
+        "url": "https://www.newadvent.org/fathers/3408.htm"
+      },
+      {
+        "title": "On the Death of Satyrus",
+        "url": "https://www.newadvent.org/fathers/3403.htm"
+      },
+      {
+        "title": "Memorial of Symmachus",
+        "url": "https://www.newadvent.org/fathers/3410.htm"
+      },
+      {
+        "title": "Sermon against Auxentius",
+        "url": "https://www.newadvent.org/fathers/3411.htm"
+      },
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/3409.htm"
+      }
+    ]
+  },
+  {
+    "id": "aphrahat_aphraates",
+    "name": "Aphrahat/Aphraates",
+    "name_en": "Aphrahat/Aphraates",
+    "period": "ante_nicene",
+    "dates": "c. 280-367",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Demonstrations",
+        "url": "https://www.newadvent.org/fathers/3701.htm"
+      }
+    ]
+  },
+  {
+    "id": "archelaus",
+    "name": "Archelaus",
+    "name_en": "Archelaus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Acts of the Disputation with the Heresiarch Manes",
+        "url": "https://www.newadvent.org/fathers/0616.htm"
+      }
+    ]
+  },
+  {
+    "id": "aristides_the_philosopher",
+    "name": "Aristides the Philosopher",
+    "name_en": "Aristides the Philosopher",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "The Apology",
+        "url": "https://www.newadvent.org/fathers/1012.htm"
+      }
+    ]
+  },
+  {
+    "id": "arnobius",
+    "name": "Arnobius",
+    "name_en": "Arnobius",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Against the Heathen",
+        "url": "https://www.newadvent.org/fathers/0631.htm"
+      }
+    ]
+  },
+  {
+    "id": "athanasius",
+    "name": "Atanásio de Alexandria",
+    "name_en": "Athanasius of Alexandria",
+    "period": "nicene",
+    "dates": "c.296–373",
+    "tradition": "catholic_orthodox",
+    "works": [
+      {
+        "title": "Against the Heathen",
+        "url": "https://www.newadvent.org/fathers/2801.htm"
+      },
+      {
+        "title": "On the Incarnation of the Word",
+        "url": "https://www.newadvent.org/fathers/2802.htm"
+      },
+      {
+        "title": "Deposition of Arius",
+        "url": "https://www.newadvent.org/fathers/2803.htm"
+      },
+      {
+        "title": "Statement of Faith",
+        "url": "https://www.newadvent.org/fathers/2821.htm"
+      },
+      {
+        "title": "On Luke 10:22 (Matthew 11:27)",
+        "url": "https://www.newadvent.org/fathers/2805.htm"
+      },
+      {
+        "title": "Circular Letter",
+        "url": "https://www.newadvent.org/fathers/2807.htm"
+      },
+      {
+        "title": "Apologia Contra Arianos",
+        "url": "https://www.newadvent.org/fathers/2808.htm"
+      },
+      {
+        "title": "De Decretis",
+        "url": "https://www.newadvent.org/fathers/2809.htm"
+      },
+      {
+        "title": "De Sententia Dionysii",
+        "url": "https://www.newadvent.org/fathers/2810.htm"
+      },
+      {
+        "title": "Vita S. Antoni (Life of St. Anthony)",
+        "url": "https://www.newadvent.org/fathers/2811.htm"
+      },
+      {
+        "title": "Ad Episcopus Aegypti et Libyae",
+        "url": "https://www.newadvent.org/fathers/2812.htm"
+      },
+      {
+        "title": "Apologia ad Constantium",
+        "url": "https://www.newadvent.org/fathers/2813.htm"
+      },
+      {
+        "title": "Apologia de Fuga",
+        "url": "https://www.newadvent.org/fathers/2814.htm"
+      },
+      {
+        "title": "Historia Arianorum",
+        "url": "https://www.newadvent.org/fathers/2815.htm"
+      },
+      {
+        "title": "Four Discourses Against the Arians",
+        "url": "https://www.newadvent.org/fathers/2816.htm"
+      },
+      {
+        "title": "De Synodis",
+        "url": "https://www.newadvent.org/fathers/2817.htm"
+      },
+      {
+        "title": "Tomus ad Antiochenos",
+        "url": "https://www.newadvent.org/fathers/2818.htm"
+      },
+      {
+        "title": "Ad Afros Epistola Synodica",
+        "url": "https://www.newadvent.org/fathers/2819.htm"
+      },
+      {
+        "title": "Historia Acephala",
+        "url": "https://www.newadvent.org/fathers/2820.htm"
+      },
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/2806.htm"
+      }
+    ]
+  },
+  {
+    "id": "athenagoras",
+    "name": "Athenagoras",
+    "name_en": "Athenagoras",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "A Plea for the Christians",
+        "url": "https://www.newadvent.org/fathers/0205.htm"
+      },
+      {
+        "title": "The Resurrection of the Dead",
+        "url": "https://www.newadvent.org/fathers/0206.htm"
+      }
+    ]
+  },
+  {
+    "id": "augustine_hippo",
+    "name": "Agostinho de Hipona",
+    "name_en": "Augustine of Hippo",
+    "period": "post_nicene",
+    "dates": "354–430",
+    "tradition": "western",
+    "works": [
+      {
+        "title": "Confessions",
+        "url": "https://www.newadvent.org/fathers/1101.htm"
+      },
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/1102.htm"
+      },
+      {
+        "title": "City of God",
+        "url": "https://www.newadvent.org/fathers/1201.htm"
+      },
+      {
+        "title": "Christian Doctrine",
+        "url": "https://www.newadvent.org/fathers/1202.htm"
+      },
+      {
+        "title": "On the Holy Trinity",
+        "url": "https://www.newadvent.org/fathers/1301.htm"
+      },
+      {
+        "title": "The Enchiridion",
+        "url": "https://www.newadvent.org/fathers/1302.htm"
+      },
+      {
+        "title": "On the Catechising of the Uninstructed",
+        "url": "https://www.newadvent.org/fathers/1303.htm"
+      },
+      {
+        "title": "On Faith and the Creed",
+        "url": "https://www.newadvent.org/fathers/1304.htm"
+      },
+      {
+        "title": "Concerning Faith of Things Not Seen",
+        "url": "https://www.newadvent.org/fathers/1305.htm"
+      },
+      {
+        "title": "On the Profit of Believing",
+        "url": "https://www.newadvent.org/fathers/1306.htm"
+      },
+      {
+        "title": "On the Creed: A Sermon to Catechumens",
+        "url": "https://www.newadvent.org/fathers/1307.htm"
+      },
+      {
+        "title": "On Continence",
+        "url": "https://www.newadvent.org/fathers/1308.htm"
+      },
+      {
+        "title": "On the Good of Marriage",
+        "url": "https://www.newadvent.org/fathers/1309.htm"
+      },
+      {
+        "title": "On Holy Virginity",
+        "url": "https://www.newadvent.org/fathers/1310.htm"
+      },
+      {
+        "title": "On the Good of Widowhood",
+        "url": "https://www.newadvent.org/fathers/1311.htm"
+      },
+      {
+        "title": "On Lying",
+        "url": "https://www.newadvent.org/fathers/1312.htm"
+      },
+      {
+        "title": "To Consentius: Against Lying",
+        "url": "https://www.newadvent.org/fathers/1313.htm"
+      },
+      {
+        "title": "On the Work of Monks",
+        "url": "https://www.newadvent.org/fathers/1314.htm"
+      },
+      {
+        "title": "On Patience",
+        "url": "https://www.newadvent.org/fathers/1315.htm"
+      },
+      {
+        "title": "On Care to be Had For the Dead",
+        "url": "https://www.newadvent.org/fathers/1316.htm"
+      },
+      {
+        "title": "On the Morals of the Catholic Church",
+        "url": "https://www.newadvent.org/fathers/1401.htm"
+      },
+      {
+        "title": "On the Morals of the Manichaeans",
+        "url": "https://www.newadvent.org/fathers/1402.htm"
+      },
+      {
+        "title": "On Two Souls, Against the Manichaeans",
+        "url": "https://www.newadvent.org/fathers/1403.htm"
+      },
+      {
+        "title": "Acts or Disputation Against Fortunatus the Manichaean",
+        "url": "https://www.newadvent.org/fathers/1404.htm"
+      },
+      {
+        "title": "Against the Epistle of Manichaeus Called Fundamental",
+        "url": "https://www.newadvent.org/fathers/1405.htm"
+      },
+      {
+        "title": "Reply to Faustus the Manichaean",
+        "url": "https://www.newadvent.org/fathers/1406.htm"
+      },
+      {
+        "title": "Concerning the Nature of Good, Against the Manichaeans",
+        "url": "https://www.newadvent.org/fathers/1407.htm"
+      },
+      {
+        "title": "On Baptism, Against the Donatists",
+        "url": "https://www.newadvent.org/fathers/1408.htm"
+      },
+      {
+        "title": "Answer to Letters of Petilian, Bishop of Cirta",
+        "url": "https://www.newadvent.org/fathers/1409.htm"
+      },
+      {
+        "title": "Merits and Remission of Sin, and Infant Baptism",
+        "url": "https://www.newadvent.org/fathers/1501.htm"
+      },
+      {
+        "title": "On the Spirit and the Letter",
+        "url": "https://www.newadvent.org/fathers/1502.htm"
+      },
+      {
+        "title": "On Nature and Grace",
+        "url": "https://www.newadvent.org/fathers/1503.htm"
+      },
+      {
+        "title": "On Man's Perfection in Righteousness",
+        "url": "https://www.newadvent.org/fathers/1504.htm"
+      },
+      {
+        "title": "On the Proceedings of Pelagius",
+        "url": "https://www.newadvent.org/fathers/1505.htm"
+      },
+      {
+        "title": "On the Grace of Christ, and on Original Sin",
+        "url": "https://www.newadvent.org/fathers/1506.htm"
+      },
+      {
+        "title": "On Marriage and Concupiscence",
+        "url": "https://www.newadvent.org/fathers/1507.htm"
+      },
+      {
+        "title": "On the Soul and its Origin",
+        "url": "https://www.newadvent.org/fathers/1508.htm"
+      },
+      {
+        "title": "Against Two Letters of the Pelagians",
+        "url": "https://www.newadvent.org/fathers/1509.htm"
+      },
+      {
+        "title": "On Grace and Free Will",
+        "url": "https://www.newadvent.org/fathers/1510.htm"
+      },
+      {
+        "title": "On Rebuke and Grace",
+        "url": "https://www.newadvent.org/fathers/1513.htm"
+      },
+      {
+        "title": "The Predestination of the Saints/Gift of Perseverance",
+        "url": "https://www.newadvent.org/fathers/1512.htm"
+      },
+      {
+        "title": "Our Lord's Sermon on the Mount",
+        "url": "https://www.newadvent.org/fathers/1601.htm"
+      },
+      {
+        "title": "The Harmony of the Gospels",
+        "url": "https://www.newadvent.org/fathers/1602.htm"
+      },
+      {
+        "title": "Sermons on Selected Lessons of the New Testament",
+        "url": "https://www.newadvent.org/fathers/1603.htm"
+      },
+      {
+        "title": "Tractates on the Gospel of John",
+        "url": "https://www.newadvent.org/fathers/1701.htm"
+      },
+      {
+        "title": "Homilies on the First Epistle of John",
+        "url": "https://www.newadvent.org/fathers/1702.htm"
+      },
+      {
+        "title": "Soliloquies",
+        "url": "https://www.newadvent.org/fathers/1703.htm"
+      },
+      {
+        "title": "The Enarrations, or Expositions, on the Psalms",
+        "url": "https://www.newadvent.org/fathers/1801.htm"
+      }
+    ]
+  },
+  {
+    "id": "bardesanes",
+    "name": "Bardesanes",
+    "name_en": "Bardesanes",
+    "period": "ante_nicene",
+    "dates": "154-222",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "The Book of the Laws of Various Countries",
+        "url": "https://www.newadvent.org/fathers/0862.htm"
+      }
+    ]
+  },
+  {
+    "id": "barnabas",
+    "name": "Barnabas",
+    "name_en": "Barnabas",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Epistle of Barnabas",
+        "url": "https://www.newadvent.org/fathers/0124.htm"
+      }
+    ]
+  },
+  {
+    "id": "basil_great",
+    "name": "Basílio Magno",
+    "name_en": "Basil the Great",
+    "period": "nicene",
+    "dates": "c.330–379",
+    "tradition": "eastern_orthodox",
+    "works": [
+      {
+        "title": "De Spiritu Sancto",
+        "url": "https://www.newadvent.org/fathers/3203.htm"
+      },
+      {
+        "title": "Nine Homilies of Hexaemeron",
+        "url": "https://www.newadvent.org/fathers/3201.htm"
+      },
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/3202.htm"
+      }
+    ]
+  },
+  {
+    "id": "caius",
+    "name": "Caius",
+    "name_en": "Caius",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Fragments",
+        "url": "https://www.newadvent.org/fathers/0510.htm"
+      }
+    ]
+  },
+  {
+    "id": "clement_alexandria",
+    "name": "Clemente de Alexandria",
+    "name_en": "Clement of Alexandria",
+    "period": "ante_nicene",
+    "dates": "c.150–215",
+    "tradition": "alexandrian",
+    "works": [
+      {
+        "title": "Who is the Rich Man That Shall Be Saved?",
+        "url": "https://www.newadvent.org/fathers/0207.htm"
+      },
+      {
+        "title": "Exhortation to the Heathen",
+        "url": "https://www.newadvent.org/fathers/0208.htm"
+      },
+      {
+        "title": "The Instructor",
+        "url": "https://www.newadvent.org/fathers/0209.htm"
+      },
+      {
+        "title": "The Stromata, or Miscellanies",
+        "url": "https://www.newadvent.org/fathers/0210.htm"
+      },
+      {
+        "title": "Fragments",
+        "url": "https://www.newadvent.org/fathers/0211.htm"
+      }
+    ]
+  },
+  {
+    "id": "clement_rome",
+    "name": "Clemente de Roma",
+    "name_en": "Clement of Rome",
+    "period": "apostolic",
+    "dates": "c.35–99",
+    "tradition": "catholic_orthodox",
+    "works": [
+      {
+        "title": "First Epistle",
+        "url": "https://www.newadvent.org/fathers/1010.htm"
+      },
+      {
+        "title": "Second Epistle",
+        "url": "https://www.newadvent.org/fathers/1011.htm"
+      },
+      {
+        "title": "Two Epistles Concerning Virginity",
+        "url": "https://www.newadvent.org/fathers/0803.htm"
+      },
+      {
+        "title": "Recognitions",
+        "url": "https://www.newadvent.org/fathers/0804.htm"
+      },
+      {
+        "title": "Clementine Homilies",
+        "url": "https://www.newadvent.org/fathers/0808.htm"
+      }
+    ]
+  },
+  {
+    "id": "commodianus",
+    "name": "Commodianus",
+    "name_en": "Commodianus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Writings",
+        "url": "https://www.newadvent.org/fathers/0411.htm"
+      }
+    ]
+  },
+  {
+    "id": "cyprian_of_carthage",
+    "name": "Cyprian of Carthage",
+    "name_en": "Cyprian of Carthage",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "The Life and Passion of Cyprian",
+        "url": "https://www.newadvent.org/fathers/0505.htm"
+      },
+      {
+        "title": "The Epistles of Cyprian",
+        "url": "https://www.newadvent.org/fathers/0506.htm"
+      },
+      {
+        "title": "The Treatises of Cyprian",
+        "url": "https://www.newadvent.org/fathers/0507.htm"
+      },
+      {
+        "title": "The Seventh Council of Carthage",
+        "url": "https://www.newadvent.org/fathers/0508.htm"
+      }
+    ]
+  },
+  {
+    "id": "cyril_jerusalem",
+    "name": "Cirilo de Jerusalém",
+    "name_en": "Cyril of Jerusalem",
+    "period": "nicene",
+    "dates": "c.313–386",
+    "tradition": "eastern_orthodox",
+    "works": [
+      {
+        "title": "Catechetical Lectures",
+        "url": "https://www.newadvent.org/fathers/3101.htm"
+      }
+    ]
+  },
+  {
+    "id": "dionysius_of_rome",
+    "name": "Dionysius of Rome",
+    "name_en": "Dionysius of Rome",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Against the Sabellians",
+        "url": "https://www.newadvent.org/fathers/0713.htm"
+      }
+    ]
+  },
+  {
+    "id": "dionysius_the_great",
+    "name": "Dionysius the Great",
+    "name_en": "Dionysius the Great",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Epistles and Epistolary Fragments",
+        "url": "https://www.newadvent.org/fathers/0632.htm"
+      },
+      {
+        "title": "Exegetical Fragments",
+        "url": "https://www.newadvent.org/fathers/0613.htm"
+      },
+      {
+        "title": "Miscellaneous Fragments",
+        "url": "https://www.newadvent.org/fathers/0612.htm"
+      }
+    ]
+  },
+  {
+    "id": "ephraim_the_syrian",
+    "name": "Ephraim the Syrian",
+    "name_en": "Ephraim the Syrian",
+    "period": "ante_nicene",
+    "dates": "306-373",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Nisibene Hymns",
+        "url": "https://www.newadvent.org/fathers/3702.htm"
+      },
+      {
+        "title": "On the Nativity of Christ in the Flesh",
+        "url": "https://www.newadvent.org/fathers/3703.htm"
+      },
+      {
+        "title": "For the Feast of the Epiphany",
+        "url": "https://www.newadvent.org/fathers/3704.htm"
+      },
+      {
+        "title": "On the Faith (\"The Pearl\")",
+        "url": "https://www.newadvent.org/fathers/3705.htm"
+      },
+      {
+        "title": "On Our Lord",
+        "url": "https://www.newadvent.org/fathers/3706.htm"
+      },
+      {
+        "title": "On Admonition and Repentance",
+        "url": "https://www.newadvent.org/fathers/3707.htm"
+      },
+      {
+        "title": "On the Sinful Woman",
+        "url": "https://www.newadvent.org/fathers/3708.htm"
+      }
+    ]
+  },
+  {
+    "id": "eusebius_of_caesarea",
+    "name": "Eusebius of Caesarea",
+    "name_en": "Eusebius of Caesarea",
+    "period": "ante_nicene",
+    "dates": "c. 265-c. 340",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Church History",
+        "url": "https://www.newadvent.org/fathers/2501.htm"
+      },
+      {
+        "title": "Life of Constantine",
+        "url": "https://www.newadvent.org/fathers/2502.htm"
+      },
+      {
+        "title": "Oration of Constantine \"to the Assembly of the Saints\"",
+        "url": "https://www.newadvent.org/fathers/2503.htm"
+      },
+      {
+        "title": "Oration in Praise of Constantine",
+        "url": "https://www.newadvent.org/fathers/2504.htm"
+      },
+      {
+        "title": "Letter on the Council of Nicaea",
+        "url": "https://www.newadvent.org/fathers/2804.htm"
+      }
+    ]
+  },
+  {
+    "id": "gennadius_of_marseilles",
+    "name": "Gennadius of Marseilles",
+    "name_en": "Gennadius of Marseilles",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Illustrious Men (Supplement to Jerome)",
+        "url": "https://www.newadvent.org/fathers/2719.htm"
+      }
+    ]
+  },
+  {
+    "id": "gregory_great",
+    "name": "Gregório Magno",
+    "name_en": "Gregory the Great",
+    "period": "post_nicene",
+    "dates": "c.540–604",
+    "tradition": "western",
+    "works": [
+      {
+        "title": "Pastoral Rule",
+        "url": "https://www.newadvent.org/fathers/3601.htm"
+      },
+      {
+        "title": "Register of Letters",
+        "url": "https://www.newadvent.org/fathers/3602.htm"
+      }
+    ]
+  },
+  {
+    "id": "gregory_nazianzus",
+    "name": "Gregório Nazianzeno",
+    "name_en": "Gregory of Nazianzus",
+    "period": "nicene",
+    "dates": "c.329–390",
+    "tradition": "eastern_orthodox",
+    "works": [
+      {
+        "title": "Orations",
+        "url": "https://www.newadvent.org/fathers/3102.htm"
+      },
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/3103.htm"
+      }
+    ]
+  },
+  {
+    "id": "gregory_nyssa",
+    "name": "Gregório de Nissa",
+    "name_en": "Gregory of Nyssa",
+    "period": "nicene",
+    "dates": "c.335–395",
+    "tradition": "eastern_orthodox",
+    "works": [
+      {
+        "title": "Against Eunomius",
+        "url": "https://www.newadvent.org/fathers/2901.htm"
+      },
+      {
+        "title": "Answer to Eunomius' Second Book",
+        "url": "https://www.newadvent.org/fathers/2902.htm"
+      },
+      {
+        "title": "On the Holy Spirit (Against the Followers of Macedonius)",
+        "url": "https://www.newadvent.org/fathers/2903.htm"
+      },
+      {
+        "title": "On the Holy Trinity, and of the Godhead of the Holy Spirit (To Eustathius)",
+        "url": "https://www.newadvent.org/fathers/2904.htm"
+      },
+      {
+        "title": "On \"Not Three Gods\" (To Ablabius)",
+        "url": "https://www.newadvent.org/fathers/2905.htm"
+      },
+      {
+        "title": "On the Faith (To Simplicius)",
+        "url": "https://www.newadvent.org/fathers/2906.htm"
+      },
+      {
+        "title": "On Virginity",
+        "url": "https://www.newadvent.org/fathers/2907.htm"
+      },
+      {
+        "title": "On Infants' Early Deaths",
+        "url": "https://www.newadvent.org/fathers/2912.htm"
+      },
+      {
+        "title": "On Pilgrimages",
+        "url": "https://www.newadvent.org/fathers/2913.htm"
+      },
+      {
+        "title": "On the Making of Man",
+        "url": "https://www.newadvent.org/fathers/2914.htm"
+      },
+      {
+        "title": "On the Soul and the Resurrection",
+        "url": "https://www.newadvent.org/fathers/2915.htm"
+      },
+      {
+        "title": "The Great Catechism",
+        "url": "https://www.newadvent.org/fathers/2908.htm"
+      },
+      {
+        "title": "Funeral Oration on Meletius",
+        "url": "https://www.newadvent.org/fathers/2909.htm"
+      },
+      {
+        "title": "On the Baptism of Christ (Sermon for the Day of Lights)",
+        "url": "https://www.newadvent.org/fathers/2910.htm"
+      },
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/2911.htm"
+      }
+    ]
+  },
+  {
+    "id": "gregory_thaumaturgus",
+    "name": "Gregory Thaumaturgus",
+    "name_en": "Gregory Thaumaturgus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "A Declaration of Faith",
+        "url": "https://www.newadvent.org/fathers/0601.htm"
+      },
+      {
+        "title": "A Metaphrase of the Book of Ecclesiastes",
+        "url": "https://www.newadvent.org/fathers/0602.htm"
+      },
+      {
+        "title": "Canonical Epistle",
+        "url": "https://www.newadvent.org/fathers/0603.htm"
+      },
+      {
+        "title": "The Oration and Panegyric Addressed to Origen",
+        "url": "https://www.newadvent.org/fathers/0604.htm"
+      },
+      {
+        "title": "A Sectional Confession of Faith",
+        "url": "https://www.newadvent.org/fathers/0605.htm"
+      },
+      {
+        "title": "On the Trinity",
+        "url": "https://www.newadvent.org/fathers/0606.htm"
+      },
+      {
+        "title": "Twelve Topics on the Faith",
+        "url": "https://www.newadvent.org/fathers/0607.htm"
+      },
+      {
+        "title": "On the Subject of the Soul",
+        "url": "https://www.newadvent.org/fathers/0608.htm"
+      },
+      {
+        "title": "Four Homilies",
+        "url": "https://www.newadvent.org/fathers/0609.htm"
+      },
+      {
+        "title": "On All the Saints",
+        "url": "https://www.newadvent.org/fathers/0610.htm"
+      },
+      {
+        "title": "On Matthew 6:22-23",
+        "url": "https://www.newadvent.org/fathers/0611.htm"
+      }
+    ]
+  },
+  {
+    "id": "hermas",
+    "name": "Hermas",
+    "name_en": "Hermas",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "The Pastor (or \"The Shepherd\")",
+        "url": "https://www.newadvent.org/fathers/0201.htm"
+      }
+    ]
+  },
+  {
+    "id": "hilary_of_poitiers",
+    "name": "Hilary of Poitiers",
+    "name_en": "Hilary of Poitiers",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "On the Councils, or the Faith of the Easterns",
+        "url": "https://www.newadvent.org/fathers/3301.htm"
+      },
+      {
+        "title": "On the Trinity",
+        "url": "https://www.newadvent.org/fathers/3302.htm"
+      },
+      {
+        "title": "Homilies on the Psalms",
+        "url": "https://www.newadvent.org/fathers/3303.htm"
+      }
+    ]
+  },
+  {
+    "id": "hippolytus_rome",
+    "name": "Hipólito de Roma",
+    "name_en": "Hippolytus of Rome",
+    "period": "ante_nicene",
+    "dates": "c.170–235",
+    "tradition": "western",
+    "works": [
+      {
+        "title": "The Refutation of All Heresies",
+        "url": "https://www.newadvent.org/fathers/0501.htm"
+      },
+      {
+        "title": "Some Exegetical Fragments of Hippolytus",
+        "url": "https://www.newadvent.org/fathers/0502.htm"
+      },
+      {
+        "title": "Expository Treatise Against the Jews",
+        "url": "https://www.newadvent.org/fathers/0503.htm"
+      },
+      {
+        "title": "Against Plato, On the Cause of the Universe",
+        "url": "https://www.newadvent.org/fathers/0520.htm"
+      },
+      {
+        "title": "Against the Heresy of Noetus",
+        "url": "https://www.newadvent.org/fathers/0521.htm"
+      },
+      {
+        "title": "Discourse on the Holy Theophany",
+        "url": "https://www.newadvent.org/fathers/0523.htm"
+      },
+      {
+        "title": "The Antichrist",
+        "url": "https://www.newadvent.org/fathers/0516.htm"
+      },
+      {
+        "title": "The End of the World (Pseudonymous)",
+        "url": "https://www.newadvent.org/fathers/0504.htm"
+      },
+      {
+        "title": "The Apostles and the Disciples (Pseudonymous)",
+        "url": "https://www.newadvent.org/fathers/0524.htm"
+      }
+    ]
+  },
+  {
+    "id": "ignatius_antioch",
+    "name": "Inácio de Antioquia",
+    "name_en": "Ignatius of Antioch",
+    "period": "apostolic",
+    "dates": "c.35–107",
+    "tradition": "catholic_orthodox",
+    "works": [
+      {
+        "title": "Epistle to the Ephesians",
+        "url": "https://www.newadvent.org/fathers/0104.htm"
+      },
+      {
+        "title": "Epistle to the Magnesians",
+        "url": "https://www.newadvent.org/fathers/0105.htm"
+      },
+      {
+        "title": "Epistle to the Trallians",
+        "url": "https://www.newadvent.org/fathers/0106.htm"
+      },
+      {
+        "title": "Epistle to the Romans",
+        "url": "https://www.newadvent.org/fathers/0107.htm"
+      },
+      {
+        "title": "Epistle to the Philadelphians",
+        "url": "https://www.newadvent.org/fathers/0108.htm"
+      },
+      {
+        "title": "Epistle to the Smyrnæans",
+        "url": "https://www.newadvent.org/fathers/0109.htm"
+      },
+      {
+        "title": "Epistle to Polycarp",
+        "url": "https://www.newadvent.org/fathers/0110.htm"
+      },
+      {
+        "title": "The Martyrdom of Ignatius",
+        "url": "https://www.newadvent.org/fathers/0123.htm"
+      },
+      {
+        "title": "The Spurious Epistles",
+        "url": "https://www.newadvent.org/fathers/0114.htm"
+      }
+    ]
+  },
+  {
+    "id": "irenaeus_lyon",
+    "name": "Ireneu de Lyon",
+    "name_en": "Irenaeus of Lyon",
+    "period": "ante_nicene",
+    "dates": "c.130–202",
+    "tradition": "catholic_orthodox",
+    "works": [
+      {
+        "title": "Adversus haereses",
+        "url": "https://www.newadvent.org/fathers/0103.htm"
+      },
+      {
+        "title": "Fragments from the Lost Writings of Irenaeus",
+        "url": "https://www.newadvent.org/fathers/0134.htm"
+      }
+    ]
+  },
+  {
+    "id": "jerome",
+    "name": "Jerónimo",
+    "name_en": "Jerome",
+    "period": "post_nicene",
+    "dates": "c.342–420",
+    "tradition": "western",
+    "works": [
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/3001.htm"
+      },
+      {
+        "title": "The Perpetual Virginity of Blessed Mary",
+        "url": "https://www.newadvent.org/fathers/3007.htm"
+      },
+      {
+        "title": "To Pammachius Against John of Jerusalem",
+        "url": "https://www.newadvent.org/fathers/3004.htm"
+      },
+      {
+        "title": "The Dialogue Against the Luciferians",
+        "url": "https://www.newadvent.org/fathers/3005.htm"
+      },
+      {
+        "title": "The Life of Malchus, the Captive Monk",
+        "url": "https://www.newadvent.org/fathers/3006.htm"
+      },
+      {
+        "title": "The Life of S. Hilarion",
+        "url": "https://www.newadvent.org/fathers/3003.htm"
+      },
+      {
+        "title": "The Life of Paulus the First Hermit",
+        "url": "https://www.newadvent.org/fathers/3008.htm"
+      },
+      {
+        "title": "Against Jovinianus",
+        "url": "https://www.newadvent.org/fathers/3009.htm"
+      },
+      {
+        "title": "Against Vigilantius",
+        "url": "https://www.newadvent.org/fathers/3010.htm"
+      },
+      {
+        "title": "Against the Pelagians",
+        "url": "https://www.newadvent.org/fathers/3011.htm"
+      },
+      {
+        "title": "Prefaces",
+        "url": "https://www.newadvent.org/fathers/3002.htm"
+      },
+      {
+        "title": "De Viris Illustribus (Illustrious Men)",
+        "url": "https://www.newadvent.org/fathers/2708.htm"
+      },
+      {
+        "title": "Apology for himself against the Books of Rufinus",
+        "url": "https://www.newadvent.org/fathers/2710.htm"
+      }
+    ]
+  },
+  {
+    "id": "john_damascus",
+    "name": "João Damasceno",
+    "name_en": "John of Damascus",
+    "period": "post_nicene",
+    "dates": "c.675–749",
+    "tradition": "eastern_orthodox",
+    "works": [
+      {
+        "title": "Exposition of the Faith",
+        "url": "https://www.newadvent.org/fathers/3304.htm"
+      }
+    ]
+  },
+  {
+    "id": "john_cassian",
+    "name": "John Cassian",
+    "name_en": "John Cassian",
+    "period": "nicene",
+    "dates": "c. 360-c. 435",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Institutes",
+        "url": "https://www.newadvent.org/fathers/3507.htm"
+      },
+      {
+        "title": "Conferences",
+        "url": "https://www.newadvent.org/fathers/3508.htm"
+      },
+      {
+        "title": "On the Incarnation of the Lord (Against Nestorius)",
+        "url": "https://www.newadvent.org/fathers/3509.htm"
+      }
+    ]
+  },
+  {
+    "id": "john_chrysostom",
+    "name": "João Crisóstomo",
+    "name_en": "John Chrysostom",
+    "period": "nicene",
+    "dates": "c.347–407",
+    "tradition": "eastern_orthodox",
+    "works": [
+      {
+        "title": "Homilies on the Gospel of St. Matthew",
+        "url": "https://www.newadvent.org/fathers/2001.htm"
+      },
+      {
+        "title": "Homilies on Acts",
+        "url": "https://www.newadvent.org/fathers/2101.htm"
+      },
+      {
+        "title": "Homilies on Romans",
+        "url": "https://www.newadvent.org/fathers/2102.htm"
+      },
+      {
+        "title": "Homilies on First Corinthians",
+        "url": "https://www.newadvent.org/fathers/2201.htm"
+      },
+      {
+        "title": "Homilies on Second Corinthians",
+        "url": "https://www.newadvent.org/fathers/2202.htm"
+      },
+      {
+        "title": "Homilies on Ephesians",
+        "url": "https://www.newadvent.org/fathers/2301.htm"
+      },
+      {
+        "title": "Homilies on Philippians",
+        "url": "https://www.newadvent.org/fathers/2302.htm"
+      },
+      {
+        "title": "Homilies on Colossians",
+        "url": "https://www.newadvent.org/fathers/2303.htm"
+      },
+      {
+        "title": "Homilies on First Thessalonians",
+        "url": "https://www.newadvent.org/fathers/2304.htm"
+      },
+      {
+        "title": "Homilies on Second Thessalonians",
+        "url": "https://www.newadvent.org/fathers/2305.htm"
+      },
+      {
+        "title": "Homilies on First Timothy",
+        "url": "https://www.newadvent.org/fathers/2306.htm"
+      },
+      {
+        "title": "Homilies on Second Timothy",
+        "url": "https://www.newadvent.org/fathers/2307.htm"
+      },
+      {
+        "title": "Homilies on Titus",
+        "url": "https://www.newadvent.org/fathers/2308.htm"
+      },
+      {
+        "title": "Homilies on Philemon",
+        "url": "https://www.newadvent.org/fathers/2309.htm"
+      },
+      {
+        "title": "Commentary on Galatians",
+        "url": "https://www.newadvent.org/fathers/2310.htm"
+      },
+      {
+        "title": "Homilies on the Gospel of John",
+        "url": "https://www.newadvent.org/fathers/2401.htm"
+      },
+      {
+        "title": "Homilies on the Epistle to the Hebrews",
+        "url": "https://www.newadvent.org/fathers/2402.htm"
+      },
+      {
+        "title": "Homilies on the Statues",
+        "url": "https://www.newadvent.org/fathers/1901.htm"
+      },
+      {
+        "title": "No One Can Harm the Man Who Does Not Injure Himself",
+        "url": "https://www.newadvent.org/fathers/1902.htm"
+      },
+      {
+        "title": "Two Letters to Theodore After His Fall",
+        "url": "https://www.newadvent.org/fathers/1903.htm"
+      },
+      {
+        "title": "Letter to a Young Widow",
+        "url": "https://www.newadvent.org/fathers/1904.htm"
+      },
+      {
+        "title": "Homily on St. Ignatius",
+        "url": "https://www.newadvent.org/fathers/1905.htm"
+      },
+      {
+        "title": "Homily on St. Babylas",
+        "url": "https://www.newadvent.org/fathers/1906.htm"
+      },
+      {
+        "title": "Homily Concerning \"Lowliness of Mind\"",
+        "url": "https://www.newadvent.org/fathers/1907.htm"
+      },
+      {
+        "title": "Instructions to Catechumens",
+        "url": "https://www.newadvent.org/fathers/1908.htm"
+      },
+      {
+        "title": "Three Homilies on the Power of Satan",
+        "url": "https://www.newadvent.org/fathers/1919.htm"
+      },
+      {
+        "title": "Homily on the Passage \"Father, if it be possible ...\"",
+        "url": "https://www.newadvent.org/fathers/1910.htm"
+      },
+      {
+        "title": "Homily on the Paralytic Lowered Through the Roof",
+        "url": "https://www.newadvent.org/fathers/1911.htm"
+      },
+      {
+        "title": "Homily on the Passage \"If your enemy hunger, feed him.\"",
+        "url": "https://www.newadvent.org/fathers/1912.htm"
+      },
+      {
+        "title": "Homily Against Publishing the Errors of the Brethren",
+        "url": "https://www.newadvent.org/fathers/1913.htm"
+      },
+      {
+        "title": "First Homily on Eutropius",
+        "url": "https://www.newadvent.org/fathers/1914.htm"
+      },
+      {
+        "title": "Second Homily on Eutropius (After His Captivity)",
+        "url": "https://www.newadvent.org/fathers/1915.htm"
+      },
+      {
+        "title": "Four Letters to Olympias",
+        "url": "https://www.newadvent.org/fathers/1916.htm"
+      },
+      {
+        "title": "Letter to Some Priests of Antioch",
+        "url": "https://www.newadvent.org/fathers/1917.htm"
+      },
+      {
+        "title": "Correspondence with Pope Innocent I",
+        "url": "https://www.newadvent.org/fathers/1918.htm"
+      },
+      {
+        "title": "On the Priesthood",
+        "url": "https://www.newadvent.org/fathers/1922.htm"
+      }
+    ]
+  },
+  {
+    "id": "julius_africanus",
+    "name": "Julius Africanus",
+    "name_en": "Julius Africanus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Extant Writings",
+        "url": "https://www.newadvent.org/fathers/0614.htm"
+      }
+    ]
+  },
+  {
+    "id": "justin_martyr",
+    "name": "Justino Mártir",
+    "name_en": "Justin Martyr",
+    "period": "ante_nicene",
+    "dates": "c.100–165",
+    "tradition": "catholic_orthodox",
+    "works": [
+      {
+        "title": "First Apology",
+        "url": "https://www.newadvent.org/fathers/0126.htm"
+      },
+      {
+        "title": "Second Apology",
+        "url": "https://www.newadvent.org/fathers/0127.htm"
+      },
+      {
+        "title": "Dialogue with Trypho",
+        "url": "https://www.newadvent.org/fathers/0128.htm"
+      },
+      {
+        "title": "Hortatory Address to the Greeks",
+        "url": "https://www.newadvent.org/fathers/0129.htm"
+      },
+      {
+        "title": "On the Sole Government of God",
+        "url": "https://www.newadvent.org/fathers/0130.htm"
+      },
+      {
+        "title": "Fragments of the Lost Work on the Resurrection",
+        "url": "https://www.newadvent.org/fathers/0131.htm"
+      },
+      {
+        "title": "Miscellaneous Fragments from Lost Writings",
+        "url": "https://www.newadvent.org/fathers/0132.htm"
+      },
+      {
+        "title": "Martyrdom of Justin, Chariton, and other Roman Martyrs",
+        "url": "https://www.newadvent.org/fathers/0133.htm"
+      },
+      {
+        "title": "Discourse to the Greeks",
+        "url": "https://www.newadvent.org/fathers/0135.htm"
+      }
+    ]
+  },
+  {
+    "id": "lactantius",
+    "name": "Lactantius",
+    "name_en": "Lactantius",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "The Divine Institutes",
+        "url": "https://www.newadvent.org/fathers/0701.htm"
+      },
+      {
+        "title": "The Epitome of the Divine Institutes",
+        "url": "https://www.newadvent.org/fathers/0702.htm"
+      },
+      {
+        "title": "On the Anger of God",
+        "url": "https://www.newadvent.org/fathers/0703.htm"
+      },
+      {
+        "title": "On the Workmanship of God",
+        "url": "https://www.newadvent.org/fathers/0704.htm"
+      },
+      {
+        "title": "Of the Manner In Which the Persecutors Died",
+        "url": "https://www.newadvent.org/fathers/0705.htm"
+      },
+      {
+        "title": "Fragments of Lactantius",
+        "url": "https://www.newadvent.org/fathers/0706.htm"
+      },
+      {
+        "title": "The Phoenix",
+        "url": "https://www.newadvent.org/fathers/0707.htm"
+      },
+      {
+        "title": "A Poem on the Passion of the Lord",
+        "url": "https://www.newadvent.org/fathers/0708.htm"
+      }
+    ]
+  },
+  {
+    "id": "leo_great",
+    "name": "Leão Magno",
+    "name_en": "Leo the Great",
+    "period": "post_nicene",
+    "dates": "c.395–461",
+    "tradition": "western",
+    "works": [
+      {
+        "title": "Sermons",
+        "url": "https://www.newadvent.org/fathers/3603.htm"
+      },
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/3604.htm"
+      }
+    ]
+  },
+  {
+    "id": "malchion",
+    "name": "Malchion",
+    "name_en": "Malchion",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Epistle",
+        "url": "https://www.newadvent.org/fathers/0617.htm"
+      }
+    ]
+  },
+  {
+    "id": "mar_jacob",
+    "name": "Mar Jacob",
+    "name_en": "Mar Jacob",
+    "period": "post_nicene",
+    "dates": "452-521",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Canticle on Edessa",
+        "url": "https://www.newadvent.org/fathers/0851.htm"
+      },
+      {
+        "title": "Homily on Habib the Martyr",
+        "url": "https://www.newadvent.org/fathers/0860.htm"
+      },
+      {
+        "title": "Homily on Guria and Shamuna",
+        "url": "https://www.newadvent.org/fathers/0861.htm"
+      }
+    ]
+  },
+  {
+    "id": "mathetes",
+    "name": "Mathetes",
+    "name_en": "Mathetes",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Epistle to Diognetus",
+        "url": "https://www.newadvent.org/fathers/0101.htm"
+      }
+    ]
+  },
+  {
+    "id": "methodius",
+    "name": "Methodius",
+    "name_en": "Methodius",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "The Banquet of the Ten Virgins",
+        "url": "https://www.newadvent.org/fathers/0623.htm"
+      },
+      {
+        "title": "Concerning Free Will",
+        "url": "https://www.newadvent.org/fathers/0624.htm"
+      },
+      {
+        "title": "From the Discourse on the Resurrection",
+        "url": "https://www.newadvent.org/fathers/0625.htm"
+      },
+      {
+        "title": "Fragments",
+        "url": "https://www.newadvent.org/fathers/0626.htm"
+      },
+      {
+        "title": "Oration Concerning Simeon and Anna",
+        "url": "https://www.newadvent.org/fathers/0627.htm"
+      },
+      {
+        "title": "Oration on the Psalms",
+        "url": "https://www.newadvent.org/fathers/0628.htm"
+      },
+      {
+        "title": "Three Fragments from the Homily on the Cross and Passion of Christ",
+        "url": "https://www.newadvent.org/fathers/0629.htm"
+      }
+    ]
+  },
+  {
+    "id": "minucius_felix",
+    "name": "Minucius Felix",
+    "name_en": "Minucius Felix",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Octavius",
+        "url": "https://www.newadvent.org/fathers/0410.htm"
+      }
+    ]
+  },
+  {
+    "id": "moses_of_chorene",
+    "name": "Moses of Chorene",
+    "name_en": "Moses of Chorene",
+    "period": "nicene",
+    "dates": "c. 400-c. 490",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "History of Armenia",
+        "url": "https://www.newadvent.org/fathers/0859.htm"
+      }
+    ]
+  },
+  {
+    "id": "novatian",
+    "name": "Novatian",
+    "name_en": "Novatian",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Treatise Concerning the Trinity",
+        "url": "https://www.newadvent.org/fathers/0511.htm"
+      },
+      {
+        "title": "On the Jewish Meats",
+        "url": "https://www.newadvent.org/fathers/0512.htm"
+      }
+    ]
+  },
+  {
+    "id": "origen",
+    "name": "Orígenes",
+    "name_en": "Origen",
+    "period": "ante_nicene",
+    "dates": "c.184–253",
+    "tradition": "alexandrian",
+    "works": [
+      {
+        "title": "De Principiis",
+        "url": "https://www.newadvent.org/fathers/0412.htm"
+      },
+      {
+        "title": "Africanus to Origen",
+        "url": "https://www.newadvent.org/fathers/0413.htm"
+      },
+      {
+        "title": "Origen to Africanus",
+        "url": "https://www.newadvent.org/fathers/0414.htm"
+      },
+      {
+        "title": "Origen to Gregory",
+        "url": "https://www.newadvent.org/fathers/0415.htm"
+      },
+      {
+        "title": "Against Celsus",
+        "url": "https://www.newadvent.org/fathers/0416.htm"
+      },
+      {
+        "title": "Letter of Origen to Gregory",
+        "url": "https://www.newadvent.org/fathers/1014.htm"
+      },
+      {
+        "title": "Commentary on the Gospel of John",
+        "url": "https://www.newadvent.org/fathers/1015.htm"
+      },
+      {
+        "title": "Commentary on the Gospel of Matthew",
+        "url": "https://www.newadvent.org/fathers/1016.htm"
+      }
+    ]
+  },
+  {
+    "id": "pamphilus",
+    "name": "Pamphilus",
+    "name_en": "Pamphilus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Exposition on the Acts of the Apostles",
+        "url": "https://www.newadvent.org/fathers/0615.htm"
+      }
+    ]
+  },
+  {
+    "id": "papias",
+    "name": "Papias",
+    "name_en": "Papias",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Fragments",
+        "url": "https://www.newadvent.org/fathers/0125.htm"
+      }
+    ]
+  },
+  {
+    "id": "peter_of_alexandria",
+    "name": "Peter of Alexandria",
+    "name_en": "Peter of Alexandria",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "The Genuine Acts",
+        "url": "https://www.newadvent.org/fathers/0619.htm"
+      },
+      {
+        "title": "The Canonical Epistle",
+        "url": "https://www.newadvent.org/fathers/0620.htm"
+      },
+      {
+        "title": "Fragments",
+        "url": "https://www.newadvent.org/fathers/0621.htm"
+      }
+    ]
+  },
+  {
+    "id": "polycarp_smyrna",
+    "name": "Policarpo de Esmirna",
+    "name_en": "Polycarp of Smyrna",
+    "period": "apostolic",
+    "dates": "c.69–155",
+    "tradition": "catholic_orthodox",
+    "works": [
+      {
+        "title": "Epistle to the Philippians",
+        "url": "https://www.newadvent.org/fathers/0136.htm"
+      },
+      {
+        "title": "The Martyrdom of Polycarp",
+        "url": "https://www.newadvent.org/fathers/0102.htm"
+      }
+    ]
+  },
+  {
+    "id": "rufinus",
+    "name": "Rufinus",
+    "name_en": "Rufinus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Apology",
+        "url": "https://www.newadvent.org/fathers/2709.htm"
+      },
+      {
+        "title": "Commentary on the Apostles' Creed",
+        "url": "https://www.newadvent.org/fathers/2711.htm"
+      },
+      {
+        "title": "Prefaces and Other Works",
+        "url": "https://www.newadvent.org/fathers/2712.htm"
+      }
+    ]
+  },
+  {
+    "id": "socrates_scholasticus",
+    "name": "Socrates Scholasticus",
+    "name_en": "Socrates Scholasticus",
+    "period": "nicene",
+    "dates": "c. 379-c. 450",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Ecclesiastical History",
+        "url": "https://www.newadvent.org/fathers/2601.htm"
+      }
+    ]
+  },
+  {
+    "id": "sozomen",
+    "name": "Sozomen",
+    "name_en": "Sozomen",
+    "period": "nicene",
+    "dates": "c. 375-c. 447",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Ecclesiastical History",
+        "url": "https://www.newadvent.org/fathers/2602.htm"
+      }
+    ]
+  },
+  {
+    "id": "sulpitius_severus",
+    "name": "Sulpitius Severus",
+    "name_en": "Sulpitius Severus",
+    "period": "nicene",
+    "dates": "c. 363-c. 420",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "On the Life of St. Martin",
+        "url": "https://www.newadvent.org/fathers/3501.htm"
+      },
+      {
+        "title": "Genuine",
+        "url": "https://www.newadvent.org/fathers/3502.htm"
+      },
+      {
+        "title": "Dubious",
+        "url": "https://www.newadvent.org/fathers/3504.htm"
+      },
+      {
+        "title": "Dialogues",
+        "url": "https://www.newadvent.org/fathers/3503.htm"
+      },
+      {
+        "title": "Sacred History",
+        "url": "https://www.newadvent.org/fathers/3505.htm"
+      }
+    ]
+  },
+  {
+    "id": "tatian",
+    "name": "Tatian",
+    "name_en": "Tatian",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Address to the Greeks",
+        "url": "https://www.newadvent.org/fathers/0202.htm"
+      },
+      {
+        "title": "Fragments",
+        "url": "https://www.newadvent.org/fathers/0203.htm"
+      },
+      {
+        "title": "The Diatessaron",
+        "url": "https://www.newadvent.org/fathers/1002.htm"
+      }
+    ]
+  },
+  {
+    "id": "tertullian",
+    "name": "Tertuliano",
+    "name_en": "Tertullian",
+    "period": "ante_nicene",
+    "dates": "c.155–240",
+    "tradition": "western",
+    "works": [
+      {
+        "title": "The Apology",
+        "url": "https://www.newadvent.org/fathers/0301.htm"
+      },
+      {
+        "title": "On Idolatry",
+        "url": "https://www.newadvent.org/fathers/0302.htm"
+      },
+      {
+        "title": "De Spectaculis (The Shows)",
+        "url": "https://www.newadvent.org/fathers/0303.htm"
+      },
+      {
+        "title": "De Corona (The Chaplet)",
+        "url": "https://www.newadvent.org/fathers/0304.htm"
+      },
+      {
+        "title": "To Scapula",
+        "url": "https://www.newadvent.org/fathers/0305.htm"
+      },
+      {
+        "title": "Ad Nationes",
+        "url": "https://www.newadvent.org/fathers/0306.htm"
+      },
+      {
+        "title": "An Answer to the Jews",
+        "url": "https://www.newadvent.org/fathers/0308.htm"
+      },
+      {
+        "title": "The Soul's Testimony",
+        "url": "https://www.newadvent.org/fathers/0309.htm"
+      },
+      {
+        "title": "A Treatise on the Soul",
+        "url": "https://www.newadvent.org/fathers/0310.htm"
+      },
+      {
+        "title": "The Prescription Against Heretics",
+        "url": "https://www.newadvent.org/fathers/0311.htm"
+      },
+      {
+        "title": "Against Marcion",
+        "url": "https://www.newadvent.org/fathers/0312.htm"
+      },
+      {
+        "title": "Against Hermogenes",
+        "url": "https://www.newadvent.org/fathers/0313.htm"
+      },
+      {
+        "title": "Against the Valentinians",
+        "url": "https://www.newadvent.org/fathers/0314.htm"
+      },
+      {
+        "title": "On the Flesh of Christ",
+        "url": "https://www.newadvent.org/fathers/0315.htm"
+      },
+      {
+        "title": "On the Resurrection of the Flesh",
+        "url": "https://www.newadvent.org/fathers/0316.htm"
+      },
+      {
+        "title": "Against Praxeas",
+        "url": "https://www.newadvent.org/fathers/0317.htm"
+      },
+      {
+        "title": "Scorpiace",
+        "url": "https://www.newadvent.org/fathers/0318.htm"
+      },
+      {
+        "title": "Appendix (Against All Heresies)",
+        "url": "https://www.newadvent.org/fathers/0319.htm"
+      },
+      {
+        "title": "On Repentance",
+        "url": "https://www.newadvent.org/fathers/0320.htm"
+      },
+      {
+        "title": "On Baptism",
+        "url": "https://www.newadvent.org/fathers/0321.htm"
+      },
+      {
+        "title": "On Prayer",
+        "url": "https://www.newadvent.org/fathers/0322.htm"
+      },
+      {
+        "title": "Ad Martyras",
+        "url": "https://www.newadvent.org/fathers/0323.htm"
+      },
+      {
+        "title": "The Martyrdom of Perpetua and Felicity",
+        "url": "https://www.newadvent.org/fathers/0324.htm"
+      },
+      {
+        "title": "Of Patience",
+        "url": "https://www.newadvent.org/fathers/0325.htm"
+      },
+      {
+        "title": "On the Pallium",
+        "url": "https://www.newadvent.org/fathers/0401.htm"
+      },
+      {
+        "title": "On the Apparel of Women",
+        "url": "https://www.newadvent.org/fathers/0402.htm"
+      },
+      {
+        "title": "On the Veiling of Virgins",
+        "url": "https://www.newadvent.org/fathers/0403.htm"
+      },
+      {
+        "title": "To His Wife",
+        "url": "https://www.newadvent.org/fathers/0404.htm"
+      },
+      {
+        "title": "On Exhortation to Chastity",
+        "url": "https://www.newadvent.org/fathers/0405.htm"
+      },
+      {
+        "title": "On Monogamy",
+        "url": "https://www.newadvent.org/fathers/0406.htm"
+      },
+      {
+        "title": "On Modesty",
+        "url": "https://www.newadvent.org/fathers/0407.htm"
+      },
+      {
+        "title": "On Fasting",
+        "url": "https://www.newadvent.org/fathers/0408.htm"
+      },
+      {
+        "title": "De Fuga in Persecutione",
+        "url": "https://www.newadvent.org/fathers/0409.htm"
+      }
+    ]
+  },
+  {
+    "id": "theodoret",
+    "name": "Theodoret",
+    "name_en": "Theodoret",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Counter-Statements to Cyril's 12 Anathemas against Nestorius",
+        "url": "https://www.newadvent.org/fathers/2701.htm"
+      },
+      {
+        "title": "Ecclesiastical History",
+        "url": "https://www.newadvent.org/fathers/2702.htm"
+      },
+      {
+        "title": "Dialogues (\"Eranistes\" or \"Polymorphus\")",
+        "url": "https://www.newadvent.org/fathers/2703.htm"
+      },
+      {
+        "title": "Demonstrations by Syllogism",
+        "url": "https://www.newadvent.org/fathers/2704.htm"
+      },
+      {
+        "title": "Letters",
+        "url": "https://www.newadvent.org/fathers/2707.htm"
+      }
+    ]
+  },
+  {
+    "id": "theodotus",
+    "name": "Theodotus",
+    "name_en": "Theodotus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Excerpts",
+        "url": "https://www.newadvent.org/fathers/0802.htm"
+      }
+    ]
+  },
+  {
+    "id": "theophilus",
+    "name": "Theophilus",
+    "name_en": "Theophilus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Theophilus to Autolycus",
+        "url": "https://www.newadvent.org/fathers/0204.htm"
+      }
+    ]
+  },
+  {
+    "id": "venantius",
+    "name": "Venantius",
+    "name_en": "Venantius",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Poem on Easter",
+        "url": "https://www.newadvent.org/fathers/0709.htm"
+      }
+    ]
+  },
+  {
+    "id": "victorinus",
+    "name": "Victorinus",
+    "name_en": "Victorinus",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "On the Creation of the World",
+        "url": "https://www.newadvent.org/fathers/0711.htm"
+      },
+      {
+        "title": "Commentary on the Apocalypse of the Blessed John",
+        "url": "https://www.newadvent.org/fathers/0712.htm"
+      }
+    ]
+  },
+  {
+    "id": "vincent_of_l_rins_d_c_450",
+    "name": "Vincent of Lérins (d. c. 450)",
+    "name_en": "Vincent of Lérins (d. c. 450)",
+    "period": "unknown",
+    "dates": "",
+    "tradition": "unknown",
+    "works": [
+      {
+        "title": "Commonitory for the Antiquity and Universality of the Catholic Faith",
+        "url": "https://www.newadvent.org/fathers/3506.htm"
+      }
+    ]
+  }
+]
