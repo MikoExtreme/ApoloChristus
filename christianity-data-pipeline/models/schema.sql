@@ -32,10 +32,11 @@ CREATE TABLE IF NOT EXISTS verses (
     id          BIGSERIAL PRIMARY KEY,
     version_id  TEXT NOT NULL REFERENCES bible_versions(id) ON DELETE CASCADE,
     testament   TEXT NOT NULL CHECK (testament IN ('OT', 'NT')),
-    book        TEXT NOT NULL,              -- ex: "GEN", "MAT"
+    book        TEXT NOT NULL,              -- ex: "GEN", "MAT", "TOB" (deuterocanónico)
     chapter     SMALLINT NOT NULL,
     verse       SMALLINT NOT NULL,
     text        TEXT NOT NULL,
+    is_deuterocanonical BOOLEAN NOT NULL DEFAULT FALSE,  -- Tobias, Judite, Sabedoria, etc.
     -- índice para pesquisa full-text (por língua)
     search_vec  TSVECTOR GENERATED ALWAYS AS (
         to_tsvector('portuguese', immutable_unaccent(text))
@@ -48,6 +49,25 @@ CREATE INDEX IF NOT EXISTS verses_search_idx ON verses USING GIN (search_vec);
 -- Índice de navegação rápida
 CREATE INDEX IF NOT EXISTS verses_ref_idx ON verses (version_id, book, chapter, verse);
 CREATE INDEX IF NOT EXISTS verses_book_idx ON verses (book, chapter);
+CREATE INDEX IF NOT EXISTS verses_deutero_idx ON verses (is_deuterocanonical) WHERE is_deuterocanonical;
+
+-- Referências cruzadas entre versículos (OpenBible.info, ~340k entradas,
+-- cada uma com um "voto" de qualidade da comunidade — usamos só votes >= 3).
+-- Independente de versão/tradução: referencia-se por (livro, capítulo, versículo).
+CREATE TABLE IF NOT EXISTS cross_references (
+    id          BIGSERIAL PRIMARY KEY,
+    source_book TEXT NOT NULL,
+    source_ch   SMALLINT NOT NULL,
+    source_v    SMALLINT NOT NULL,
+    target_book TEXT NOT NULL,
+    target_ch   SMALLINT NOT NULL,
+    target_v    SMALLINT NOT NULL,
+    votes       INT NOT NULL DEFAULT 0,
+    UNIQUE (source_book, source_ch, source_v, target_book, target_ch, target_v)
+);
+
+CREATE INDEX IF NOT EXISTS cross_references_source_idx
+    ON cross_references (source_book, source_ch, source_v);
 
 -- ============================================================
 -- 2. PATRÍSTICA
@@ -164,6 +184,7 @@ $$;
 
 ALTER TABLE bible_versions      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE verses               ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cross_references      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE patristic_authors    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE patristic_works      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE patristic_sections   ENABLE ROW LEVEL SECURITY;
@@ -172,6 +193,7 @@ ALTER TABLE apocryphal_sections  ENABLE ROW LEVEL SECURITY;
 
 -- Leitura pública para todos os textos (são domínio público)
 CREATE POLICY "public_read_verses"     ON verses              FOR SELECT USING (true);
+CREATE POLICY "public_read_crossrefs"  ON cross_references    FOR SELECT USING (true);
 CREATE POLICY "public_read_patristics" ON patristic_sections  FOR SELECT USING (true);
 CREATE POLICY "public_read_apocrypha"  ON apocryphal_sections FOR SELECT USING (true);
 CREATE POLICY "public_read_meta"       ON bible_versions      FOR SELECT USING (true);

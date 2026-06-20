@@ -11,6 +11,7 @@ Pré-requisitos:
 Tabelas esperadas (ver schema.sql):
   - bible_versions     (metadados de cada tradução)
   - verses             (todos os versículos)
+  - cross_references   (referências cruzadas entre versículos)
   - patristic_authors  (metadados dos Pais da Igreja)
   - patristic_works    (obras por autor)
   - patristic_sections (parágrafos/secções de cada obra)
@@ -78,6 +79,20 @@ def load_verses(client: Client, bible_dir: Path):
                 batch = verses[i:i + BATCH_SIZE]
                 client.table("verses").upsert(batch, on_conflict="version_id,book,chapter,verse").execute()
                 log.info(f"  [{version_id}/{book_file.stem}] {i+len(batch)}/{len(verses)} versículos")
+
+
+def load_crossrefs(client: Client, crossrefs_dir: Path):
+    """Carrega as referências cruzadas em batches."""
+    refs_file = crossrefs_dir / "cross_references.json"
+    if not refs_file.exists():
+        return
+
+    refs = json.loads(refs_file.read_text(encoding="utf-8"))
+    on_conflict = "source_book,source_ch,source_v,target_book,target_ch,target_v"
+    for i in range(0, len(refs), BATCH_SIZE):
+        batch = refs[i:i + BATCH_SIZE]
+        client.table("cross_references").upsert(batch, on_conflict=on_conflict).execute()
+        log.info(f"  [cross_references] {i+len(batch)}/{len(refs)} referências")
 
 
 def load_patristics(client: Client, patristics_dir: Path):
@@ -172,6 +187,7 @@ def load_apocrypha(client: Client, apocrypha_dir: Path):
 
 def run(
     bible_dir:      str = "output/bible",
+    crossrefs_dir:  str = "output/crossrefs",
     patristics_dir: str = "output/patristics",
     apocrypha_dir:  str = "output/apocrypha",
 ):
@@ -183,6 +199,10 @@ def run(
         load_bible_versions(client, Path(bible_dir))
         log.info("\n--- Versículos ---")
         load_verses(client, Path(bible_dir))
+
+    if Path(crossrefs_dir).exists():
+        log.info("\n--- Referências cruzadas ---")
+        load_crossrefs(client, Path(crossrefs_dir))
 
     if Path(patristics_dir).exists():
         log.info("\n--- Patrística ---")

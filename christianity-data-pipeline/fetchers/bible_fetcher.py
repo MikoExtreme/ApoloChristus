@@ -61,6 +61,23 @@ CANONICAL_BOOKS = {
     ],
 }
 
+# Livros deuterocanónicos/apócrifos disponíveis no en-kjv (única versão do
+# wldeh/bible-api com "Bible with Deuterocanon" no scope). Contagem de
+# capítulos confirmada diretamente na API (atenção: a listagem de diretório
+# do GitHub duplica cada entrada — pasta + ficheiro ".json" — por isso só
+# contam os "*.json" reais).
+DEUTEROCANONICAL_BOOKS = [
+    ("1ES", 9),  ("2ES", 16), ("TOB", 14), ("JDT", 16), ("WIS", 19),
+    ("SIR", 51), ("BAR", 6),  ("BEL", 1),  ("ESG", 7),  ("MAN", 1),
+    ("1MA", 16), ("2MA", 15), ("S3Y", 1),  ("SUS", 1),
+]
+
+# As adições gregas a Ester (ESG) são numeradas como continuação dos 10
+# capítulos do Ester hebraico — os capítulos reais são 10–16, não 1–7.
+DEUTEROCANONICAL_START_CHAPTER = {
+    "ESG": 10,
+}
+
 # Mapa: código canónico -> nome de pasta no wldeh/bible-api (inglês)
 WLDEH_EN_BOOK_NAMES = {
     "GEN": "genesis", "EXO": "exodus", "LEV": "leviticus", "NUM": "numbers",
@@ -80,6 +97,16 @@ WLDEH_EN_BOOK_NAMES = {
     "TIT": "titus", "PHM": "philemon", "HEB": "hebrews", "JAS": "james",
     "1PE": "1peter", "2PE": "2peter", "1JN": "1john", "2JN": "2john",
     "3JN": "3john", "JUD": "jude", "REV": "revelation",
+}
+
+# Mapa: código canónico -> nome de pasta no wldeh/bible-api (inglês,
+# deuterocanónicos — só existe para en-kjv).
+WLDEH_EN_DEUTERO_BOOK_NAMES = {
+    "1ES": "1esdras", "2ES": "2esdras", "TOB": "tobit", "JDT": "judith",
+    "WIS": "wisdom", "SIR": "ecclesiasticus", "BAR": "baruch",
+    "BEL": "belandthedragon", "ESG": "esther(greek)", "MAN": "manasseh",
+    "1MA": "1maccabees", "2MA": "2maccabees", "S3Y": "songofthethree",
+    "SUS": "susanna",
 }
 
 # Mapa: código canónico -> nome de pasta no wldeh/bible-api (grego, só NT)
@@ -129,6 +156,7 @@ PT_BOOK_ABBREV = {
 # (mostrar ao utilizador de onde veio cada texto, não só "domínio público").
 VERSIONS = [
     {"id": "en-kjv",    "name": "King James Version",                  "lang": "en", "license": "public_domain", "source": "wldeh", "book_names": WLDEH_EN_BOOK_NAMES,
+     "deutero_book_names": WLDEH_EN_DEUTERO_BOOK_NAMES,
      "source_url": "https://github.com/wldeh/bible-api/tree/main/bibles/en-kjv"},
     {"id": "en-asv",    "name": "American Standard Version",           "lang": "en", "license": "public_domain", "source": "wldeh", "book_names": WLDEH_EN_BOOK_NAMES,
      "source_url": "https://github.com/wldeh/bible-api/tree/main/bibles/en-asv"},
@@ -164,7 +192,8 @@ def fetch_chapter_wldeh(version_id: str, book_folder: str, chapter: int, retries
     return None
 
 
-def normalize_wldeh_chapter(raw: dict, version_id: str, book_code: str, testament: str, chapter_num: int) -> list[dict]:
+def normalize_wldeh_chapter(raw: dict, version_id: str, book_code: str, testament: str, chapter_num: int,
+                             is_deuterocanonical: bool = False) -> list[dict]:
     # Algumas versões (ex: en-kjv) repetem cada item de "data" duas vezes —
     # bug confirmado na fonte, não no nosso parsing. Deduplicamos por nº de
     # versículo, mantendo a primeira ocorrência.
@@ -188,8 +217,21 @@ def normalize_wldeh_chapter(raw: dict, version_id: str, book_code: str, testamen
             "chapter":    chapter_num,
             "verse":      verse_num,
             "text":       text,
+            "is_deuterocanonical": is_deuterocanonical,
         })
     return verses
+
+
+def fetch_book_wldeh(vid: str, book_code: str, book_folder: str, testament: str, num_chapters: int,
+                      delay: float, is_deuterocanonical: bool = False, start_chapter: int = 1) -> list[dict]:
+    book_verses = []
+    log.info(f"[{vid}] {testament}/{book_code} ({num_chapters} capítulos, a partir de {start_chapter})...")
+    for ch in range(start_chapter, start_chapter + num_chapters):
+        raw = fetch_chapter_wldeh(vid, book_folder, ch)
+        if raw:
+            book_verses.extend(normalize_wldeh_chapter(raw, vid, book_code, testament, ch, is_deuterocanonical))
+        time.sleep(delay)
+    return book_verses
 
 
 def fetch_version_wldeh(version: dict, output_dir: Path, delay: float = 0.2):
@@ -210,20 +252,32 @@ def fetch_version_wldeh(version: dict, output_dir: Path, delay: float = 0.2):
             if not book_folder:
                 continue
 
-            book_verses = []
-            log.info(f"[{vid}] {testament}/{book_code} ({num_chapters} capítulos)...")
-
-            for ch in range(1, num_chapters + 1):
-                raw = fetch_chapter_wldeh(vid, book_folder, ch)
-                if raw:
-                    book_verses.extend(normalize_wldeh_chapter(raw, vid, book_code, testament, ch))
-                time.sleep(delay)
+            book_verses = fetch_book_wldeh(vid, book_code, book_folder, testament, num_chapters, delay)
 
             if book_verses:
                 out_file = version_dir / f"{book_code}.json"
                 out_file.write_text(json.dumps(book_verses, ensure_ascii=False, indent=2), encoding="utf-8")
                 total_verses += len(book_verses)
                 log.info(f"  → {len(book_verses)} versículos guardados em {out_file.name}")
+            else:
+                log.warning(f"  ✗ Sem versículos para {book_code} ({book_folder})")
+
+    deutero_book_names = version.get("deutero_book_names")
+    if deutero_book_names:
+        for book_code, num_chapters in DEUTEROCANONICAL_BOOKS:
+            book_folder = deutero_book_names.get(book_code)
+            if not book_folder:
+                continue
+
+            start_ch = DEUTEROCANONICAL_START_CHAPTER.get(book_code, 1)
+            book_verses = fetch_book_wldeh(vid, book_code, book_folder, "OT", num_chapters, delay,
+                                            is_deuterocanonical=True, start_chapter=start_ch)
+
+            if book_verses:
+                out_file = version_dir / f"{book_code}.json"
+                out_file.write_text(json.dumps(book_verses, ensure_ascii=False, indent=2), encoding="utf-8")
+                total_verses += len(book_verses)
+                log.info(f"  → {len(book_verses)} versículos (deuterocanónico) guardados em {out_file.name}")
             else:
                 log.warning(f"  ✗ Sem versículos para {book_code} ({book_folder})")
 
@@ -272,6 +326,7 @@ def fetch_version_thiagobodruk(version: dict, output_dir: Path) -> int:
                     "chapter":    ch_idx,
                     "verse":      v_idx,
                     "text":       text,
+                    "is_deuterocanonical": False,
                 })
         by_book[code] = verses
 
