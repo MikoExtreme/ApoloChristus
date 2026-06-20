@@ -1,0 +1,464 @@
+==============================================================================
+APOLOCHRISTUS — REVISÃO DETALHADA DO BACKEND/BD (até 2026-06-20)
+==============================================================================
+Documento de backup/contexto. Se uma conversa futura perder o histórico,
+este ficheiro tem tudo o necessário para retomar o trabalho sem repetir
+investigação já feita. Vive no repositório (Git) por isso sobrevive a
+qualquer perda de contexto de conversa.
+
+------------------------------------------------------------------------------
+1. VISÃO DO PROJETO
+------------------------------------------------------------------------------
+
+ApoloChristus é uma aplicação web que agrega tudo sobre Cristianismo —
+Bíblia (várias traduções e línguas), Pais da Igreja, apócrifos, credos e
+confissões, léxico/interlinear original — numa única plataforma pesquisável.
+
+Motivação central (do utilizador, registada em memória):
+  Resolver 3 problemas pessoais de pesquisa sobre Cristianismo:
+  1. Não saber ONDE pesquisar (informação espalhada por dezenas de sites)
+  2. Não saber O QUE pesquisar (falta de pontos de entrada/descoberta)
+  3. Não saber se a informação encontrada está CORRETA (falta de fontes
+     primárias e de transparência sobre proveniência)
+
+Isto orienta decisões de design: agregação (resolve 1), cross-references
++ citações patrísticas + estrutura de navegação (resolve 2), fontes
+primárias + campo source_url/license em quase todas as tabelas (resolve 3).
+
+Comparação com Logos Bible Software (discutida em sessão): ApoloChristus
+não compete em profundidade de ferramentas, mas ocupa um nicho real —
+grátis, aberto, multilingue, com Patrística como pilar central (não um
+extra pago) — que nem o Logos (pago, fechado) nem o BibleGateway/YouVersion
+(grátis mas raso) cobrem.
+
+Stack: React + Vite (frontend, ainda por construir) · Supabase/Postgres
+(BD) · Python (pipeline de ingestão) · GitHub Desktop (workflow de Git).
+
+GitHub: MikoExtreme/ApoloChristus
+Repo local: C:\Users\pedro\Desktop\ApoloChristus\ApoloChristus
+
+------------------------------------------------------------------------------
+2. ESTRUTURA DO REPOSITÓRIO
+------------------------------------------------------------------------------
+
+ApoloChristus/
+├── PLAN.md                     — plano vivo, atualizado a cada fase
+├── README.md
+├── .gitignore
+└── christianity-data-pipeline/
+    ├── README.md                — documentação técnica do pipeline
+    ├── requirements.txt          — requests, beautifulsoup4, supabase, python-dotenv
+    ├── .env                      — SUPABASE_URL + SUPABASE_SERVICE_KEY (NÃO versionado)
+    ├── .venv/                    — venv Python dedicado (NÃO versionado)
+    ├── fetchers/
+    │   ├── bible_fetcher.py
+    │   ├── patristics_fetcher.py
+    │   ├── patristic_catalog.json       — catálogo gerado dos 65 autores
+    │   ├── apocrypha_fetcher.py
+    │   ├── crossrefs_fetcher.py
+    │   ├── creeds_fetcher.py
+    │   ├── glossary_fetcher.py
+    │   ├── geography_fetcher.py
+    │   ├── geography_confidence_fetcher.py
+    │   ├── strongs_fetcher.py
+    │   ├── interlinear_fetcher.py
+    │   └── citations_fetcher.py          — lê dados já carregados, não é fetch externo
+    ├── models/
+    │   └── schema.sql            — schema completo, fonte de verdade da BD
+    ├── scripts/
+    │   └── load_to_supabase.py   — loader idempotente (upsert + on_conflict)
+    └── output/                   — JSON intermédio por fetcher (NÃO versionado, recriável)
+
+------------------------------------------------------------------------------
+3. WORKFLOW GIT ESTABELECIDO
+------------------------------------------------------------------------------
+
+- Um branch por tópico de trabalho, criados todos a partir do mesmo commit
+  inicial (595c53e "Bíblia, apócrifos e pais da Igreja").
+- Branches (todos já mergeados em main, por esta ordem):
+    1. Deuterocanónicos_e_Cross-references  (PR #1)
+    2. Credos_e_Confissões                  (PR #2)
+    3. Glossário                            (PR #3)
+    4. Geografia                            (PR #4, + melhoria depois, PR #8)
+    5. Concordância_e_Strong                (PR #5)
+    6. Morfologia_e_Interlinear              (PR #6)
+    7. Citações_Patristicas                  (PR #7)
+    8. Geografia (reaproveitado) — confiança/fontes (PR #8)
+- Regra aprendida: ANTES de começar a trabalhar num branch, fazer "merge
+  main → branch" para trazer o trabalho dos branches anteriores (evita
+  conflitos grandes no fim). Verificar sempre com `git log` / `git diff`
+  antes de assumir que está sincronizado — já aconteceu ficar esquecido.
+- O utilizador faz commit/merge no GitHub Desktop; eu verifico via
+  `git status`, `git log --oneline`, `git diff main HEAD --stat`.
+- REGRA DE OURO já confirmada pelo utilizador: posso avançar autonomamente
+  em trabalho de rotina sem pedir confirmação a cada passo — só param para
+  ações genuinamente arriscadas/destrutivas.
+
+------------------------------------------------------------------------------
+4. ESTADO ATUAL DA BASE DE DADOS (números exatos, confirmados 2026-06-20)
+------------------------------------------------------------------------------
+
+Tabela                          | Linhas
+---------------------------------|----------
+bible_versions                  |      6
+verses                          | 161 281   (dos quais 5 718 deuterocanónicos)
+cross_references                | 211 926
+patristic_authors               |     65
+patristic_works                 |    341
+patristic_sections              |  67 604
+patristic_citations             |  30 157
+apocryphal_works                |     39
+apocryphal_sections             |   2 895
+creeds_confessions              |     19
+creeds_confessions_sections     |   3 212
+glossary_terms                  |  20 827
+biblical_places                 |   1 232   (dos quais 1 050 com confidence_pct/sources)
+lexicon_entries                 |  22 710
+interlinear_words               | 425 437
+
+TOTAL aproximado de registos de texto/dados: ~950 000+
+
+------------------------------------------------------------------------------
+5. DETALHE POR ÁREA — O QUE FOI FEITO, BUGS ENCONTRADOS, DECISÕES
+------------------------------------------------------------------------------
+
+5.1 BÍBLIA (bible_fetcher.py) — 6 versões, 161 281 versículos
+-----------------------------------------------------------
+Fontes: wldeh/bible-api (GitHub) para en-kjv/en-asv/grc-grctr/hbo-wlc;
+thiagobodruk/biblia (GitHub) para pt-aa/pt-acf.
+
+Bugs reais encontrados (o código nunca tinha sido testado contra as
+fontes reais antes desta sessão):
+  - Endpoint CDN jsdelivr bloqueado (repo >50MB) — mudado para
+    raw.githubusercontent.com
+  - IDs de versão inventados (por-ARC, eng-KJV...) não existem — IDs
+    reais descobertos via GitHub API
+  - NÃO existe nenhuma Almeida no wldeh/bible-api — só inglês, grego,
+    hebraico. Português veio de fonte alternativa (thiagobodruk/biblia)
+  - Formato JSON diferente do assumido ("data" em vez de "verses")
+  - Nomes de livro variam por idioma (inglês: nomes completos; grego/
+    hebraico: nome nativo) — mapas de tradução construídos por idioma
+  - BUG DE ENCODING WINDOWS: Path.write_text() sem encoding="utf-8"
+    corrompia acentos — corrigido em TODOS os ficheiros do pipeline
+  - Versículos DUPLICADOS na fonte en-kjv (cada um aparecia 2x) —
+    deduplicação adicionada
+  - GitHub duplica entradas pasta+ficheiro na listagem de diretório
+    (contagem de capítulos a dobrar nos deuterocanónicos)
+  - Adições gregas a Ester (ESG) numeradas como capítulos 10-16
+    (continuação do Ester hebraico), não 1-7
+
+Validação: en-kjv e en-asv batem exatamente com o número clássico
+31 102 versículos; grc-grctr bate com o número conhecido do NT grego
+(7 957); confirma correção da extração.
+
+Deuterocanónicos: 14 livros (1ES,2ES,TOB,JDT,WIS,SIR,BAR,BEL,ESG,MAN,
+1MA,2MA,S3Y,SUS), 5 718 versículos, só disponíveis em en-kjv. Flag
+is_deuterocanonical na tabela verses.
+
+Licenciamento: en-kjv/en-asv/grc-grctr/hbo-wlc = domínio público
+confirmado. pt-aa/pt-acf = licença NÃO confirmada formalmente
+(license="check_rights") — verificar com Sociedade Bíblica antes de
+publicação pública.
+
+5.2 PAIS DA IGREJA (patristics_fetcher.py) — 65 autores, 341 obras, 67 604 secções
+-----------------------------------------------------------------------------------
+Fonte: New Advent (newadvent.org/fathers), coleção ANF/NPNF, domínio
+público (traduções séc. XIX).
+
+Processo: catálogo completo gerado programaticamente a partir do índice
+real do site (não inventado) — guardado em fetchers/patristic_catalog.json.
+Cobre apostólicos, ante-nicenos, nicenos, pós-nicenos — essencialmente
+toda a coleção disponível nessa fonte.
+
+Bugs reais encontrados:
+  - Seletor HTML errado (div.text não existe — é div#springfield2)
+  - Secções marcadas por <h2>Chapter N.</h2>, não por <a name="N">
+  - VÁRIOS URLs do catálogo original apontavam para obras ERRADAS
+    (ex: "Carta aos Efésios" apontava para outro texto completamente
+    diferente) — corrigidos um a um consultando o índice real
+  - Muitas obras não têm o texto numa única página — são índices que
+    apontam para subpáginas (livro→capítulo); implementado scraper
+    recursivo genérico que segue páginas de índice automaticamente,
+    detetando por padrão de URL (prefixo numérico partilhado) em vez de
+    por palavras-chave de texto (mais robusto, apanhou casos atípicos
+    como "THE SIEGE OF NISIBIS" sem precisar de regex específico)
+  - BUG DE PERDA DE DADOS: section_num repetia-se quando um capítulo
+    tinha vários parágrafos (violava UNIQUE(work_id,section_num); um
+    upsert teria APAGADO parágrafos silenciosamente) — corrigido para
+    contador sequencial sempre único
+  - Rodapé "About this page" (info de contacto do site) estava a ser
+    apanhado como conteúdo da obra — filtrado
+  - Hermas "O Pastor": vários rótulos de secção apontavam para a MESMA
+    página (FIRST VISION, SECOND VISION...) — sem deduplicar, duplicava
+    o texto
+
+Autores incluídos: Inácio, Policarpo, Clemente de Roma, Justino Mártir,
+Ireneu, Tertuliano, Orígenes, Clemente de Alexandria, Hipólito,
+Atanásio, Basílio, Gregório Nazianzeno, Gregório de Nissa, Cirilo de
+Jerusalém (NÃO Cirilo de Alexandria — não disponível no New Advent),
+Crisóstomo, Agostinho, Jerónimo, Ambrósio, Leão Magno, Gregório Magno,
+João Damasceno, e mais ~45 autores menos conhecidos (lista completa no
+catálogo).
+
+BUG DE INFRAESTRUTURA (loader): upsert sem on_conflict explícito usa a
+PRIMARY KEY (BIGSERIAL, nunca em conflito) — cada re-execução duplicava
+TODAS as linhas em vez de atualizar. Corrigido em todo o load_to_supabase.py
+para usar as chaves naturais (on_conflict="work_id,section_num" etc.)
+— relevante para qualquer tabela nova que se adicione no futuro.
+
+5.3 APÓCRIFOS (apocrypha_fetcher.py) — 39 obras, 2 895 secções
+----------------------------------------------------------------
+Fonte: Early Christian Writings (earlychristianwritings.com).
+
+Bugs reais encontrados:
+  - Seletor errado (div#textboundingbox, não div.text)
+  - VÁRIOS URLs eram 404 — cada obra tem página-índice com várias
+    traduções possíveis em /text/{obra}-{tradutor}.html; não existe
+    /text/{obra}.html genérico
+  - Licenças erradas no catálogo original: Evangelho de Tomé e
+    Evangelho da Verdade (achados de Nag Hammadi, 1945) só têm
+    traduções académicas MODERNAS, sem opção do séc. XIX — corrigido
+    para license="check_rights" (um deles tem mesmo aviso de copyright
+    explícito no texto fonte: "Copyright 1992, 1994 by Polebridge")
+  - HTML mal formado (tags <p> sem fecho) — extração reescrita para
+    texto plano em blocos
+
+Expansão: 12 obras curadas inicialmente → 27 adicionais resolvidas a
+partir do índice completo do site (apocrypha.html + gnostics.html) = 39
+no total. 1 obra ("Gospel of the Savior") ficou de fora — só tem ficha
+informativa no site, sem tradução hospedada.
+
+EM FALTA (fora do âmbito): 1 Enoque e Livro dos Jubileus não existem
+nesta fonte (focada em séc. I-III, não pseudepígrafos do AT mais
+amplos) — precisam de outra fonte, nunca resolvido nesta sessão.
+
+5.4 CROSS-REFERENCES (crossrefs_fetcher.py) — 211 926 referências
+----------------------------------------------------------------------
+Fonte: OpenBible.info, ficheiro TSV único (cross-references.zip),
+CC-BY 4.0. Filtrado por votes >= 3 (de 344 799 totais).
+Mapeamento de abreviaturas OSIS-like para códigos USFM do projeto.
+Intervalos no alvo (ex: "John.1.1-John.1.3") resolvidos para o primeiro
+versículo do intervalo.
+
+BUG: tabela cross_references sem UNIQUE constraint — corrigido ANTES de
+carregar (lição já aprendida da patrística, aplicada preventivamente).
+
+5.5 CREDOS E CONFISSÕES (creeds_fetcher.py) — 19 documentos, 3 212 secções
+------------------------------------------------------------------------------
+Fonte: CCEL, "Creeds of Christendom" de Philip Schaff (3 volumes, séc.
+XIX, "Rights: Public Domain" confirmado nos metadados do CCEL).
+
+Cobertura: Credo Apostólico, Niceno (325 e 381), Calcedónia, Atanasiano,
+Profissão Tridentina (católica), Catecismo Maior Ortodoxo, Confissão de
+Augsburgo, Catecismo de Lutero, 2ª Confissão Helvética, Catecismo de
+Heidelberg, Confissão Belga, Cânones de Dort, Confissão de Westminster
++ Catecismo Breve, Confissão Escocesa, 39 Artigos Anglicanos, Confissão
+Batista de 1688, Declaração de Saboia.
+
+Bugs/decisões:
+  - Texto extraído de <div class="book-content">; parágrafos em
+    latim/grego (marcados lang="LA"/"EL" em <span>) filtrados,
+    mantendo só inglês
+  - Notas de rodapé duplicadas inline (<sup class="Note"> +
+    <span class="mnote">) — removidas
+  - VÁRIAS páginas só tinham texto em grego/latim SEM tradução inglesa
+    (Confissão Ortodoxa de 1643, Confissão de Dositeu) — removidas do
+    catálogo em vez de incluir texto não traduzido; substituídas por
+    alternativas com tradução real onde possível (Catecismo Maior
+    Ortodoxo)
+  - URLs iniciais errados para o Credo Niceno-Constantinopolitano e a
+    2ª Confissão Helvética (apontavam para versões só em latim) —
+    corrigidos para as páginas com tradução inglesa
+
+NÃO incluído: Vaticano I/II (séc. XX, fora do âmbito da obra de Schaff,
+1877/1889) — precisaria de fonte diferente (vatican.va, provavelmente
+com direitos reservados).
+
+5.6 GLOSSÁRIO (glossary_fetcher.py) — 20 827 termos
+-------------------------------------------------------
+Fonte: neuu-org/bible-dictionary-dataset (GitHub), JSON já estruturado
+a partir de 5 dicionários clássicos via XML ThML do CCEL — em vez de
+raspar ~4000 páginas individuais do Easton's (que teria demorado ~45
+min), encontrado este dataset pronto (123 pedidos no total).
+
+Dicionários: Easton's (1897, 3 962), Smith's (1863, 4 488), Hastings'
+(c.1900, 5 033), Hitchcock's (c.1869, 2 619), Schaff's (c.1880, 4 725).
+
+Licença: textos originais domínio público; a ESTRUTURAÇÃO em JSON é
+CC-BY 4.0 do NEUU — atribuição registada no schema.
+
+5.7 GEOGRAFIA (geography_fetcher.py + geography_confidence_fetcher.py) — 1 232 locais
+------------------------------------------------------------------------------------------
+Fonte inicial: OpenBible.info merged.txt (TSV simples, "versão 2007
+simplificada" confirmada pelo próprio site) — 1 232 locais com
+coordenadas (resolve referências indiretas via campo "Root", ex:
+"Abarim" -> coordenadas de "Mount Nebo"). CC-BY 4.0.
+
+Bug: GitHub duplica entradas pasta+ficheiro também aqui inicialmente
+mal-entendido como dado real (42 linhas legitimamente sem coordenadas
+por terem localização desconhecida/disputada, ex: "Éden" — não é bug,
+é honestidade dos dados).
+
+MELHORIA POSTERIOR (mesma sessão, depois de pergunta do utilizador
+"isto tem base histórica?"): descoberto que o merged.txt é só a versão
+simplificada; existe um dataset MUITO mais rico em JSON Lines
+(github.com/openbibleinfo/Bible-Geocoding-Data) com sistema de pontuação
+académico completo (múltiplos caminhos de identificação, regressão
+linear por década de publicação 1969-2020, taxonomia de tipos de voto).
+Decisão consciente (confirmada com o utilizador, "profissionalmente e
+academicamente"): NÃO replicar o sistema completo — usar só time_total
+(que a própria documentação do dataset designa como o número-resumo
+oficial) convertido para confidence_pct (0-100, com clamp porque a
+regressão pode extrapolar fora de [0,1000]) + identification_sources
+resolvidas via source.jsonl.
+
+Correspondência por nome: 1050/1232 (85%) — o resto não bateu porque o
+dataset novo desambigua locais homónimos com sufixos próprios (ex:
+"Gath 1/2/3") que não alinham com os do merged.txt antigo; deixados sem
+confiança/fontes em vez de arriscar correspondência errada.
+
+BUG REAL DE POSTGRES (relevante para o futuro): um upsert PARCIAL (só
+name+confidence_pct+sources) falhava sempre com erro NOT NULL em
+lat/lon, MESMO para linhas já existentes — porque o Postgres valida as
+colunas NOT NULL do "candidate row" de um INSERT...ON CONFLICT ANTES de
+decidir se há conflito. Resolvido com uma função SQL
+(bulk_update_place_confidence) que faz UPDATE direto via
+jsonb_to_recordset em vez de upsert. Regra geral: upserts parciais em
+tabelas com colunas NOT NULL sem default precisam de UPDATE explícito,
+não upsert.
+
+5.8 CONCORDÂNCIA E STRONG'S (strongs_fetcher.py) — 22 710 entradas
+------------------------------------------------------------------------
+Fonte: STEPBible-Data (Tyndale House Cambridge), CC BY 4.0. O repositório
+GitHub MUDOU DE DONO (tyndale/STEPBible-Data -> STEPBible/STEPBible-Data,
+301 redirect) — descoberto seguindo o redirect via API.
+
+Ficheiros: TBESH (hebraico, 11 682) + TBESG (grego, 11 035) = 22 717
+brutas, 22 710 após deduplicação por d_strong.
+
+Bug: GitHub duplica entradas pasta+ficheiro na listagem (contagem de
+capítulos a dobrar — mesmo padrão já visto nos deuterocanónicos).
+Idioma de cada entrada derivado do prefixo do campo Morph, com fallback
+para o prefixo do código Strong quando Morph vem vazio ou é
+"Prefix"/"Suffix" gramatical sem marca de língua.
+
+Concordância: NÃO precisou de fetch nenhum — é a função SQL
+concordance(word, version) sobre os 161 281 versículos já carregados
+(todas as ocorrências em ordem canónica, ao contrário de
+search_verses_pt() que limita e ordena por relevância).
+
+5.9 MORFOLOGIA / INTERLINEAR (interlinear_fetcher.py) — 425 437 palavras
+-------------------------------------------------------------------------------
+Fonte: STEPBible-Data, ficheiros "Translators Amalgamated" (TAGNT grego
+NT, TAHOT hebraico AT) — desenhados para crítica textual (incluem TODAS
+as variantes de manuscrito), por isso cada posição de palavra pode ter
+várias linhas; mantida só a leitura mais bem atestada por posição (flag
+de edição mais "completa") — suficiente para leitura, não para aparato
+crítico completo.
+
+Grego: 141 720 palavras (bate com o número académico conhecido do NT).
+Hebraico: 283 717 palavras (bate com o número académico conhecido do AT).
+66 livros = Bíblia completa, códigos 100% compatíveis com os já usados
+no projeto (sem necessidade de mapeamento).
+
+Bug: colunas "dStrongs" e "Grammar" vêm SEPARADAS no ficheiro hebraico,
+mas COMBINADAS (com "=") no ficheiro grego — assumir o mesmo formato
+para os dois deixava o campo "grammar" do hebraico sempre vazio.
+Hebraico tem palavras compostas prefixo+raiz (separadas por "/") com
+múltiplos Strong's por palavra — schema usa TEXT[] para strong_numbers.
+
+5.10 CITAÇÕES PATRÍSTICAS (citations_fetcher.py) — 30 157 citações
+--------------------------------------------------------------------------
+ÚNICA tarefa desta lista que NÃO é fetch externo — extrai citações
+bíblicas de dentro do texto patrístico JÁ carregado (67 604 secções),
+por regex, e valida cada candidato contra os 161 281 versículos reais
+antes de guardar (descarta falsos positivos).
+
+Padrão de citação descoberto nos dados reais: o scraping do New Advent
+deixou referências bíblicas coladas no texto corrido (ex: "...all in
+all. 1 Corinthians 15:24-28 If the So...") — resíduo de links HTML
+achatados em texto simples durante a extração original.
+
+Decisão de qualidade: livros que exigem dígito ordinal para desambiguar
+(Corinthians, Timothy, Peter, Thessalonians, Kings, Samuel, Chronicles,
+Maccabees) são IGNORADOS se o dígito não for capturado, em vez de
+adivinhar 1 vs 2. "John" sem dígito = Evangelho (não ambíguo, caso
+correto de não exigir dígito).
+
+Validação de qualidade: os versículos mais citados (João 1:1 com 89
+citações, João 1:14, João 14:6, Filipenses 2:6, Génesis 1:26) são
+exatamente os versículos teologicamente centrais nos debates
+trinitários/cristológicos dos primeiros séculos — forte confirmação de
+que a extração está a apanhar citações reais, não ruído.
+
+Função SQL: verses_cited_by_fathers(book, chapter, verse) — devolve
+quais Pais/obras citaram um versículo, já testada e a funcionar.
+
+------------------------------------------------------------------------------
+6. PADRÕES DE BUGS RECORRENTES (úteis para qualquer trabalho futuro)
+------------------------------------------------------------------------------
+
+1. NUNCA confiar em código/catálogos gerados sem testar contra a fonte
+   real — em TODOS os 3 fetchers originais (Bíblia, Patrística,
+   Apócrifos) o código nunca tinha corrido contra as APIs/sites reais e
+   tinha bugs sistemáticos (URLs errados, seletores errados, formato de
+   dados errado).
+2. Path.write_text()/read_text() no Windows precisa SEMPRE de
+   encoding="utf-8" explícito, senão corrompe acentuação.
+3. GitHub Contents API duplica entradas pasta+ficheiro do mesmo nome na
+   listagem de diretório — sempre filtrar por extensão (".json", etc.)
+   ao contar ficheiros.
+4. section_num / chaves de unicidade: nunca usar um valor "semântico"
+   (nº de capítulo, posição relativa) como chave única se o mesmo valor
+   pode repetir-se dentro do agrupamento — usar sempre um contador
+   sequencial puro.
+5. upsert() do Supabase/PostgREST: SEM on_conflict explícito usa a
+   PRIMARY KEY (nunca em conflito em tabelas com BIGSERIAL), causando
+   duplicação silenciosa em vez de atualização. SEMPRE especificar
+   on_conflict com a chave natural da tabela.
+6. upsert() PARCIAL (sem todas as colunas NOT NULL) falha mesmo para
+   linhas já existentes — o Postgres valida NOT NULL antes de resolver
+   o conflito. Usar UPDATE explícito (ou uma função RPC) para
+   atualizações parciais.
+7. Antes de assumir que uma fonte "não tem X", verificar a sério (ex:
+   geografia — parecia só ter dados simples, mas tinha um dataset muito
+   mais rico disponível só não óbvio à primeira vista).
+8. Repositórios GitHub mudam de dono/local (301 redirect) — seguir o
+   redirect via API em vez de assumir que um URL antigo de documentação
+   ainda é válido.
+
+------------------------------------------------------------------------------
+7. LIMITAÇÕES CONHECIDAS / TRABALHO FUTURO
+------------------------------------------------------------------------------
+
+Por fazer (registado no PLAN.md, Fases 1/3/5):
+  - Vulgata Latina e Septuaginta como textos próprios (só temos NT
+    grego/AT hebraico separados, sem o texto integral de cada um)
+  - Comentário de Matthew Henry
+  - Medievais (Anselmo, Aquino, Bernardo, Boaventura)
+  - Reforma além dos credos já feitos (Lutero/Calvino textos completos,
+    não só catecismos)
+  - Modernos (Wesley, Edwards, Spurgeon, C.S. Lewis, Warfield)
+  - Atas conciliares completas (só temos os credos resultantes)
+  - Catecismo da Igreja Católica (1992), Vaticano I/II
+  - Místicos/devocionais (Imitação de Cristo, Teresa de Ávila...)
+  - Martirológios (Foxe's Book of Martyrs)
+  - 1 Enoque, Livro dos Jubileus (sem fonte identificada ainda)
+  - 182 locais bíblicos sem confidence_pct/sources (correspondência de
+    nome falhou)
+
+Licenças por confirmar antes de publicação pública:
+  - pt-aa, pt-acf (Bíblia em português) — license="check_rights"
+  - Vários apócrifos e o Evangelho de Tomé/Verdade — license="check_rights"
+
+------------------------------------------------------------------------------
+8. PRÓXIMO PASSO
+------------------------------------------------------------------------------
+
+Backend/BD considerado completo para esta fase. Próximo: FRONTEND
+(React + Vite) — ainda não foi iniciado nesta sessão. Nenhum código de
+frontend existe no repositório ainda.
+
+==============================================================================
+FIM DO DOCUMENTO
+==============================================================================
