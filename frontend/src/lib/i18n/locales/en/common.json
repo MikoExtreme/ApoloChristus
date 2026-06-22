@@ -1,0 +1,40 @@
+{
+  "appName": "ApoloChristus",
+  "tagline": "The Bible, the Church Fathers, the Apocrypha, Creeds, a Glossary, a Lexicon, and Bible Geography — all in one place.",
+  "nav": {
+    "home": "Home",
+    "bible": "Bible",
+    "patristics": "Church Fathers",
+    "apocrypha": "Apocrypha",
+    "creeds": "Creeds & Confessions",
+    "glossary": "Glossary",
+    "lexicon": "Lexicon",
+    "geography": "Geography"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "button": "Search",
+    "notAvailable": "Search not yet available for this section"
+  },
+  "theme": {
+    "label": "Theme",
+    "catholic": "Catholic",
+    "orthodox": "Orthodox",
+    "protestant": "Protestant"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "notFound": "Not found.",
+    "source": "Source",
+    "license": "License"
+  },
+  "licenses": {
+    "public_domain": "Public domain",
+    "check_rights": "Rights to confirm",
+    "licensed": "Licensed (CC-BY)"
+  }
+}

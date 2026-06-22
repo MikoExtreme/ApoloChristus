@@ -1,0 +1,16 @@
+{
+  "title": "Strong's Lexicon",
+  "browseByLanguage": "Browse by language or search",
+  "languages": {
+    "hebrew": "Hebrew",
+    "aramaic": "Aramaic",
+    "greek": "Greek",
+    "name": "Proper name"
+  },
+  "fields": {
+    "strongs": "Strong's",
+    "morphology": "Morphology",
+    "gloss": "Short gloss"
+  },
+  "searchPlaceholder": "Search the lexicon..."
+}

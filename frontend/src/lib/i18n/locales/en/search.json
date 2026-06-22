@@ -1,0 +1,5 @@
+{
+  "title": "Search",
+  "resultsFor": "Results for \"{{query}}\"",
+  "noResults": "No results."
+}

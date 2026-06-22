@@ -1,0 +1,34 @@
+{
+  "title": "Bíblia",
+  "chooseVersion": "Escolhe idioma e versão",
+  "toggles": {
+    "interlinear": "Interlinear",
+    "crossReferences": "Referências cruzadas",
+    "patristicCitations": "Citações dos Pais",
+    "concordance": "Concordância",
+    "concordanceText": "Texto",
+    "concordanceOriginal": "Original",
+    "parallel": "Comparar traduções"
+  },
+  "jump": {
+    "title": "Ir para referência",
+    "placeholder": "Ex: Génesis 2, Isaías 10:1, 1 Pedro 1:1-4",
+    "goButton": "Ir",
+    "notRecognized": "Referência não reconhecida."
+  },
+  "testaments": {
+    "OT": "Antigo Testamento",
+    "NT": "Novo Testamento"
+  },
+  "concordanceDrawer": {
+    "title": "Concordância",
+    "noResults": "Sem ocorrências."
+  },
+  "crossReferences": {
+    "seeAlso": "Ver também"
+  },
+  "citations": {
+    "loading": "A carregar citações...",
+    "citedBy": "Citado por"
+  }
+}

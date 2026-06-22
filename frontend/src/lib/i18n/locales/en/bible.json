@@ -1,0 +1,34 @@
+{
+  "title": "Bible",
+  "chooseVersion": "Choose a language and version",
+  "toggles": {
+    "interlinear": "Interlinear",
+    "crossReferences": "Cross references",
+    "patristicCitations": "Patristic citations",
+    "concordance": "Concordance",
+    "concordanceText": "Text",
+    "concordanceOriginal": "Original",
+    "parallel": "Compare translations"
+  },
+  "jump": {
+    "title": "Jump to a reference",
+    "placeholder": "E.g. Genesis 2, Isaiah 10:1, 1 Peter 1:1-4",
+    "goButton": "Go",
+    "notRecognized": "Reference not recognized."
+  },
+  "testaments": {
+    "OT": "Old Testament",
+    "NT": "New Testament"
+  },
+  "concordanceDrawer": {
+    "title": "Concordance",
+    "noResults": "No occurrences."
+  },
+  "crossReferences": {
+    "seeAlso": "See also"
+  },
+  "citations": {
+    "loading": "Loading citations...",
+    "citedBy": "Cited by"
+  }
+}

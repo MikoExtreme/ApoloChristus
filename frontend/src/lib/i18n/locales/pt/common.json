@@ -1,0 +1,40 @@
+{
+  "appName": "ApoloChristus",
+  "tagline": "Bíblia, Pais da Igreja, Apócrifos, Credos, Glossário, Léxico e Geografia bíblica num só lugar.",
+  "nav": {
+    "home": "Início",
+    "bible": "Bíblia",
+    "patristics": "Pais da Igreja",
+    "apocrypha": "Apócrifos",
+    "creeds": "Credos & Confissões",
+    "glossary": "Glossário",
+    "lexicon": "Léxico",
+    "geography": "Geografia"
+  },
+  "search": {
+    "placeholder": "Pesquisar...",
+    "button": "Pesquisar",
+    "notAvailable": "Pesquisa ainda não disponível nesta secção"
+  },
+  "theme": {
+    "label": "Tema",
+    "catholic": "Católico",
+    "orthodox": "Ortodoxo",
+    "protestant": "Protestante"
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "common": {
+    "loading": "A carregar...",
+    "error": "Ocorreu um erro.",
+    "notFound": "Não encontrado.",
+    "source": "Fonte",
+    "license": "Licença"
+  },
+  "licenses": {
+    "public_domain": "Domínio público",
+    "check_rights": "Direitos a confirmar",
+    "licensed": "Licenciado (CC-BY)"
+  }
+}

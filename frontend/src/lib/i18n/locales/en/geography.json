@@ -1,0 +1,15 @@
+{
+  "title": "Bible Geography",
+  "list": "List",
+  "map": "Map",
+  "searchPlaceholder": "Search a place...",
+  "approximate": "approximate location",
+  "confidence": "Identification confidence",
+  "seeDetails": "See details",
+  "noResults": "No places found.",
+  "coordinates": "Coordinates",
+  "comment": "Comment",
+  "verses": "Verses",
+  "sources": "Academic sources",
+  "backToList": "Back to list"
+}

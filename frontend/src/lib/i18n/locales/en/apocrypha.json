@@ -1,0 +1,15 @@
+{
+  "title": "Apocrypha",
+  "browseByCategory": "Browse by category",
+  "categories": {
+    "apocalypse": "Apocalypse",
+    "apocryphal_acts": "Apocryphal Acts",
+    "apocryphal_epistle": "Apocryphal Epistle",
+    "apocryphal_gospel": "Apocryphal Gospel",
+    "apocryphal_other": "Other",
+    "church_order": "Church Order",
+    "gnostic_fragment": "Gnostic Fragment",
+    "nag_hammadi": "Nag Hammadi",
+    "ot_pseudepigrapha": "Old Testament Pseudepigrapha"
+  }
+}

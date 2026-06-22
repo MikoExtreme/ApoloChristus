@@ -1,0 +1,16 @@
+{
+  "title": "Léxico Strong's",
+  "browseByLanguage": "Navega por idioma ou pesquisa",
+  "languages": {
+    "hebrew": "Hebraico",
+    "aramaic": "Aramaico",
+    "greek": "Grego",
+    "name": "Nome próprio"
+  },
+  "fields": {
+    "strongs": "Strong's",
+    "morphology": "Morfologia",
+    "gloss": "Tradução curta"
+  },
+  "searchPlaceholder": "Pesquisar no léxico..."
+}

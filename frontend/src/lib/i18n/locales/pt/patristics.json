@@ -1,0 +1,11 @@
+{
+  "title": "Pais da Igreja",
+  "browseByPeriod": "Navega por período",
+  "periods": {
+    "apostolic": "Apostólico",
+    "ante_nicene": "Ante-Niceno",
+    "nicene": "Niceno",
+    "post_nicene": "Pós-Niceno",
+    "medieval": "Medieval"
+  }
+}

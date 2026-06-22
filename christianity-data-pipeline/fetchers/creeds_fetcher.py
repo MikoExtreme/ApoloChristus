@@ -47,7 +47,16 @@ CATALOG = [
      "url": f"{CCEL_BASE}/creeds2/creeds2.iv.i.i.i.html"},
     {"id": "nicene_creed_325", "title": "Nicene Creed (A.D. 325)", "title_pt": "Credo Niceno (325)",
      "type": "creed", "tradition": "ecumenical", "year": "325",
-     "url": f"{CCEL_BASE}/creeds2/creeds2.iv.i.ii.iii.html"},
+     # A página óbvia (creeds2.iv.i.ii.iii.html, Volume II) só tem o texto
+     # grego/latim original, com uma nota a remeter para "Vol. I. pp. 28, 29"
+     # para a tradução inglesa — confirmado ao inspecionar o HTML ao vivo
+     # (sem isto, extrai-se só comentário editorial, não o credo em si).
+     # A tradução real está em creeds1.iv.iii.html (Volume I, §8 "The Nicene
+     # Creed"), mas essa página começa com várias páginas de bibliografia
+     # académica antes de citar o texto do credo — "start_after" salta tudo
+     # isso, começando só na tabela comparativa Credo Apostólico/Niceno.
+     "url": f"{CCEL_BASE}/creeds1/creeds1.iv.iii.html",
+     "start_after": "The relation of the Nicene Creed to the Apostles' Creed"},
     {"id": "niceno_constantinopolitan_creed", "title": "Nicene-Constantinopolitan Creed (A.D. 381, Western form with filioque)",
      "title_pt": "Credo Niceno-Constantinopolitano (381, forma ocidental com filioque)",
      "type": "creed", "tradition": "ecumenical", "year": "381",
@@ -146,7 +155,7 @@ def is_foreign(elem) -> bool:
     return total > 0 and (foreign / total) > 0.5
 
 
-def extract_sections(soup: BeautifulSoup) -> list[dict]:
+def extract_sections(soup: BeautifulSoup, start_after: str | None = None) -> list[dict]:
     content = soup.find("div", class_="book-content")
     if not content:
         return []
@@ -158,17 +167,27 @@ def extract_sections(soup: BeautifulSoup) -> list[dict]:
     for tag in content.find_all(["script", "style"]):
         tag.decompose()
 
+    started = start_after is None
     sections = []
     for elem in content.find_all(["p", "td"]):
-        # evita contar duas vezes quando um <p> está dentro de um <td>
-        # (raro, mas acontece nalguns documentos)
-        if elem.name == "p" and elem.find_parent("td"):
-            continue
+        # Quando um <td> contém <p>'s, extrai-se granularmente por cada <p>
+        # (bug anterior: saltava o <td> E os seus <p> filhos, perdendo o
+        # conteúdo todo — confirmado em creeds2.iv.i.ii.ii.html, onde o
+        # texto do credo está inteiro dentro de <td><p>...</p></td>).
+        # Só se salta o <td> quando ele tem <p> filhos (evita duplicar);
+        # <td> sem <p> (tabelas simples tipo pergunta/resposta) extrai-se
+        # diretamente.
         if elem.name == "td" and elem.find("p"):
             continue
         if is_foreign(elem):
             continue
         text = re.sub(r"\s+", " ", elem.get_text(separator=" ", strip=True))
+
+        if not started:
+            if start_after in text:
+                started = True
+            continue
+
         if len(text) < 20 or text.startswith(FOOTER_NOISE_PREFIXES):
             continue
         sections.append({"section": len(sections) + 1, "text": text[:4000]})
@@ -186,7 +205,7 @@ def fetch_work(work: dict) -> dict | None:
         return None
 
     soup = BeautifulSoup(r.text, "html.parser")
-    sections = extract_sections(soup)
+    sections = extract_sections(soup, start_after=work.get("start_after"))
     if not sections:
         log.warning("  Sem conteúdo extraído!")
         return None

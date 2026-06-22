@@ -1,0 +1,15 @@
+{
+  "title": "Apócrifos",
+  "browseByCategory": "Navega por categoria",
+  "categories": {
+    "apocalypse": "Apocalipse",
+    "apocryphal_acts": "Atos apócrifos",
+    "apocryphal_epistle": "Epístola apócrifa",
+    "apocryphal_gospel": "Evangelho apócrifo",
+    "apocryphal_other": "Outros",
+    "church_order": "Ordem eclesiástica",
+    "gnostic_fragment": "Fragmento gnóstico",
+    "nag_hammadi": "Nag Hammadi",
+    "ot_pseudepigrapha": "Pseudepígrafos do Antigo Testamento"
+  }
+}

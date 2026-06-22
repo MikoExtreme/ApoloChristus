@@ -1,0 +1,14 @@
+{
+  "title": "Credos & Confissões",
+  "browseByTradition": "Navega por tradição",
+  "traditions": {
+    "ecumenical": "Ecuménico",
+    "catholic": "Católico",
+    "orthodox": "Ortodoxo",
+    "lutheran": "Luterano",
+    "reformed": "Reformado",
+    "anglican": "Anglicano",
+    "baptist": "Batista",
+    "congregational": "Congregacionalista"
+  }
+}

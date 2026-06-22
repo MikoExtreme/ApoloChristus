@@ -154,6 +154,13 @@ CREATE TABLE IF NOT EXISTS creeds_confessions (
     source_url  TEXT,
     language    TEXT NOT NULL DEFAULT 'en',
     license     TEXT NOT NULL DEFAULT 'public_domain',
+    -- Tradução PT real (não automática) quando existe uma fonte credível —
+    -- ver migrations/2026-06-21_creeds_pt_translations.sql. Maioria das
+    -- fontes encontradas não declara licença formalmente, por isso
+    -- license_pt fica tipicamente "check_rights" (mesmo tratamento que
+    -- pt-aa/pt-acf na Bíblia).
+    source_url_pt TEXT,
+    license_pt    TEXT,
     created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -162,10 +169,14 @@ CREATE TABLE IF NOT EXISTS creeds_confessions_sections (
     work_id     TEXT NOT NULL REFERENCES creeds_confessions(id) ON DELETE CASCADE,
     section_num INT NOT NULL,
     text        TEXT NOT NULL,
+    -- 'en' (Schaff/CCEL, default) ou 'pt' (tradução real encontrada online).
+    -- A numeração de secções PT é independente da inglesa (parágrafos não
+    -- correspondem 1-para-1 entre traduções diferentes).
+    language    TEXT NOT NULL DEFAULT 'en',
     search_vec  TSVECTOR GENERATED ALWAYS AS (
         to_tsvector('english', text)
     ) STORED,
-    UNIQUE (work_id, section_num)
+    UNIQUE (work_id, section_num, language)
 );
 
 CREATE INDEX IF NOT EXISTS creeds_confessions_sections_search_idx

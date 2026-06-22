@@ -1,0 +1,12 @@
+{
+  "title": "Glossário",
+  "browseAlphabetically": "Índice A-Z",
+  "searchPlaceholder": "Pesquisar termo...",
+  "sources": {
+    "easton": "Easton (1897)",
+    "smith": "Smith (1863)",
+    "hastings": "Hastings (c.1900)",
+    "hitchcock": "Hitchcock (c.1869)",
+    "schaff": "Schaff (c.1880)"
+  }
+}

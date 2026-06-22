@@ -1,0 +1,11 @@
+{
+  "title": "Church Fathers",
+  "browseByPeriod": "Browse by period",
+  "periods": {
+    "apostolic": "Apostolic",
+    "ante_nicene": "Ante-Nicene",
+    "nicene": "Nicene",
+    "post_nicene": "Post-Nicene",
+    "medieval": "Medieval"
+  }
+}

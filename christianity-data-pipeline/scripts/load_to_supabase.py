@@ -214,10 +214,46 @@ def load_creeds(client: Client, creeds_dir: Path):
         ]
         for i in range(0, len(sections), BATCH_SIZE):
             client.table("creeds_confessions_sections").upsert(
-                sections[i:i+BATCH_SIZE], on_conflict="work_id,section_num"
+                sections[i:i+BATCH_SIZE], on_conflict="work_id,section_num,language"
             ).execute()
 
         log.info(f"  [{work['id']}] {len(sections)} secções carregadas")
+
+
+def load_creeds_pt(client: Client, creeds_pt_dir: Path):
+    """
+    Carrega traduções portuguesas reais dos credos/confissões (ver
+    fetchers/creeds_pt_fetcher.py). Atualiza source_url_pt/license_pt na
+    linha já existente em creeds_confessions (não faz upsert completo —
+    o credo já foi carregado por load_creeds antes desta função correr)
+    e insere as secções PT com language='pt' (numeração independente das
+    secções em inglês, que não correspondem 1-para-1 entre traduções).
+    """
+    for work_file in creeds_pt_dir.glob("*.json"):
+        if work_file.name == "summary.json":
+            continue
+        work = json.loads(work_file.read_text(encoding="utf-8"))
+
+        client.table("creeds_confessions").update({
+            "source_url_pt": work["source_url_pt"],
+            "license_pt":    work["license_pt"],
+        }).eq("id", work["id"]).execute()
+
+        sections = [
+            {
+                "work_id":     work["id"],
+                "section_num": s["section"],
+                "text":        s["text"],
+                "language":    "pt",
+            }
+            for s in work.get("sections", [])
+        ]
+        for i in range(0, len(sections), BATCH_SIZE):
+            client.table("creeds_confessions_sections").upsert(
+                sections[i:i+BATCH_SIZE], on_conflict="work_id,section_num,language"
+            ).execute()
+
+        log.info(f"  [{work['id']}] {len(sections)} secções PT carregadas")
 
 
 def load_glossary(client: Client, glossary_dir: Path):
@@ -352,6 +388,7 @@ def run(
     patristics_dir: str = "output/patristics",
     apocrypha_dir:  str = "output/apocrypha",
     creeds_dir:     str = "output/creeds",
+    creeds_pt_dir:  str = "output/creeds_pt",
     glossary_dir:   str = "output/glossary",
     geography_dir:  str = "output/geography",
     lexicon_dir:    str = "output/lexicon",
@@ -382,6 +419,10 @@ def run(
     if Path(creeds_dir).exists():
         log.info("\n--- Credos e confissões ---")
         load_creeds(client, Path(creeds_dir))
+
+    if Path(creeds_pt_dir).exists():
+        log.info("\n--- Credos e confissões (PT) ---")
+        load_creeds_pt(client, Path(creeds_pt_dir))
 
     if Path(glossary_dir).exists():
         log.info("\n--- Glossário ---")
