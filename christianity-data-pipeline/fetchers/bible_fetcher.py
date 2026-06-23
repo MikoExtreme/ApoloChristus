@@ -30,6 +30,7 @@ import requests
 import json
 import time
 import logging
+import unicodedata
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -151,6 +152,43 @@ PT_BOOK_ABBREV = {
     "JUD": "jd", "REV": "ap",
 }
 
+JFAAL_RAW_URL = "https://raw.githubusercontent.com/BibliaJFAAL/JFAAL/main/original/1911-JFAAtualizada.json"
+
+
+def _normalize_book_name(name: str) -> str:
+    # Remove acentos e baixa para minúsculas, para casar variantes BR/PT
+    # ("Gênesis" vs "Génesis") e eventuais diferenças de pontuação.
+    decomposed = unicodedata.normalize("NFKD", name)
+    stripped = "".join(c for c in decomposed if not unicodedata.combining(c))
+    return stripped.lower().strip()
+
+
+# Nomes completos (normalizados, sem acentos) -> código canónico, como
+# aparecem no JSON da Almeida 1911 (JFAAL). Cobre só o cânone protestante
+# de 66 livros — a 1911 Almeida não inclui deuterocanónicos.
+JFAAL_BOOK_NAME_TO_CODE = {
+    "genesis": "GEN", "exodo": "EXO", "levitico": "LEV", "numeros": "NUM",
+    "deuteronomio": "DEU", "josue": "JOS", "juizes": "JDG", "rute": "RUT",
+    "1 samuel": "1SA", "2 samuel": "2SA", "1 reis": "1KI", "2 reis": "2KI",
+    "1 cronicas": "1CH", "2 cronicas": "2CH", "esdras": "EZR", "neemias": "NEH",
+    "ester": "EST", "jo": "JOB", "salmos": "PSA", "proverbios": "PRO",
+    "eclesiastes": "ECC", "cantico dos canticos": "SNG", "cantares de salomao": "SNG",
+    "isaias": "ISA", "jeremias": "JER", "lamentacoes de jeremias": "LAM",
+    "lamentacoes": "LAM", "ezequiel": "EZK", "daniel": "DAN", "oseias": "HOS",
+    "joel": "JOL", "amos": "AMO", "obadias": "OBA", "jonas": "JON",
+    "miqueias": "MIC", "naum": "NAM", "habacuque": "HAB", "sofonias": "ZEP",
+    "ageu": "HAG", "zacarias": "ZEC", "malaquias": "MAL",
+    "mateus": "MAT", "marcos": "MRK", "lucas": "LUK", "joao": "JHN",
+    "atos dos apostolos": "ACT", "atos": "ACT", "romanos": "ROM",
+    "1 corintios": "1CO", "2 corintios": "2CO", "galatas": "GAL",
+    "efesios": "EPH", "filipenses": "PHP", "colossenses": "COL",
+    "1 tessalonicenses": "1TH", "2 tessalonicenses": "2TH",
+    "1 timoteo": "1TI", "2 timoteo": "2TI", "tito": "TIT", "filemom": "PHM",
+    "hebreus": "HEB", "tiago": "JAS", "1 pedro": "1PE", "2 pedro": "2PE",
+    "1 joao": "1JN", "2 joao": "2JN", "3 joao": "3JN", "judas": "JUD",
+    "apocalipse": "REV",
+}
+
 # Versões a ingerir. "source" determina qual fetch_* é usado.
 # "source_url" fica gravado em bible_versions.source_url para transparência
 # (mostrar ao utilizador de onde veio cada texto, não só "domínio público").
@@ -164,10 +202,15 @@ VERSIONS = [
      "source_url": "https://github.com/wldeh/bible-api/tree/main/bibles/grc-grctr"},
     {"id": "hbo-wlc",   "name": "Westminster Leningrad Codex (hebraico, AT)", "lang": "he", "license": "public_domain", "source": "wldeh", "book_names": WLDEH_HBO_BOOK_NAMES, "testament_only": "OT",
      "source_url": "https://github.com/wldeh/bible-api/tree/main/bibles/hbo-wlc"},
-    {"id": "pt-aa",     "name": "Almeida Atualizada",                  "lang": "pt", "license": "check_rights", "source": "thiagobodruk", "file": "aa.json",
-     "source_url": "https://github.com/thiagobodruk/biblia/blob/master/json/aa.json"},
-    {"id": "pt-acf",    "name": "Almeida Corrigida Fiel",              "lang": "pt", "license": "check_rights", "source": "thiagobodruk", "file": "acf.json",
-     "source_url": "https://github.com/thiagobodruk/biblia/blob/master/json/acf.json"},
+    # pt-aa e pt-acf (thiagobodruk/biblia) foram REMOVIDAS: investigação confirmou
+    # que nenhuma das duas é domínio público — a ACF é propriedade reservada da
+    # Sociedade Bíblica Trinitariana do Brasil (limite de 1.100 versículos sem
+    # autorização, nós servíamos o texto completo), e a AA desse repositório é
+    # atribuída à Imprensa Bíblica Brasileira pelo próprio README da fonte (a
+    # licença CC BY-NC do repo é só da compilação, não da tradução em si).
+    # Substituídas por pt-jfaal: Almeida 1911, genuinamente em domínio público.
+    {"id": "pt-jfaal",  "name": "Almeida 1911 (João Ferreira de Almeida)", "lang": "pt", "license": "public_domain", "source": "jfaal",
+     "source_url": "https://github.com/BibliaJFAAL/JFAAL/blob/main/original/1911-JFAAtualizada.json"},
 ]
 
 
@@ -342,6 +385,66 @@ def fetch_version_thiagobodruk(version: dict, output_dir: Path) -> int:
 
 
 # ----------------------------------------------------------------------------
+# Fonte 3: BibliaJFAAL/JFAAL (Almeida 1911, ficheiro único, domínio público)
+# ----------------------------------------------------------------------------
+
+def fetch_version_jfaal(version: dict, output_dir: Path) -> int:
+    vid = version["id"]
+    version_dir = output_dir / vid
+    version_dir.mkdir(parents=True, exist_ok=True)
+    (version_dir / "meta.json").write_text(json.dumps(version, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+
+    log.info(f"[{vid}] A descarregar ficheiro único: {JFAAL_RAW_URL}")
+    r = requests.get(JFAAL_RAW_URL, timeout=120)
+    r.raise_for_status()
+    data = json.loads(r.content.decode("utf-8-sig"))
+
+    ot_codes = {code for code, _ in CANONICAL_BOOKS["OT"]}
+
+    total_verses = 0
+    by_book: dict[str, list[dict]] = {}
+    unmatched: set[str] = set()
+
+    for book in data.get("books", []):
+        name_key = _normalize_book_name(book.get("name", ""))
+        code = JFAAL_BOOK_NAME_TO_CODE.get(name_key)
+        if not code:
+            unmatched.add(book.get("name", "?"))
+            continue
+        testament = "OT" if code in ot_codes else "NT"
+        verses = []
+        for chapter in book.get("chapters", []):
+            ch_num = chapter.get("chapter")
+            for v in chapter.get("verses", []):
+                text = (v.get("text") or "").strip()
+                if not text:
+                    continue
+                verses.append({
+                    "version_id": vid,
+                    "testament":  testament,
+                    "book":       code,
+                    "chapter":    ch_num,
+                    "verse":      v.get("verse"),
+                    "text":       text,
+                    "is_deuterocanonical": False,
+                })
+        by_book[code] = verses
+
+    if unmatched:
+        log.warning(f"  Nomes de livro não reconhecidos, ignorados: {sorted(unmatched)}")
+
+    for code, verses in by_book.items():
+        if not verses:
+            continue
+        out_file = version_dir / f"{code}.json"
+        out_file.write_text(json.dumps(verses, ensure_ascii=False, indent=2), encoding="utf-8")
+        total_verses += len(verses)
+
+    log.info(f"[{vid}] Concluído: {total_verses} versículos em {len(by_book)} livros.")
+    return total_verses
+
+
+# ----------------------------------------------------------------------------
 
 def run(output_dir: str = "output/bible", versions: list[dict] = None):
     out = Path(output_dir)
@@ -355,6 +458,8 @@ def run(output_dir: str = "output/bible", versions: list[dict] = None):
             count = fetch_version_wldeh(version, out)
         elif version["source"] == "thiagobodruk":
             count = fetch_version_thiagobodruk(version, out)
+        elif version["source"] == "jfaal":
+            count = fetch_version_jfaal(version, out)
         else:
             raise ValueError(f"Fonte desconhecida: {version['source']}")
         summary[version["id"]] = count
@@ -364,5 +469,5 @@ def run(output_dir: str = "output/bible", versions: list[dict] = None):
 
 
 if __name__ == "__main__":
-    # Teste rápido: só a versão pt-aa (ficheiro único, rápido) para validar end-to-end.
-    run(versions=[v for v in VERSIONS if v["id"] == "pt-aa"])
+    # Teste rápido: só a versão pt-jfaal (ficheiro único, rápido) para validar end-to-end.
+    run(versions=[v for v in VERSIONS if v["id"] == "pt-jfaal"])

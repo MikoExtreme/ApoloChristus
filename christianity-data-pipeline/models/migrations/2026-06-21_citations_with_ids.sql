@@ -1,6 +1,9 @@
 -- Adiciona author_id, period e work_id ao retorno de verses_cited_by_fathers,
 -- para o frontend poder ligar diretamente à obra/autor citado (em vez de só
--- mostrar o nome em texto). Substitui a função anterior (CREATE OR REPLACE).
+-- mostrar o nome em texto). O Postgres não permite CREATE OR REPLACE quando
+-- a lista de colunas do retorno muda — é preciso DROP primeiro.
+DROP FUNCTION IF EXISTS verses_cited_by_fathers(text, smallint, smallint);
+
 CREATE OR REPLACE FUNCTION verses_cited_by_fathers(p_book TEXT, p_chapter SMALLINT, p_verse SMALLINT)
 RETURNS TABLE (
     author_id TEXT, author_name TEXT, period TEXT,

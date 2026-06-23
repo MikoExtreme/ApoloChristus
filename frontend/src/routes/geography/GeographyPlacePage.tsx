@@ -1,9 +1,10 @@
-import { useParams, Link } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { getPlaceByName } from "@/lib/supabase/queries/geography"
 import { PlaceMiniMap } from "@/features/geography/components/PlaceMiniMap"
 import { SourceAttribution } from "@/components/layout/SourceAttribution"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { Badge } from "@/components/ui/badge"
 
 export function GeographyPlacePage() {
@@ -22,9 +23,7 @@ export function GeographyPlacePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
-      <Link to="/geography" className="text-sm text-muted-foreground hover:underline">
-        ← {t("geography:backToList")}
-      </Link>
+      <Breadcrumbs items={[{ label: t("geography:title"), to: "/geography" }, { label: place.name }]} />
 
       <div className="mt-2 flex items-center gap-2">
         <h1 className="font-serif text-3xl text-foreground">{place.name}</h1>

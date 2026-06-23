@@ -30,5 +30,22 @@
   "citations": {
     "loading": "A carregar citações...",
     "citedBy": "Citado por"
+  },
+  "verseActions": {
+    "copyReference": "Copiar referência",
+    "copyText": "Copiar texto",
+    "copied": "Copiado!",
+    "openParallel": "Ver em comparação paralela",
+    "addBookmark": "Adicionar aos favoritos",
+    "removeBookmark": "Remover dos favoritos"
+  },
+  "continueReading": {
+    "title": "Continuar a ler",
+    "button": "Continuar"
+  },
+  "favorites": {
+    "title": "Favoritos",
+    "empty": "Ainda não guardaste nenhum versículo. Clica no número de um versículo no leitor e escolhe \"Adicionar aos favoritos\".",
+    "remove": "Remover"
   }
 }

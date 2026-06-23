@@ -12,5 +12,8 @@
     "morphology": "Morfologia",
     "gloss": "Tradução curta"
   },
-  "searchPlaceholder": "Pesquisar no léxico..."
+  "searchPlaceholder": "Pesquisar no léxico...",
+  "totalEntries": "{{count}} entradas",
+  "previous": "Anterior",
+  "next": "Seguinte"
 }

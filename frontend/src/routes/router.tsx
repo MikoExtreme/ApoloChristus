@@ -8,6 +8,7 @@ import { BibleLandingPage } from "@/routes/bible/BibleLandingPage"
 import { BibleBookPage } from "@/routes/bible/BibleBookPage"
 import { BibleChapterPage } from "@/routes/bible/BibleChapterPage"
 import { BibleJumpPage } from "@/routes/bible/BibleJumpPage"
+import { FavoritesPage } from "@/routes/bible/FavoritesPage"
 
 import { PatristicsLandingPage } from "@/routes/patristics/PatristicsLandingPage"
 import { PatristicsAuthorPage } from "@/routes/patristics/PatristicsAuthorPage"
@@ -45,6 +46,7 @@ export const router = createBrowserRouter([
       { path: "bible/go", element: <BibleJumpPage /> },
       { path: "bible/:versionId", element: <BibleBookPage /> },
       { path: "bible/:versionId/:book/:chapter", element: <BibleChapterPage /> },
+      { path: "favorites", element: <FavoritesPage /> },
 
       { path: "patristics", element: <PatristicsLandingPage /> },
       { path: "patristics/:period", element: <PatristicsAuthorPage /> },

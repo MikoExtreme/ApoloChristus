@@ -17,7 +17,7 @@ export function LanguageSwitcher() {
       }}
     >
       <SelectTrigger aria-label="Idioma" className="w-[130px]">
-        <SelectValue />
+        <SelectValue>{(value: string) => LANGUAGES.find((l) => l.value === value)?.label ?? value}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         {LANGUAGES.map(({ value, label }) => (

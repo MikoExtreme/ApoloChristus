@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase/client"
-import type { ApocryphalSectionRow, ApocryphalWorkRow } from "@/types/database.types"
+import { toTsQueryInput } from "@/lib/supabase/queries/sanitize"
+import type { ApocryphalSectionRow, ApocryphalWorkRow, SearchApocryphaResult } from "@/types/database.types"
 
 export async function getApocryphaCategories(): Promise<string[]> {
   const { data, error } = await supabase.from("apocryphal_works").select("category")
@@ -29,6 +30,14 @@ export async function getSectionsForWork(workId: string): Promise<ApocryphalSect
     .select("*")
     .eq("work_id", workId)
     .order("section_num")
+  if (error) throw error
+  return data ?? []
+}
+
+export async function searchApocrypha(query: string, lim = 20): Promise<SearchApocryphaResult[]> {
+  const tsQuery = toTsQueryInput(query)
+  if (!tsQuery) return []
+  const { data, error } = await supabase.rpc("search_apocrypha", { query: tsQuery, lim })
   if (error) throw error
   return data ?? []
 }

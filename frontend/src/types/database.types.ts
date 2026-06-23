@@ -5,7 +5,7 @@
 //   supabase gen types typescript --project-id <ref> > src/types/database.types.ts
 // (não corrido nesta sessão — exige login interativo do utilizador)
 
-export type License = "public_domain" | "check_rights" | "licensed"
+export type License = "public_domain" | "check_rights" | "licensed" | "machine_translated"
 export type Testament = "OT" | "NT"
 export type PatristicPeriod = "apostolic" | "ante_nicene" | "nicene" | "post_nicene" | "medieval"
 export type GlossarySource = "easton" | "smith" | "hastings" | "hitchcock" | "schaff"
@@ -61,6 +61,7 @@ export type PatristicWorkRow = {
   source_url: string | null
   language: string
   license: License
+  translated_from_work_id: string | null
   created_at: string
 }
 
@@ -230,6 +231,33 @@ export type VersesCitedByFathersResult = {
   section_text: string
 }
 
+export type SearchApocryphaResult = {
+  work_id: string
+  section_num: number
+  text: string
+  work_title_pt: string
+  work_title_en: string
+  category: string
+  rank: number
+}
+
+export type SearchCreedsResult = {
+  work_id: string
+  section_num: number
+  text: string
+  language: string
+  work_title: string
+  work_title_pt: string | null
+  rank: number
+}
+
+export type SearchGlossaryResult = {
+  term: string
+  source: string
+  definition: string
+  rank: number
+}
+
 type TableDef<Row> = {
   Row: Row
   Insert: Partial<Row>
@@ -274,6 +302,9 @@ export type Database = {
         { p_book: string; p_chapter: number; p_verse: number },
         VersesCitedByFathersResult[]
       >
+      search_apocrypha: FunctionDef<{ query: string; lim?: number }, SearchApocryphaResult[]>
+      search_creeds: FunctionDef<{ query: string; lim?: number }, SearchCreedsResult[]>
+      search_glossary: FunctionDef<{ query: string; lim?: number }, SearchGlossaryResult[]>
     }
     Enums: Record<string, never>
     CompositeTypes: Record<string, never>

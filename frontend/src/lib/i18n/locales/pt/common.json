@@ -35,6 +35,9 @@
   "licenses": {
     "public_domain": "Domínio público",
     "check_rights": "Direitos a confirmar",
-    "licensed": "Licenciado (CC-BY)"
-  }
+    "licensed": "Licenciado (CC-BY)",
+    "machine_translated": "Tradução automática (não revista)"
+  },
+  "machineTranslationWarning": "Esta tradução para português foi gerada automaticamente (não há, até à data, uma tradução portuguesa fiável e gratuita conhecida desta obra) e pode conter erros ou imprecisões. Para leitura rigorosa, consulta o texto original em inglês.",
+  "archaicSpellingNote": "Esta versão é a tradução de 1911 de João Ferreira de Almeida, anterior ao acordo ortográfico. Palavras como \"creou\", \"fórma\" ou \"vasia\" não são erros — refletem a ortografia portuguesa da época."
 }

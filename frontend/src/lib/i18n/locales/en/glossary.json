@@ -2,6 +2,9 @@
   "title": "Glossary",
   "browseAlphabetically": "A-Z index",
   "searchPlaceholder": "Search a term...",
+  "totalTerms": "{{count}} terms",
+  "previous": "Previous",
+  "next": "Next",
   "sources": {
     "easton": "Easton (1897)",
     "smith": "Smith (1863)",

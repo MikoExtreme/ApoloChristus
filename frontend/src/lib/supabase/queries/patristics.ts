@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase/client"
 import { toTsQueryInput } from "@/lib/supabase/queries/sanitize"
+import { fetchAllRows } from "@/lib/supabase/queries/pagination"
 import type {
   PatristicAuthorRow,
   PatristicPeriod,
@@ -49,14 +50,29 @@ export async function getWorkById(workId: string): Promise<PatristicWorkRow | nu
   return data
 }
 
+// Algumas obras (homilias de Crisóstomo, "Enarrations" de Agostinho sobre
+// os Salmos, etc.) têm mais de 1000 secções — acima do limite por omissão
+// do PostgREST. Sem paginação explícita, a obra ficava cortada a meio
+// silenciosamente (ex: Homilias de Crisóstomo sobre Mateus: 4484 secções,
+// só as primeiras 1000 apareciam).
 export async function getSectionsForWork(workId: string): Promise<PatristicSectionRow[]> {
+  return fetchAllRows<PatristicSectionRow>((from, to) =>
+    supabase.from("patristic_sections").select("*").eq("work_id", workId).order("section_num").range(from, to)
+  )
+}
+
+// Nem todas as obras têm tradução PT — quando existe, é uma linha separada
+// em patristic_works (language='pt') ligada à obra original por
+// translated_from_work_id, em vez de uma coluna paralela como em creeds_confessions.
+export async function getPtTranslationForWork(workId: string): Promise<PatristicWorkRow | null> {
   const { data, error } = await supabase
-    .from("patristic_sections")
+    .from("patristic_works")
     .select("*")
-    .eq("work_id", workId)
-    .order("section_num")
+    .eq("translated_from_work_id", workId)
+    .eq("language", "pt")
+    .maybeSingle()
   if (error) throw error
-  return data ?? []
+  return data
 }
 
 export async function searchPatristics(query: string, lim = 20): Promise<SearchPatristicsResult[]> {

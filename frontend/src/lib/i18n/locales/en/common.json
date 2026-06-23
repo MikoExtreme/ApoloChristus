@@ -35,6 +35,9 @@
   "licenses": {
     "public_domain": "Public domain",
     "check_rights": "Rights to confirm",
-    "licensed": "Licensed (CC-BY)"
-  }
+    "licensed": "Licensed (CC-BY)",
+    "machine_translated": "Machine translation (unreviewed)"
+  },
+  "machineTranslationWarning": "This Portuguese translation was generated automatically (no reliable free Portuguese translation of this work is known to exist) and may contain errors or inaccuracies. For careful reading, consult the original English text.",
+  "archaicSpellingNote": "This version is João Ferreira de Almeida's 1911 translation, predating the Portuguese orthographic reform. Words like \"creou\", \"fórma\", or \"vasia\" are not errors — they reflect the spelling conventions of the period."
 }

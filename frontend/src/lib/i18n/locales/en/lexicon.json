@@ -12,5 +12,8 @@
     "morphology": "Morphology",
     "gloss": "Short gloss"
   },
-  "searchPlaceholder": "Search the lexicon..."
+  "searchPlaceholder": "Search the lexicon...",
+  "totalEntries": "{{count}} entries",
+  "previous": "Previous",
+  "next": "Next"
 }

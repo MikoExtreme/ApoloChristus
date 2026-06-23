@@ -11,6 +11,8 @@ interface VerseListProps {
   concordanceClickable: boolean
   onTextWordClick: (word: string) => void
   onStrongClick: (strongNumber: string) => void
+  highlightedVerse?: number
+  parallelCandidateVersionId?: string
 }
 
 export function VerseList({
@@ -23,6 +25,8 @@ export function VerseList({
   concordanceClickable,
   onTextWordClick,
   onStrongClick,
+  highlightedVerse,
+  parallelCandidateVersionId,
 }: VerseListProps) {
   return (
     <div className="flex flex-col">
@@ -38,6 +42,8 @@ export function VerseList({
           concordanceClickable={concordanceClickable}
           onTextWordClick={onTextWordClick}
           onStrongClick={onStrongClick}
+          highlighted={verse.verse === highlightedVerse}
+          parallelCandidateVersionId={parallelCandidateVersionId}
         />
       ))}
     </div>

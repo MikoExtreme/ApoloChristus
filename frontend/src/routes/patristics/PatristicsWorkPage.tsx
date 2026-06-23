@@ -3,10 +3,11 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { getAuthorById, getWorksForAuthor } from "@/lib/supabase/queries/patristics"
 import { Card, CardContent } from "@/components/ui/card"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 
 export function PatristicsWorkPage() {
   const { period, authorId } = useParams<{ period: string; authorId: string }>()
-  const { t } = useTranslation("common")
+  const { t } = useTranslation(["common", "patristics"])
   const { data: author } = useQuery({
     queryKey: ["patristic-author", authorId],
     queryFn: () => getAuthorById(authorId!),
@@ -20,6 +21,13 @@ export function PatristicsWorkPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
+      <Breadcrumbs
+        items={[
+          { label: t("nav.patristics"), to: "/patristics" },
+          { label: t(`patristics:periods.${period}`), to: `/patristics/${period}` },
+          { label: author?.name_pt ?? authorId ?? "" },
+        ]}
+      />
       <h1 className="font-serif text-3xl text-foreground">{author?.name_pt ?? authorId}</h1>
 
       {isLoading && <p className="mt-6 text-muted-foreground">{t("common.loading")}</p>}

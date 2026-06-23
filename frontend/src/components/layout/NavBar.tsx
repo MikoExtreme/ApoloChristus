@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { Menu } from "lucide-react"
+import { Menu, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { SearchBar } from "@/features/search/components/SearchBar"
@@ -18,7 +18,7 @@ const SECTIONS = [
 ] as const
 
 export function NavBar() {
-  const { t } = useTranslation("common")
+  const { t } = useTranslation(["common", "bible"])
 
   return (
     <header className="border-b border-border bg-card">
@@ -44,6 +44,11 @@ export function NavBar() {
         </div>
 
         <div className="hidden shrink-0 items-center gap-2 md:flex">
+          <Link to="/favorites" aria-label={t("bible:favorites.title")}>
+            <Button variant="ghost" size="icon">
+              <Star className="size-4" />
+            </Button>
+          </Link>
           <LanguageSwitcher />
           <ThemeSwitcher />
         </div>
@@ -68,6 +73,9 @@ export function NavBar() {
                     {t(key)}
                   </Link>
                 ))}
+                <Link to="/favorites" className="flex items-center gap-1.5 text-sm text-foreground hover:underline">
+                  <Star className="size-4" /> {t("bible:favorites.title")}
+                </Link>
               </nav>
               <div className="flex items-center gap-2">
                 <LanguageSwitcher />

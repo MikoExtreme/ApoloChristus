@@ -58,9 +58,9 @@ echo "SUPABASE_SERVICE_KEY=eyJ..." >> .env
 python fetchers/bible_fetcher.py
 ```
 
-Por omissão corre só `pt-aa` (rápido, ficheiro único) para teste. Edita o
+Por omissão corre só `pt-jfaal` (rápido, ficheiro único) para teste. Edita o
 `if __name__ == "__main__":` no fim do ficheiro e chama `run()` sem
-argumentos para todas as 6 versões.
+argumentos para todas as 5 versões.
 
 | ID | Nome | Língua | Licença | Fonte |
 |----|------|--------|---------|-------|
@@ -68,13 +68,19 @@ argumentos para todas as 6 versões.
 | en-asv | American Standard Version | EN | Domínio público | wldeh/bible-api |
 | grc-grctr | Textus Receptus (NT) | Grego | Domínio público | wldeh/bible-api |
 | hbo-wlc | Westminster Leningrad Codex (AT) | Hebraico | Domínio público | wldeh/bible-api |
-| pt-aa | Almeida Atualizada | PT | A confirmar | thiagobodruk/biblia |
-| pt-acf | Almeida Corrigida Fiel | PT | A confirmar | thiagobodruk/biblia |
+| pt-jfaal | Almeida 1911 (João Ferreira de Almeida) | PT | Domínio público | BibliaJFAAL/JFAAL |
 
 **Nota importante**: não existe nenhuma versão Almeida no `wldeh/bible-api`
 — só inglês, grego e hebraico. O português vem de uma fonte diferente
-(`thiagobodruk/biblia`), com licença ainda por confirmar formalmente antes
-de qualquer publicação pública (ver Notas legais).
+(`BibliaJFAAL/JFAAL`, ficheiro `original/1911-JFAAtualizada.json`,
+digitalização da edição de 1911 da tradução de João Ferreira de Almeida).
+
+**Histórico**: as versões `pt-aa` e `pt-acf` (de `thiagobodruk/biblia`)
+foram removidas em 2026-06-22 após investigação confirmar que nenhuma das
+duas é domínio público — a ACF é propriedade reservada da Sociedade
+Bíblica Trinitariana do Brasil, e a AA desse repositório é atribuída à
+Imprensa Bíblica Brasileira pelo próprio README da fonte (a licença
+CC BY-NC do repo cobre só a compilação, não as traduções em si).
 
 ### Passo 2 — Pais da Igreja
 
@@ -117,7 +123,7 @@ duplicados.
 | Fonte | URL | Chave? | Conteúdo |
 |-------|-----|--------|---------|
 | wldeh/bible-api | github.com/wldeh/bible-api | Não | Bíblia: inglês, grego, hebraico (usa `raw.githubusercontent.com`, o CDN jsdelivr está bloqueado por tamanho do repo) |
-| thiagobodruk/biblia | github.com/thiagobodruk/biblia | Não | Bíblia: português (Almeida Atualizada, Almeida Corrigida Fiel) |
+| BibliaJFAAL/JFAAL | github.com/BibliaJFAAL/JFAAL | Não | Bíblia: português (Almeida 1911, domínio público confirmado) |
 | New Advent | newadvent.org/fathers | Não | Pais da Igreja (ANF/NPNF) |
 | Early Christian Writings | earlychristianwritings.com | Não | Apócrifos e textos gnósticos |
 
@@ -127,10 +133,7 @@ A coluna `license` em cada tabela (`public_domain` \| `check_rights`)
 reflete o que foi possível confirmar durante o desenvolvimento, **não**
 uma garantia legal formal. Antes de publicar a app publicamente, confirma:
 
-- **en-kjv, en-asv, grc-grctr, hbo-wlc**: domínio público, sem dúvida.
-- **pt-aa, pt-acf**: a licença real não foi confirmada — vêm de um
-  repositório GitHub de terceiros sem declaração explícita de domínio
-  público. Verificar com a Sociedade Bíblica antes de publicar.
+- **en-kjv, en-asv, grc-grctr, hbo-wlc, pt-jfaal**: domínio público, sem dúvida.
 - **Pais da Igreja (New Advent)**: as traduções ANF/NPNF usadas são do
   séc. XIX, genuinamente em domínio público.
 - **Apócrifos**: varia por obra. As traduções **Roberts-Donaldson**

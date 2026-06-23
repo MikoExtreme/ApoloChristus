@@ -19,7 +19,7 @@ export function ThemeSwitcher() {
       }}
     >
       <SelectTrigger aria-label="Tema" className="w-[150px]">
-        <SelectValue />
+        <SelectValue>{(value: Theme) => THEME_LABELS[value] ?? value}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         {(Object.keys(THEME_LABELS) as Theme[]).map((value) => (

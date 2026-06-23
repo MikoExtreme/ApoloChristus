@@ -8,7 +8,7 @@ import { ReferenceJumpInput } from "@/features/bible/components/ReferenceJumpInp
 export function BibleJumpPage() {
   const { t } = useTranslation("bible")
   const { data: versions } = useQuery({ queryKey: ["bible-versions"], queryFn: getBibleVersions })
-  const [versionId, setVersionId] = useState("pt-aa")
+  const [versionId, setVersionId] = useState("pt-jfaal")
 
   return (
     <div className="mx-auto max-w-xl px-4 py-12">
@@ -17,7 +17,12 @@ export function BibleJumpPage() {
       <div className="mt-6 flex flex-col gap-3">
         <Select value={versionId} onValueChange={(v) => v && setVersionId(v)}>
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue>
+              {(value: string) => {
+                const v = versions?.find((item) => item.id === value)
+                return v ? `${v.name} (${v.id})` : value
+              }}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {versions?.map((v) => (

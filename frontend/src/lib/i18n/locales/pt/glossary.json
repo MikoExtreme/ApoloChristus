@@ -2,6 +2,9 @@
   "title": "Glossário",
   "browseAlphabetically": "Índice A-Z",
   "searchPlaceholder": "Pesquisar termo...",
+  "totalTerms": "{{count}} termos",
+  "previous": "Anterior",
+  "next": "Seguinte",
   "sources": {
     "easton": "Easton (1897)",
     "smith": "Smith (1863)",

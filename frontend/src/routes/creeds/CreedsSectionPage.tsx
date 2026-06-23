@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { getCreedById, getSectionsForWork } from "@/lib/supabase/queries/creeds"
 import { SourceAttribution } from "@/components/layout/SourceAttribution"
+import { MachineTranslationWarning } from "@/components/layout/MachineTranslationWarning"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 
 export function CreedsSectionPage() {
   const { workId } = useParams<{ workId: string }>()
@@ -31,14 +33,27 @@ export function CreedsSectionPage() {
   const sections = wantsPt && !needsEnFallback ? ptSections : enSections
   const isLoading = wantsPt ? loadingPt || (needsEnFallback && loadingEn) : loadingEn
   const showingPt = wantsPt && !needsEnFallback
+  const isMachineTranslated = showingPt && creed?.license_pt === "machine_translated"
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
+      <Breadcrumbs
+        items={[
+          { label: t("nav.creeds"), to: "/creeds" },
+          { label: (i18n.language === "en" ? creed?.title : (creed?.title_pt ?? creed?.title)) ?? workId ?? "" },
+        ]}
+      />
       <h1 className="font-serif text-3xl text-foreground">
         {(i18n.language === "en" ? creed?.title : (creed?.title_pt ?? creed?.title)) ?? workId}
       </h1>
 
       {isLoading && <p className="mt-6 text-muted-foreground">{t("common.loading")}</p>}
+
+      {isMachineTranslated && (
+        <div className="mt-6">
+          <MachineTranslationWarning />
+        </div>
+      )}
 
       <div className="mt-6 flex flex-col gap-4 font-serif text-lg leading-relaxed">
         {sections?.map((section) => (

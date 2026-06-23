@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { getEntryByDStrong } from "@/lib/supabase/queries/lexicon"
 import { SourceAttribution } from "@/components/layout/SourceAttribution"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 
 export function LexiconEntryPage() {
   const { dStrong } = useParams<{ dStrong: string }>()
@@ -18,6 +19,7 @@ export function LexiconEntryPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
+      <Breadcrumbs items={[{ label: t("nav.lexicon"), to: "/lexicon" }, { label: entry.word }]} />
       <h1 className="font-serif text-4xl text-foreground">{entry.word}</h1>
       {entry.transliteration && <p className="mt-1 text-muted-foreground">{entry.transliteration}</p>}
 

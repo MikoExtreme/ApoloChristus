@@ -30,5 +30,22 @@
   "citations": {
     "loading": "Loading citations...",
     "citedBy": "Cited by"
+  },
+  "verseActions": {
+    "copyReference": "Copy reference",
+    "copyText": "Copy text",
+    "copied": "Copied!",
+    "openParallel": "View in parallel comparison",
+    "addBookmark": "Add to favorites",
+    "removeBookmark": "Remove from favorites"
+  },
+  "continueReading": {
+    "title": "Continue reading",
+    "button": "Continue"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "You haven't saved any verses yet. Click a verse number in the reader and choose \"Add to favorites\".",
+    "remove": "Remove"
   }
 }

@@ -3,10 +3,11 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { getSectionsForWork, getWorkById } from "@/lib/supabase/queries/apocrypha"
 import { SourceAttribution } from "@/components/layout/SourceAttribution"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 
 export function ApocryphaSectionPage() {
-  const { workId } = useParams<{ workId: string }>()
-  const { t, i18n } = useTranslation("common")
+  const { category, workId } = useParams<{ category: string; workId: string }>()
+  const { t, i18n } = useTranslation(["common", "apocrypha"])
   const { data: work } = useQuery({
     queryKey: ["apocrypha-work", workId],
     queryFn: () => getWorkById(workId!),
@@ -20,6 +21,13 @@ export function ApocryphaSectionPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
+      <Breadcrumbs
+        items={[
+          { label: t("nav.apocrypha"), to: "/apocrypha" },
+          { label: t(`apocrypha:categories.${category}`), to: `/apocrypha/${category}` },
+          { label: (i18n.language === "en" ? work?.title_en : work?.title_pt) ?? workId ?? "" },
+        ]}
+      />
       <h1 className="font-serif text-3xl text-foreground">
         {(i18n.language === "en" ? work?.title_en : work?.title_pt) ?? workId}
       </h1>

@@ -71,9 +71,23 @@ export function ReaderToolbar({ versions, currentVersionId, testament }: ReaderT
       </Button>
 
       {concordanceActive && !isParallel && (
-        <Select value={concordanceMode} onValueChange={(v) => v && setConcordanceMode(v as "text" | "original")}>
+        <Select
+          value={concordanceMode}
+          onValueChange={(v) => {
+            if (!v) return
+            setConcordanceMode(v as "text" | "original")
+            // O modo "Original" precisa do painel interlinear visível para
+            // ter palavras gregas/hebraicas em que clicar — sem isto, a
+            // concordância original parecia simplesmente não fazer nada.
+            if (v === "original") setInterlinear(true)
+          }}
+        >
           <SelectTrigger className="w-[140px]">
-            <SelectValue />
+            <SelectValue>
+              {(value: "text" | "original") =>
+                value === "original" ? t("toggles.concordanceOriginal") : t("toggles.concordanceText")
+              }
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="text">{t("toggles.concordanceText")}</SelectItem>
@@ -89,7 +103,13 @@ export function ReaderToolbar({ versions, currentVersionId, testament }: ReaderT
           onValueChange={(value) => setParallelVersions(!value || value === NONE_VALUE ? [] : [value])}
         >
           <SelectTrigger className="w-[220px]">
-            <SelectValue placeholder="—" />
+            <SelectValue placeholder="—">
+              {(value: string) => {
+                if (!value || value === NONE_VALUE) return "—"
+                const v = compatibleVersions.find((item) => item.id === value)
+                return v ? `${v.name} (${v.id})` : value
+              }}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={NONE_VALUE}>—</SelectItem>

@@ -1,6 +1,8 @@
 import { Fragment } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { useChapter } from "@/features/bible/hooks/useChapter"
+import { getBibleVersions } from "@/lib/supabase/queries/bible"
 import { Badge } from "@/components/ui/badge"
 import type { VerseRow } from "@/types/database.types"
 
@@ -21,6 +23,9 @@ export function ParallelColumnView({ versionIds, book, chapter }: ParallelColumn
   const versionA = versionIds[0]
   const versionB = versionIds[1]
 
+  const { data: versions } = useQuery({ queryKey: ["bible-versions"], queryFn: getBibleVersions })
+  const nameFor = (id: string) => versions?.find((v) => v.id === id)?.name ?? id
+
   const { data: versesA, isLoading: loadingA } = useChapter(versionA, book, chapter)
   const { data: versesB, isLoading: loadingB } = useChapter(versionB, book, chapter)
 
@@ -37,8 +42,12 @@ export function ParallelColumnView({ versionIds, book, chapter }: ParallelColumn
 
   return (
     <div className="grid grid-cols-2 gap-x-6">
-      <h3 className="sticky top-0 bg-background pb-2 text-sm font-semibold text-muted-foreground">{versionA}</h3>
-      <h3 className="sticky top-0 bg-background pb-2 text-sm font-semibold text-muted-foreground">{versionB}</h3>
+      <h3 className="sticky top-0 bg-background pb-2 text-sm font-semibold text-muted-foreground">
+        {nameFor(versionA)}
+      </h3>
+      <h3 className="sticky top-0 bg-background pb-2 text-sm font-semibold text-muted-foreground">
+        {nameFor(versionB)}
+      </h3>
 
       {verseNumbers.map((verseNum) => (
         <Fragment key={verseNum}>

@@ -90,8 +90,13 @@ CREATE TABLE IF NOT EXISTS patristic_works (
     source_url  TEXT,
     language    TEXT NOT NULL DEFAULT 'en',
     license     TEXT NOT NULL DEFAULT 'public_domain',
+    -- Liga uma tradução (language='pt') à obra original (EN) para fallback no frontend.
+    translated_from_work_id TEXT REFERENCES patristic_works(id) ON DELETE SET NULL,
     created_at  TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS patristic_works_translated_from_idx
+    ON patristic_works (translated_from_work_id);
 
 CREATE TABLE IF NOT EXISTS patristic_sections (
     id          BIGSERIAL PRIMARY KEY,
@@ -342,11 +347,16 @@ RETURNS TABLE (
     version_id TEXT, testament TEXT, book TEXT,
     chapter SMALLINT, verse SMALLINT, text TEXT, rank REAL
 ) LANGUAGE SQL AS $$
-    SELECT version_id, testament, book, chapter, verse, text,
-           ts_rank(search_vec, to_tsquery('portuguese', immutable_unaccent(query))) AS rank
-    FROM verses
-    WHERE search_vec @@ to_tsquery('portuguese', immutable_unaccent(query))
-      AND (version IS NULL OR version_id = version)
+    -- Restringe a bible_versions.language = 'pt' — o search_vec usa sempre
+    -- o dicionário 'portuguese', o que por si só não impede texto inglês
+    -- de ser indexado e devolvido (ver migração 2026-06-22).
+    SELECT v.version_id, v.testament, v.book, v.chapter, v.verse, v.text,
+           ts_rank(v.search_vec, to_tsquery('portuguese', immutable_unaccent(query))) AS rank
+    FROM verses v
+    JOIN bible_versions bv ON bv.id = v.version_id
+    WHERE v.search_vec @@ to_tsquery('portuguese', immutable_unaccent(query))
+      AND bv.language = 'pt'
+      AND (version IS NULL OR v.version_id = version)
     ORDER BY rank DESC
     LIMIT lim;
 $$;
@@ -366,6 +376,58 @@ RETURNS TABLE (
     JOIN patristic_works pw ON pw.id = ps.work_id
     JOIN patristic_authors pa ON pa.id = pw.author_id
     WHERE ps.search_vec @@ to_tsquery('english', query)
+    ORDER BY rank DESC
+    LIMIT lim;
+$$;
+
+-- Pesquisa nos Apócrifos
+CREATE OR REPLACE FUNCTION search_apocrypha(query TEXT, lim INT DEFAULT 20)
+RETURNS TABLE (
+    work_id TEXT, section_num INT, text TEXT,
+    work_title_pt TEXT, work_title_en TEXT, category TEXT, rank REAL
+) LANGUAGE SQL AS $$
+    SELECT
+        aps.work_id, aps.section_num, aps.text,
+        aw.title_pt AS work_title_pt,
+        aw.title_en AS work_title_en,
+        aw.category,
+        ts_rank(aps.search_vec, to_tsquery('english', query)) AS rank
+    FROM apocryphal_sections aps
+    JOIN apocryphal_works aw ON aw.id = aps.work_id
+    WHERE aps.search_vec @@ to_tsquery('english', query)
+    ORDER BY rank DESC
+    LIMIT lim;
+$$;
+
+-- Pesquisa em Credos & Confissões (ambas as línguas — search_vec usa
+-- sempre o dicionário 'english', mesmo limite já existente nas secções)
+CREATE OR REPLACE FUNCTION search_creeds(query TEXT, lim INT DEFAULT 20)
+RETURNS TABLE (
+    work_id TEXT, section_num INT, text TEXT, language TEXT,
+    work_title TEXT, work_title_pt TEXT, rank REAL
+) LANGUAGE SQL AS $$
+    SELECT
+        ccs.work_id, ccs.section_num, ccs.text, ccs.language,
+        cc.title AS work_title,
+        cc.title_pt AS work_title_pt,
+        ts_rank(ccs.search_vec, to_tsquery('english', query)) AS rank
+    FROM creeds_confessions_sections ccs
+    JOIN creeds_confessions cc ON cc.id = ccs.work_id
+    WHERE ccs.search_vec @@ to_tsquery('english', query)
+    ORDER BY rank DESC
+    LIMIT lim;
+$$;
+
+-- Pesquisa no Glossário
+CREATE OR REPLACE FUNCTION search_glossary(query TEXT, lim INT DEFAULT 20)
+RETURNS TABLE (
+    term TEXT, source TEXT, definition TEXT, rank REAL
+) LANGUAGE SQL AS $$
+    SELECT
+        gt.term, gt.source, gt.definition,
+        ts_rank(gt.search_vec, to_tsquery('english', immutable_unaccent(query))) AS rank
+    FROM glossary_terms gt
+    WHERE gt.search_vec @@ to_tsquery('english', immutable_unaccent(query))
     ORDER BY rank DESC
     LIMIT lim;
 $$;
