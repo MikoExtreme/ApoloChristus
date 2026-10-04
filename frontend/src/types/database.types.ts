@@ -82,6 +82,7 @@ export type ApocryphalWorkRow = {
   source_url: string | null
   language: string
   license: License
+  translated_from_work_id: string | null
   created_at: string
 }
 
@@ -251,6 +252,68 @@ export type SearchCreedsResult = {
   rank: number
 }
 
+export type ApologeticsCategory = "existence_of_god" | "gospel_reliability" | "resurrection"
+
+export type LogicalForm = {
+  premises: string[]
+  conclusion: string
+}
+
+export type ApologeticsArgumentRow = {
+  id: string
+  category: ApologeticsCategory
+  order_in_category: number
+  title_en: string
+  title_pt: string | null
+  subtitle_en: string | null
+  subtitle_pt: string | null
+  logical_form_en: LogicalForm | null
+  logical_form_pt: LogicalForm | null
+  explanation_en: string
+  explanation_pt: string | null
+  historical_origin: string | null
+  license: string
+}
+
+export type CouncilTradition = "ecumenical" | "catholic" | "orthodox" | "protestant" | "reformed"
+export type CouncilType = "ecumenical" | "regional" | "synod"
+
+export type CouncilRow = {
+  id: string
+  name: string
+  name_pt: string | null
+  year: string | null
+  year_end: string | null
+  location: string | null
+  tradition: CouncilTradition
+  type: CouncilType
+  description: string | null
+  source_url: string | null
+  license: License
+  created_at: string
+}
+
+export type CouncilCanonRow = {
+  id: number
+  council_id: string
+  canon_num: number
+  language: string
+  title: string | null
+  text: string
+  notes: string | null
+}
+
+export type SearchCouncilsResult = {
+  council_id: string
+  canon_num: number
+  language: string
+  title: string | null
+  text: string
+  council_name: string
+  year: string | null
+  rank: number
+}
+
 export type SearchGlossaryResult = {
   term: string
   source: string
@@ -288,6 +351,9 @@ export type Database = {
       lexicon_entries: TableDef<LexiconEntryRow>
       interlinear_words: TableDef<InterlinearWordRow>
       patristic_citations: TableDef<PatristicCitationRow>
+      councils: TableDef<CouncilRow>
+      council_canons: TableDef<CouncilCanonRow>
+      apologetics_arguments: TableDef<ApologeticsArgumentRow>
     }
     Views: Record<string, never>
     Functions: {
@@ -305,6 +371,7 @@ export type Database = {
       search_apocrypha: FunctionDef<{ query: string; lim?: number }, SearchApocryphaResult[]>
       search_creeds: FunctionDef<{ query: string; lim?: number }, SearchCreedsResult[]>
       search_glossary: FunctionDef<{ query: string; lim?: number }, SearchGlossaryResult[]>
+      search_councils: FunctionDef<{ query: string; lim?: number }, SearchCouncilsResult[]>
     }
     Enums: Record<string, never>
     CompositeTypes: Record<string, never>

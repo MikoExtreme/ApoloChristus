@@ -5,63 +5,297 @@
    o atributo data-theme em <html> (ver useThemeStore e ThemeSwitcher). */
 
 @layer base {
+  /* Faixa de identidade — gradiente horizontal fino usado no topo da NavBar.
+     Cada tradição tem a sua combinação: os temas litúrgicos (católico e
+     ortodoxo) levam ouro ao centro; protestante e agnóstico são sóbrios. */
+  :root {
+    --theme-strip: linear-gradient(90deg, oklch(0.4 0.02 230) 0%, oklch(0.62 0.03 230) 50%, oklch(0.4 0.02 230) 100%);
+  }
   :root[data-theme="catholic"] {
-    --background: oklch(0.96 0.02 80);
-    --foreground: oklch(0.25 0.06 25);
-    --card: oklch(0.97 0.015 80);
-    --card-foreground: oklch(0.25 0.06 25);
-    --popover: oklch(0.97 0.015 80);
-    --popover-foreground: oklch(0.25 0.06 25);
-    --primary: oklch(0.35 0.15 25);
-    --primary-foreground: oklch(0.95 0.03 85);
-    --secondary: oklch(0.88 0.04 75);
-    --secondary-foreground: oklch(0.3 0.05 25);
-    --muted: oklch(0.9 0.02 75);
-    --muted-foreground: oklch(0.45 0.03 30);
-    --accent: oklch(0.75 0.13 85);
-    --accent-foreground: oklch(0.25 0.05 25);
-    --border: oklch(0.85 0.03 70);
-    --input: oklch(0.85 0.03 70);
-    --ring: oklch(0.35 0.15 25);
+    --theme-strip: linear-gradient(90deg, oklch(0.34 0.13 25) 0%, oklch(0.72 0.14 85) 50%, oklch(0.34 0.13 25) 100%);
+  }
+  :root[data-theme="orthodox"] {
+    --theme-strip: linear-gradient(90deg, oklch(0.28 0.15 283) 0%, oklch(0.74 0.13 88) 50%, oklch(0.28 0.15 283) 100%);
+  }
+  :root[data-theme="protestant"] {
+    --theme-strip: linear-gradient(90deg, oklch(0.26 0.1 240) 0%, oklch(0.42 0.09 150) 50%, oklch(0.26 0.1 240) 100%);
+  }
+  :root[data-theme="agnostic"] {
+    --theme-strip: linear-gradient(90deg, oklch(0.4 0.02 230) 0%, oklch(0.62 0.03 230) 50%, oklch(0.4 0.02 230) 100%);
+  }
+
+  :root[data-theme="catholic"] {
+    --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+    --background: oklch(0.95 0.025 75);
+    --foreground: oklch(0.22 0.07 25);
+    --card: oklch(0.965 0.02 78);
+    --card-foreground: oklch(0.22 0.07 25);
+    --popover: oklch(0.965 0.02 78);
+    --popover-foreground: oklch(0.22 0.07 25);
+    --primary: oklch(0.3 0.19 25);
+    --primary-foreground: oklch(0.96 0.04 85);
+    --secondary: oklch(0.86 0.05 73);
+    --secondary-foreground: oklch(0.26 0.06 25);
+    --muted: oklch(0.89 0.025 73);
+    --muted-foreground: oklch(0.42 0.04 30);
+    --accent: oklch(0.68 0.16 82);
+    --accent-foreground: oklch(0.22 0.06 25);
+    --border: oklch(0.82 0.04 68);
+    --input: oklch(0.82 0.04 68);
+    --ring: oklch(0.3 0.19 25);
   }
 
   :root[data-theme="orthodox"] {
-    --background: oklch(0.94 0.015 90);
-    --foreground: oklch(0.22 0.06 280);
-    --card: oklch(0.96 0.012 90);
-    --card-foreground: oklch(0.22 0.06 280);
-    --popover: oklch(0.96 0.012 90);
-    --popover-foreground: oklch(0.22 0.06 280);
-    --primary: oklch(0.3 0.13 280);
-    --primary-foreground: oklch(0.92 0.05 85);
-    --secondary: oklch(0.87 0.04 270);
-    --secondary-foreground: oklch(0.25 0.06 280);
-    --muted: oklch(0.89 0.02 270);
-    --muted-foreground: oklch(0.45 0.04 270);
-    --accent: oklch(0.78 0.13 80);
-    --accent-foreground: oklch(0.22 0.06 280);
-    --border: oklch(0.82 0.04 270);
-    --input: oklch(0.82 0.04 270);
-    --ring: oklch(0.3 0.13 280);
+    --font-serif: 'EB Garamond', ui-serif, Georgia, serif;
+    --background: oklch(0.93 0.02 88);
+    --foreground: oklch(0.19 0.07 280);
+    --card: oklch(0.955 0.016 88);
+    --card-foreground: oklch(0.19 0.07 280);
+    --popover: oklch(0.955 0.016 88);
+    --popover-foreground: oklch(0.19 0.07 280);
+    --primary: oklch(0.25 0.17 280);
+    --primary-foreground: oklch(0.93 0.06 85);
+    --secondary: oklch(0.85 0.05 268);
+    --secondary-foreground: oklch(0.22 0.07 280);
+    --muted: oklch(0.87 0.025 268);
+    --muted-foreground: oklch(0.42 0.05 270);
+    --accent: oklch(0.7 0.17 80);
+    --accent-foreground: oklch(0.19 0.07 280);
+    --border: oklch(0.78 0.05 268);
+    --input: oklch(0.78 0.05 268);
+    --ring: oklch(0.25 0.17 280);
+  }
+
+  /* Secular / Racionalista — cinza frio, sem conotações religiosas de cor,
+     ideal para utilizadores céticos ou de apologética. */
+  :root[data-theme="agnostic"] {
+    --background: oklch(0.97 0.005 220);
+    --foreground: oklch(0.15 0.015 245);
+    --card: oklch(0.985 0.004 220);
+    --card-foreground: oklch(0.15 0.015 245);
+    --popover: oklch(0.985 0.004 220);
+    --popover-foreground: oklch(0.15 0.015 245);
+    --primary: oklch(0.25 0.07 235);
+    --primary-foreground: oklch(0.97 0.005 220);
+    --secondary: oklch(0.88 0.012 225);
+    --secondary-foreground: oklch(0.22 0.04 235);
+    --muted: oklch(0.90 0.008 220);
+    --muted-foreground: oklch(0.48 0.02 225);
+    --accent: oklch(0.44 0.13 230);
+    --accent-foreground: oklch(0.97 0.005 220);
+    --border: oklch(0.83 0.01 220);
+    --input: oklch(0.83 0.01 220);
+    --ring: oklch(0.25 0.07 235);
   }
 
   :root[data-theme="protestant"] {
-    --background: oklch(0.96 0.01 90);
-    --foreground: oklch(0.25 0.05 240);
-    --card: oklch(0.97 0.008 90);
-    --card-foreground: oklch(0.25 0.05 240);
-    --popover: oklch(0.97 0.008 90);
-    --popover-foreground: oklch(0.25 0.05 240);
-    --primary: oklch(0.3 0.08 240);
-    --primary-foreground: oklch(0.95 0.02 150);
-    --secondary: oklch(0.89 0.02 150);
-    --secondary-foreground: oklch(0.3 0.05 240);
-    --muted: oklch(0.91 0.01 150);
-    --muted-foreground: oklch(0.48 0.02 220);
-    --accent: oklch(0.45 0.07 150);
-    --accent-foreground: oklch(0.95 0.02 150);
-    --border: oklch(0.85 0.015 200);
-    --input: oklch(0.85 0.015 200);
-    --ring: oklch(0.3 0.08 240);
+    --background: oklch(0.95 0.012 88);
+    --foreground: oklch(0.22 0.06 240);
+    --card: oklch(0.965 0.01 88);
+    --card-foreground: oklch(0.22 0.06 240);
+    --popover: oklch(0.965 0.01 88);
+    --popover-foreground: oklch(0.22 0.06 240);
+    --primary: oklch(0.24 0.11 240);
+    --primary-foreground: oklch(0.96 0.025 150);
+    --secondary: oklch(0.87 0.025 150);
+    --secondary-foreground: oklch(0.26 0.06 240);
+    --muted: oklch(0.89 0.014 150);
+    --muted-foreground: oklch(0.44 0.025 220);
+    --accent: oklch(0.38 0.1 150);
+    --accent-foreground: oklch(0.96 0.025 150);
+    --border: oklch(0.81 0.02 200);
+    --input: oklch(0.81 0.02 200);
+    --ring: oklch(0.24 0.11 240);
+  }
+
+  /* Padrões de fundo subtis — cada tema tem um motivo derivado da sua
+     iconografia visual. Opacidade propositadamente baixa (6–11%)
+     para não interferir com a leitura. */
+
+  /* Católico: grelha de losangos góticos */
+  :root[data-theme="catholic"] body {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><path d='M20 1L39 20L20 39L1 20Z' fill='none' stroke='%236B1A1F' stroke-width='0.7' stroke-opacity='0.16'/></svg>");
+    background-size: 40px 40px;
+  }
+
+  /* Ortodoxo: estrela de 8 pontas (motivo bizantino) */
+  :root[data-theme="orthodox"] body {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><path d='M24 17L25.2 21.2L29 19.1L26.8 22.9L31 24L26.8 25.1L29 29L25.1 26.8L24 31L22.9 26.8L19.1 29L21.2 25.1L17 24L21.2 22.9L19.1 19.1L22.9 21.2Z' fill='%232D1B5E' fill-opacity='0.11'/></svg>");
+    background-size: 48px 48px;
+  }
+
+  /* Protestante: grelha de pontos (austero) */
+  :root[data-theme="protestant"] body {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><circle cx='10' cy='10' r='2' fill='%231C2E5E' fill-opacity='0.18'/></svg>");
+    background-size: 20px 20px;
+  }
+
+  /* Agnóstico: grelha (académico, racional) */
+  :root[data-theme="agnostic"] body {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><line x1='0' y1='0' x2='20' y2='0' stroke='%23475569' stroke-width='0.5' stroke-opacity='0.15'/><line x1='0' y1='0' x2='0' y2='20' stroke='%23475569' stroke-width='0.5' stroke-opacity='0.15'/></svg>");
+    background-size: 20px 20px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Tipografia por tema
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Católico: serifado ornado, espaçamento generoso (estética gótica/tridentina) */
+  :root[data-theme="catholic"] h1,
+  :root[data-theme="catholic"] h2,
+  :root[data-theme="catholic"] h3,
+  :root[data-theme="catholic"] h4 {
+    letter-spacing: 0.03em;
+  }
+
+  /* Ortodoxo: tracking compacto e peso forte (ícones bizantinos são densos) */
+  :root[data-theme="orthodox"] h1,
+  :root[data-theme="orthodox"] h2,
+  :root[data-theme="orthodox"] h3,
+  :root[data-theme="orthodox"] h4 {
+    letter-spacing: 0.005em;
+    font-weight: 800;
+  }
+
+  /* Protestante: tracking fechado, corpo mais espaçado (ênfase na leitura da Palavra) */
+  :root[data-theme="protestant"] h1,
+  :root[data-theme="protestant"] h2,
+  :root[data-theme="protestant"] h3,
+  :root[data-theme="protestant"] h4 {
+    letter-spacing: -0.015em;
+  }
+  :root[data-theme="protestant"] body {
+    line-height: 1.75;
+  }
+
+  /* Agnóstico: sans-serif em tudo — inclui conteúdo bíblico/patrístico que
+     normalmente usa .font-serif; aqui --font-serif aponta para a mesma fonte
+     sans-serif para dar o look racional/académico uniforme */
+  :root[data-theme="agnostic"] {
+    --font-serif: var(--font-sans);
+  }
+  :root[data-theme="agnostic"] h1,
+  :root[data-theme="agnostic"] h2,
+  :root[data-theme="agnostic"] h3,
+  :root[data-theme="agnostic"] h4 {
+    letter-spacing: -0.025em;
+    font-weight: 600;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Modo escuro por tema — cada tradição mantém a sua identidade:
+   vinho + ouro (católico), violeta bizantino + ouro (ortodoxo),
+   azul-marinho + verde (protestante), ardósia fria (agnóstico).
+   O seletor :root.dark[data-theme] tem mais especificidade do que o
+   bloco .dark neutro de index.css, por isso a paleta do tema ganha.
+   ═══════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  :root.dark { color-scheme: dark; }
+
+  :root.dark[data-theme="catholic"] {
+    --background: oklch(0.2 0.035 25);
+    --foreground: oklch(0.93 0.03 80);
+    --card: oklch(0.245 0.04 25);
+    --card-foreground: oklch(0.93 0.03 80);
+    --popover: oklch(0.245 0.04 25);
+    --popover-foreground: oklch(0.93 0.03 80);
+    --primary: oklch(0.77 0.13 82);
+    --primary-foreground: oklch(0.2 0.05 25);
+    --secondary: oklch(0.31 0.045 25);
+    --secondary-foreground: oklch(0.93 0.03 80);
+    --muted: oklch(0.28 0.035 25);
+    --muted-foreground: oklch(0.74 0.04 70);
+    --accent: oklch(0.72 0.14 82);
+    --accent-foreground: oklch(0.2 0.05 25);
+    --border: oklch(0.37 0.05 30);
+    --input: oklch(0.37 0.05 30);
+    --ring: oklch(0.77 0.13 82);
+    --theme-strip: linear-gradient(90deg, oklch(0.42 0.14 25) 0%, oklch(0.78 0.14 85) 50%, oklch(0.42 0.14 25) 100%);
+  }
+
+  :root.dark[data-theme="orthodox"] {
+    --background: oklch(0.19 0.05 285);
+    --foreground: oklch(0.93 0.03 88);
+    --card: oklch(0.235 0.055 285);
+    --card-foreground: oklch(0.93 0.03 88);
+    --popover: oklch(0.235 0.055 285);
+    --popover-foreground: oklch(0.93 0.03 88);
+    --primary: oklch(0.79 0.13 88);
+    --primary-foreground: oklch(0.2 0.07 285);
+    --secondary: oklch(0.3 0.06 285);
+    --secondary-foreground: oklch(0.93 0.03 88);
+    --muted: oklch(0.27 0.045 285);
+    --muted-foreground: oklch(0.73 0.05 280);
+    --accent: oklch(0.75 0.14 85);
+    --accent-foreground: oklch(0.2 0.07 285);
+    --border: oklch(0.36 0.07 285);
+    --input: oklch(0.36 0.07 285);
+    --ring: oklch(0.79 0.13 88);
+    --theme-strip: linear-gradient(90deg, oklch(0.4 0.15 283) 0%, oklch(0.8 0.13 88) 50%, oklch(0.4 0.15 283) 100%);
+  }
+
+  :root.dark[data-theme="protestant"] {
+    --background: oklch(0.2 0.03 245);
+    --foreground: oklch(0.94 0.015 90);
+    --card: oklch(0.245 0.035 245);
+    --card-foreground: oklch(0.94 0.015 90);
+    --popover: oklch(0.245 0.035 245);
+    --popover-foreground: oklch(0.94 0.015 90);
+    --primary: oklch(0.8 0.08 235);
+    --primary-foreground: oklch(0.2 0.05 245);
+    --secondary: oklch(0.3 0.04 240);
+    --secondary-foreground: oklch(0.94 0.015 90);
+    --muted: oklch(0.28 0.03 240);
+    --muted-foreground: oklch(0.73 0.03 230);
+    --accent: oklch(0.72 0.11 150);
+    --accent-foreground: oklch(0.18 0.04 150);
+    --border: oklch(0.37 0.04 240);
+    --input: oklch(0.37 0.04 240);
+    --ring: oklch(0.8 0.08 235);
+    --theme-strip: linear-gradient(90deg, oklch(0.38 0.1 240) 0%, oklch(0.62 0.1 150) 50%, oklch(0.38 0.1 240) 100%);
+  }
+
+  :root.dark[data-theme="agnostic"] {
+    --background: oklch(0.18 0.012 245);
+    --foreground: oklch(0.95 0.005 220);
+    --card: oklch(0.225 0.014 245);
+    --card-foreground: oklch(0.95 0.005 220);
+    --popover: oklch(0.225 0.014 245);
+    --popover-foreground: oklch(0.95 0.005 220);
+    --primary: oklch(0.82 0.06 230);
+    --primary-foreground: oklch(0.18 0.02 245);
+    --secondary: oklch(0.28 0.015 240);
+    --secondary-foreground: oklch(0.95 0.005 220);
+    --muted: oklch(0.26 0.012 240);
+    --muted-foreground: oklch(0.72 0.02 225);
+    --accent: oklch(0.72 0.11 230);
+    --accent-foreground: oklch(0.15 0.02 245);
+    --border: oklch(0.34 0.015 235);
+    --input: oklch(0.34 0.015 235);
+    --ring: oklch(0.82 0.06 230);
+    --theme-strip: linear-gradient(90deg, oklch(0.5 0.03 230) 0%, oklch(0.72 0.04 230) 50%, oklch(0.5 0.03 230) 100%);
+  }
+
+  /* Padrões de fundo com traço claro (os do modo claro são escuros e
+     desapareceriam sobre fundo escuro). */
+  :root.dark[data-theme="catholic"] body {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><path d='M20 1L39 20L20 39L1 20Z' fill='none' stroke='%23E8C77A' stroke-width='0.7' stroke-opacity='0.12'/></svg>");
+  }
+  :root.dark[data-theme="orthodox"] body {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><path d='M24 17L25.2 21.2L29 19.1L26.8 22.9L31 24L26.8 25.1L29 29L25.1 26.8L24 31L22.9 26.8L19.1 29L21.2 25.1L17 24L21.2 22.9L19.1 19.1L22.9 21.2Z' fill='%23D9C27A' fill-opacity='0.1'/></svg>");
+  }
+  :root.dark[data-theme="protestant"] body {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><circle cx='10' cy='10' r='2' fill='%239DB4E0' fill-opacity='0.13'/></svg>");
+  }
+  :root.dark[data-theme="agnostic"] body {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20'><line x1='0' y1='0' x2='20' y2='0' stroke='%2394A3B8' stroke-width='0.5' stroke-opacity='0.13'/><line x1='0' y1='0' x2='0' y2='20' stroke='%2394A3B8' stroke-width='0.5' stroke-opacity='0.13'/></svg>");
+  }
+
+  /* Mapa: os mosaicos do OpenStreetMap são claros — escurece-os e inverte
+     a luminosidade para combinar com o resto da página. */
+  :root.dark .leaflet-tile-pane {
+    filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9);
   }
 }

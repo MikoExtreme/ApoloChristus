@@ -1,6 +1,25 @@
 {
   "title": "Bíblia",
   "chooseVersion": "Escolhe idioma e versão",
+  "landing": {
+    "translations": "Traduções",
+    "originals": "Texto original",
+    "originalsHint": "Os textos nas línguas em que a Bíblia foi escrita.",
+    "languages": {
+      "pt": "Português",
+      "en": "Inglês",
+      "el": "Grego",
+      "he": "Hebraico"
+    }
+  },
+  "reader": {
+    "book": "Livro",
+    "chapter": "Capítulo",
+    "previousChapter": "Capítulo anterior",
+    "nextChapter": "Capítulo seguinte",
+    "studyTools": "Ferramentas de estudo",
+    "noComparison": "Sem comparação"
+  },
   "toggles": {
     "interlinear": "Interlinear",
     "crossReferences": "Referências cruzadas",
@@ -8,7 +27,12 @@
     "concordance": "Concordância",
     "concordanceText": "Texto",
     "concordanceOriginal": "Original",
-    "parallel": "Comparar traduções"
+    "parallel": "Comparar traduções",
+    "parallelInterlinear": "Original + Interlinear"
+  },
+  "interlinearParallel": {
+    "originalLabel": "Original (grego / hebraico)",
+    "noData": "Sem dados interlineares para este capítulo."
   },
   "jump": {
     "title": "Ir para referência",
@@ -25,11 +49,15 @@
     "noResults": "Sem ocorrências."
   },
   "crossReferences": {
-    "seeAlso": "Ver também"
+    "seeAlso": "Ver também",
+    "refOne": "1 referência cruzada",
+    "refMany": "{{count}} referências cruzadas"
   },
   "citations": {
     "loading": "A carregar citações...",
-    "citedBy": "Citado por"
+    "citedBy": "Citado por",
+    "citedByOne": "1 comentário patrístico",
+    "citedByMany": "{{count}} comentários patrísticos"
   },
   "verseActions": {
     "copyReference": "Copiar referência",

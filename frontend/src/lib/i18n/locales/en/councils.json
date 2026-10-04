@@ -1,0 +1,19 @@
+{
+  "title": "Church Councils",
+  "subtitle": "Canons of the ecumenical and regional councils of the Christian Church.",
+  "canon": "Canon",
+  "section": "Section",
+  "noCanons": "The canons of this council are not currently available.",
+  "types": {
+    "ecumenical": "Ecumenical",
+    "regional": "Regional",
+    "synod": "Synods"
+  },
+  "traditions": {
+    "ecumenical": "Ecumenical",
+    "catholic": "Catholic",
+    "orthodox": "Orthodox",
+    "protestant": "Protestant",
+    "reformed": "Reformed"
+  }
+}

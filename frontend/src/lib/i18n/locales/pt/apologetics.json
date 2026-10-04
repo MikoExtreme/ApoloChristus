@@ -1,0 +1,20 @@
+{
+  "title": "Apologética",
+  "subtitle": "Argumentos para a existência de Deus, a fiabilidade dos Evangelhos e o caso histórico para a Ressurreição.",
+  "browseByCategory": "Navegar por categoria",
+  "argumentCount_one": "{{count}} argumento",
+  "argumentCount_other": "{{count}} argumentos",
+  "historicalOrigin": "Origem histórica",
+  "premises": "Premissas",
+  "conclusion": "Conclusão",
+  "categories": {
+    "existence_of_god": "Existência de Deus",
+    "gospel_reliability": "Fiabilidade dos Evangelhos",
+    "resurrection": "A Ressurreição"
+  },
+  "categorySubtitles": {
+    "existence_of_god": "Argumentos filosóficos clássicos e contemporâneos para a existência de um criador.",
+    "gospel_reliability": "Critérios históricos utilizados para avaliar a fiabilidade dos relatos evangélicos.",
+    "resurrection": "O caso dos factos máximos para a ressurreição corporal de Jesus de Nazaré."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Concílios da Igreja",
+  "subtitle": "Cânones dos concílios ecuménicos e regionais da Igreja Cristã.",
+  "canon": "Cânone",
+  "section": "Secção",
+  "noCanons": "Os cânones deste concílio não estão disponíveis neste momento.",
+  "types": {
+    "ecumenical": "Ecuménicos",
+    "regional": "Regionais",
+    "synod": "Sínodos"
+  },
+  "traditions": {
+    "ecumenical": "Ecuménico",
+    "catholic": "Católico",
+    "orthodox": "Ortodoxo",
+    "protestant": "Protestante",
+    "reformed": "Reformado"
+  }
+}

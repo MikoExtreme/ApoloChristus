@@ -6,6 +6,7 @@
     "ante_nicene": "Ante-Niceno",
     "nicene": "Niceno",
     "post_nicene": "Pós-Niceno",
-    "medieval": "Medieval"
+    "medieval": "Medieval",
+    "unknown": "Período desconhecido"
   }
 }

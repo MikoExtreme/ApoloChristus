@@ -1,6 +1,25 @@
 {
   "title": "Bible",
   "chooseVersion": "Choose a language and version",
+  "landing": {
+    "translations": "Translations",
+    "originals": "Original text",
+    "originalsHint": "The texts in the languages the Bible was written in.",
+    "languages": {
+      "pt": "Portuguese",
+      "en": "English",
+      "el": "Greek",
+      "he": "Hebrew"
+    }
+  },
+  "reader": {
+    "book": "Book",
+    "chapter": "Chapter",
+    "previousChapter": "Previous chapter",
+    "nextChapter": "Next chapter",
+    "studyTools": "Study tools",
+    "noComparison": "No comparison"
+  },
   "toggles": {
     "interlinear": "Interlinear",
     "crossReferences": "Cross references",
@@ -8,7 +27,12 @@
     "concordance": "Concordance",
     "concordanceText": "Text",
     "concordanceOriginal": "Original",
-    "parallel": "Compare translations"
+    "parallel": "Compare translations",
+    "parallelInterlinear": "Original + Interlinear"
+  },
+  "interlinearParallel": {
+    "originalLabel": "Original (Greek / Hebrew)",
+    "noData": "No interlinear data for this chapter."
   },
   "jump": {
     "title": "Jump to a reference",
@@ -25,11 +49,15 @@
     "noResults": "No occurrences."
   },
   "crossReferences": {
-    "seeAlso": "See also"
+    "seeAlso": "See also",
+    "refOne": "1 cross-reference",
+    "refMany": "{{count}} cross-references"
   },
   "citations": {
     "loading": "Loading citations...",
-    "citedBy": "Cited by"
+    "citedBy": "Cited by",
+    "citedByOne": "1 patristic commentary",
+    "citedByMany": "{{count}} patristic commentaries"
   },
   "verseActions": {
     "copyReference": "Copy reference",

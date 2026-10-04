@@ -1,0 +1,191 @@
+================================================================================
+  APOLO CHRISTUS — REVISÃO DE SESSÃO
+  Data: 25 de Junho de 2026
+  Âmbito: Qualidade de conteúdo PT + suporte PT para Patrísticos e Apócrifos
+================================================================================
+
+CONTEXTO
+--------
+Esta sessão focou-se exclusivamente em conteúdo e qualidade das traduções
+portuguesas, sem alterar a arquitectura do frontend ou da base de dados de
+forma disruptiva. O objectivo era eliminar traduções automáticas de má qualidade
+e substituí-las por fontes genuínas, ou deixar o site cair graciosamente para
+inglês quando não existe fonte PT fiável.
+
+
+1. REMOÇÃO DE TRADUÇÕES AUTOMÁTICAS (ARGOS) — PATRÍSTICOS
+----------------------------------------------------------
+Problema detectado: as 341 obras patrísticas traduzidas automaticamente pelo
+Argos Translate tinham qualidade inaceitável (ex: índice de conteúdos em vez
+do texto do artigo, frases sem sentido).
+
+Acção:
+  - Executado DELETE na tabela patristic_works onde language = 'pt' e
+    license = 'machine_translated' (341 obras removidas).
+  - O frontend já tratava este caso correctamente: PatristicsSectionPage faz
+    fallback para EN quando não existe obra PT (showingPt = false).
+  - Resultado: o site passou a mostrar EN por omissão em todos os patrísticos,
+    sem nenhuma tradução má visível.
+
+SQL executado:
+  DELETE FROM patristic_works
+  WHERE language = 'pt' AND license = 'machine_translated';
+
+
+2. SUBSTITUIÇÃO DE CREDOS COM TRADUÇÃO AUTOMÁTICA
+-------------------------------------------------
+Problema detectado: 4 credos/confissões tinham secções PT com tradução
+automática (machine_translated):
+  - nicene_creed_325 (60 secções MT → deve ter 2)
+  - chalcedonian_definition (6 secções MT → deve ter 1)
+  - baptist_confession_1688 (MT completo)
+  - longer_catechism_orthodox (752 secções MT, sem fonte PT fiável)
+
+Acções:
+  a) Criado script: fetchers/creeds_mt_replacements_fetcher.py
+     - Nicene 325: texto hardcoded genuíno (2 secções) — fonte: viacrucis.pt
+     - Calcedónia: texto hardcoded genuíno (1 secção) — domínio público
+     - Confissão Batista 1689: scraping de reformedreader.org (~1140 secções)
+     - Catecismo Ortodoxo: sem fonte PT — secções PT apagadas, fica em EN
+
+  b) SQL de limpeza executado para remover secções MT residuais:
+     DELETE FROM creeds_confessions_sections
+     WHERE work_id = 'nicene_creed_325' AND language = 'pt' AND section_num > 2;
+     DELETE FROM creeds_confessions_sections
+     WHERE work_id = 'chalcedonian_definition' AND language = 'pt' AND section_num > 1;
+     DELETE FROM creeds_confessions_sections
+     WHERE work_id = 'longer_catechism_orthodox' AND language = 'pt';
+
+  c) Script executado com sucesso. Estado final dos credos:
+     - 15 credos com PT genuíno (fontes existentes de sessões anteriores)
+     - nicene_creed_325: PT genuíno (2 secções)
+     - chalcedonian_definition: PT genuíno (1 secção)
+     - baptist_confession_1688: PT genuíno (~1140 secções, reformedreader.org)
+     - longer_catechism_orthodox: sem PT, mostra EN por omissão
+
+
+3. CARREGAMENTO DE PATRÍSTICOS PT GENUÍNOS
+------------------------------------------
+Fontes genuínas e gratuitas encontradas para 3 obras patrísticas:
+
+  | Obra                          | Autor     | Fonte                         | Secções |
+  |-------------------------------|-----------|-------------------------------|---------|
+  | Vida de Santo Antão           | Atanásio  | cristianismo.org.br (HTML)    | 603     |
+  | O Pastor de Hermas            | Hermas    | monergismo.com (PDF)          | 123     |
+  | I Apologia de Justino de Roma | Justino   | monergismo.com (PDF)          | 88      |
+
+Processo:
+  a) Criado script: fetchers/patristics_pt_genuine_fetcher.py
+     - HTML multi-página para Vida de Santo Antão (5 páginas)
+     - Extracção de PDF via pdfplumber para as outras duas
+
+  b) Detectado que obras EN de Atanásio e Hermas não estavam na BD.
+     Criado e executado scripts/load_two_fathers.py para carregar 21 obras EN
+     de Atanásio e 1 de Hermas antes de inserir as PT.
+
+  c) Script PT executado com sucesso. Estrutura na BD:
+     - Cada obra PT é uma linha separada em patristic_works com:
+       language = 'pt', translated_from_work_id → obra EN original
+     - O frontend usa getPtTranslationForWork(workId) para encontrar a PT
+       e faz fallback para EN quando não existe.
+
+  IDs na BD:
+    athanasius__vida_de_santo_antao_pt  → translated_from: athanasius__vita_s._antoni_(life_of_st._anthony)
+    hermas__o_pastor_de_hermas_pt       → translated_from: hermas__the_pastor_(or_the_shepherd)
+    justin_martyr__i_apologia_de_justino_pt → translated_from: justin_martyr__first_apology
+
+
+4. SUPORTE PT PARA APÓCRIFOS — EVANGELHO DE TOMÉ
+-------------------------------------------------
+Problema: apocryphal_works não tinha coluna translated_from_work_id, e não
+existia qualquer mecanismo para associar uma obra PT a uma EN nos apócrifos.
+
+Fontes genuínas encontradas: apenas 1 — Evangelho de Tomé (tradução Huberto
+Rohden), em saindodamatrix.com.br.
+
+Acções:
+
+  a) Migração de schema:
+     Ficheiro: models/migrations/2026-06-25_apocryphal_works_pt_translations.sql
+     - ALTER TABLE apocryphal_works ADD COLUMN translated_from_work_id TEXT
+       REFERENCES apocryphal_works(id) ON DELETE SET NULL;
+     - CREATE INDEX idx_apocryphal_works_translated_from ...
+     Executado no Supabase SQL Editor.
+
+  b) Frontend — 3 ficheiros alterados:
+     - frontend/src/types/database.types.ts
+         Adicionado campo: translated_from_work_id: string | null
+         ao tipo ApocryphalWorkRow.
+
+     - frontend/src/lib/supabase/queries/apocrypha.ts
+         Nova função: getPtTranslationForWork(workId)
+         Mesma lógica de patristics.ts: .eq("translated_from_work_id", workId)
+         .eq("language", "pt").maybeSingle()
+
+     - frontend/src/routes/apocrypha/ApocryphaSectionPage.tsx
+         Adicionado o padrão PT/EN idêntico ao PatristicsSectionPage:
+         wantsPt, ptWork, showingPt, activeWorkId, fallback para EN.
+         SourceAttribution, título e breadcrumb actualizados para PT.
+
+  c) Script de fetching:
+     Ficheiro: fetchers/apocrypha_pt_fetcher.py
+     - Scraping de saindodamatrix.com.br (tradução Rohden)
+     - Cria gospel_thomas_pt com translated_from_work_id = 'gospel_thomas'
+     Executado com sucesso.
+
+  Resultado verificado na BD:
+    gospel_thomas_pt: 350 secções, language='pt',
+                      translated_from_work_id='gospel_thomas' ✓
+
+
+5. VERIFICAÇÃO FINAL
+--------------------
+Estado confirmado na BD (query directa via Python/Supabase client):
+
+  Apócrifos PT:
+    gospel_thomas_pt ............... 350 secções
+
+  Patrísticos PT:
+    athanasius__vida_de_santo_antao_pt ..... 603 secções
+    hermas__o_pastor_de_hermas_pt .......... 123 secções
+    justin_martyr__i_apologia_de_justino_pt ..  88 secções
+
+  Credos (PT genuíno, sem MT):
+    15 obras com PT de sessões anteriores
+    nicene_creed_325 ................ 2 secções genuínas
+    chalcedonian_definition ......... 1 secção genuína
+    baptist_confession_1688 ......... ~1140 secções genuínas
+    longer_catechism_orthodox ....... sem PT (EN por omissão)
+
+TypeScript check: 0 erros.
+
+
+6. FICHEIROS CRIADOS/ALTERADOS NESTA SESSÃO
+--------------------------------------------
+Pipeline:
+  + fetchers/patristics_pt_genuine_fetcher.py   (novo)
+  + fetchers/apocrypha_pt_fetcher.py             (novo)
+  + fetchers/creeds_mt_replacements_fetcher.py   (novo)
+  + scripts/load_two_fathers.py                  (novo, temporário)
+  + scripts/verify_pt_content.py                 (novo, utilitário)
+  + models/migrations/2026-06-25_apocryphal_works_pt_translations.sql  (novo)
+
+Frontend:
+  ~ frontend/src/types/database.types.ts          (+ translated_from_work_id em ApocryphalWorkRow)
+  ~ frontend/src/lib/supabase/queries/apocrypha.ts (+ getPtTranslationForWork)
+  ~ frontend/src/routes/apocrypha/ApocryphaSectionPage.tsx  (suporte PT completo)
+
+
+7. ESTADO ACTUAL DO SITE
+------------------------
+  Bíblia:       múltiplas versões PT e EN — completo
+  Patrísticos:  EN completo; PT em 3 obras com fontes genuínas
+  Apócrifos:    EN completo; PT no Evangelho de Tomé (Rohden)
+  Credos:       EN completo; PT genuíno em 18/19 obras
+  Glossário:    completo
+  Léxico:       completo
+  Geografia:    completo
+
+Sem traduções automáticas visíveis. Fallback EN funciona em todas as secções.
+
+================================================================================

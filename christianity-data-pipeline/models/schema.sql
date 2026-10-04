@@ -103,8 +103,10 @@ CREATE TABLE IF NOT EXISTS patristic_sections (
     work_id     TEXT NOT NULL REFERENCES patristic_works(id) ON DELETE CASCADE,
     section_num INT NOT NULL,
     text        TEXT NOT NULL,
+    -- 'simple': tokenização sem stemming — funciona para EN e PT
+    -- (migration 2026-06-25_fix_search_vec_language.sql)
     search_vec  TSVECTOR GENERATED ALWAYS AS (
-        to_tsvector('english', text)
+        to_tsvector('simple', text)
     ) STORED,
     UNIQUE (work_id, section_num)
 );
@@ -128,16 +130,24 @@ CREATE TABLE IF NOT EXISTS apocryphal_works (
     source_url     TEXT,
     language       TEXT NOT NULL DEFAULT 'en',
     license        TEXT NOT NULL DEFAULT 'public_domain',
+    -- Liga uma tradução PT à obra EN original (migration 2026-06-25_apocryphal_works_pt_translations.sql)
+    translated_from_work_id TEXT REFERENCES apocryphal_works(id) ON DELETE SET NULL,
     created_at     TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS idx_apocryphal_works_translated_from
+    ON apocryphal_works (translated_from_work_id)
+    WHERE translated_from_work_id IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS apocryphal_sections (
     id          BIGSERIAL PRIMARY KEY,
     work_id     TEXT NOT NULL REFERENCES apocryphal_works(id) ON DELETE CASCADE,
     section_num INT NOT NULL,
     text        TEXT NOT NULL,
+    -- 'simple': tokenização sem stemming — funciona para EN e PT
+    -- (migration 2026-06-25_fix_search_vec_language.sql)
     search_vec  TSVECTOR GENERATED ALWAYS AS (
-        to_tsvector('english', text)
+        to_tsvector('simple', text)
     ) STORED,
     UNIQUE (work_id, section_num)
 );
@@ -178,8 +188,10 @@ CREATE TABLE IF NOT EXISTS creeds_confessions_sections (
     -- A numeração de secções PT é independente da inglesa (parágrafos não
     -- correspondem 1-para-1 entre traduções diferentes).
     language    TEXT NOT NULL DEFAULT 'en',
+    -- 'simple': tokenização sem stemming — funciona para EN e PT
+    -- (migration 2026-06-25_fix_search_vec_language.sql)
     search_vec  TSVECTOR GENERATED ALWAYS AS (
-        to_tsvector('english', text)
+        to_tsvector('simple', text)
     ) STORED,
     UNIQUE (work_id, section_num, language)
 );
@@ -324,15 +336,20 @@ CREATE INDEX IF NOT EXISTS patristic_citations_verse_idx ON patristic_citations 
 CREATE INDEX IF NOT EXISTS patristic_citations_section_idx ON patristic_citations (section_id);
 
 -- Que Pais da Igreja citaram um determinado versículo
-CREATE OR REPLACE FUNCTION verses_cited_by_fathers(p_book TEXT, p_chapter SMALLINT, p_verse SMALLINT)
+-- Corrigida em 2026-06-25: devolvemos author_id, period e work_id para que
+-- o frontend possa construir a rota /patristics/:period/:authorId/:workId
+CREATE OR REPLACE FUNCTION verses_cited_by_fathers(
+    p_book TEXT, p_chapter SMALLINT, p_verse SMALLINT
+)
 RETURNS TABLE (
-    author_name TEXT, work_title TEXT, section_num INT, section_text TEXT
+    author_id TEXT, author_name TEXT, period TEXT,
+    work_id TEXT, work_title TEXT, section_num INT, section_text TEXT
 ) LANGUAGE SQL AS $$
-    SELECT pa.name_en, pw.title, ps.section_num, ps.text
+    SELECT pa.id, pa.name_en, pa.period::TEXT, pw.id, pw.title, ps.section_num, ps.text
     FROM patristic_citations pc
-    JOIN patristic_sections ps ON ps.id = pc.section_id
-    JOIN patristic_works pw ON pw.id = ps.work_id
-    JOIN patristic_authors pa ON pa.id = pw.author_id
+    JOIN patristic_sections  ps ON ps.id = pc.section_id
+    JOIN patristic_works     pw ON pw.id = ps.work_id
+    JOIN patristic_authors   pa ON pa.id = pw.author_id
     WHERE pc.book = p_book AND pc.chapter = p_chapter AND pc.verse = p_verse
     ORDER BY pa.name_en, pw.title, ps.section_num;
 $$;
@@ -362,6 +379,7 @@ RETURNS TABLE (
 $$;
 
 -- Pesquisa nos Pais da Igreja
+-- Actualizada para 'simple' (migration 2026-06-25_fix_search_vec_language.sql)
 CREATE OR REPLACE FUNCTION search_patristics(query TEXT, lim INT DEFAULT 20)
 RETURNS TABLE (
     work_id TEXT, section_num INT, text TEXT,
@@ -370,17 +388,18 @@ RETURNS TABLE (
     SELECT
         ps.work_id, ps.section_num, ps.text,
         pa.name_en AS author_name,
-        pw.title AS work_title,
-        ts_rank(ps.search_vec, to_tsquery('english', query)) AS rank
+        pw.title   AS work_title,
+        ts_rank(ps.search_vec, to_tsquery('simple', query)) AS rank
     FROM patristic_sections ps
-    JOIN patristic_works pw ON pw.id = ps.work_id
-    JOIN patristic_authors pa ON pa.id = pw.author_id
-    WHERE ps.search_vec @@ to_tsquery('english', query)
+    JOIN patristic_works    pw ON pw.id = ps.work_id
+    JOIN patristic_authors  pa ON pa.id = pw.author_id
+    WHERE ps.search_vec @@ to_tsquery('simple', query)
     ORDER BY rank DESC
     LIMIT lim;
 $$;
 
 -- Pesquisa nos Apócrifos
+-- Actualizada para 'simple' (migration 2026-06-25_fix_search_vec_language.sql)
 CREATE OR REPLACE FUNCTION search_apocrypha(query TEXT, lim INT DEFAULT 20)
 RETURNS TABLE (
     work_id TEXT, section_num INT, text TEXT,
@@ -391,16 +410,16 @@ RETURNS TABLE (
         aw.title_pt AS work_title_pt,
         aw.title_en AS work_title_en,
         aw.category,
-        ts_rank(aps.search_vec, to_tsquery('english', query)) AS rank
+        ts_rank(aps.search_vec, to_tsquery('simple', query)) AS rank
     FROM apocryphal_sections aps
-    JOIN apocryphal_works aw ON aw.id = aps.work_id
-    WHERE aps.search_vec @@ to_tsquery('english', query)
+    JOIN apocryphal_works    aw  ON aw.id = aps.work_id
+    WHERE aps.search_vec @@ to_tsquery('simple', query)
     ORDER BY rank DESC
     LIMIT lim;
 $$;
 
--- Pesquisa em Credos & Confissões (ambas as línguas — search_vec usa
--- sempre o dicionário 'english', mesmo limite já existente nas secções)
+-- Pesquisa em Credos & Confissões (EN e PT)
+-- Actualizada para 'simple' (migration 2026-06-25_fix_search_vec_language.sql)
 CREATE OR REPLACE FUNCTION search_creeds(query TEXT, lim INT DEFAULT 20)
 RETURNS TABLE (
     work_id TEXT, section_num INT, text TEXT, language TEXT,
@@ -408,12 +427,12 @@ RETURNS TABLE (
 ) LANGUAGE SQL AS $$
     SELECT
         ccs.work_id, ccs.section_num, ccs.text, ccs.language,
-        cc.title AS work_title,
+        cc.title    AS work_title,
         cc.title_pt AS work_title_pt,
-        ts_rank(ccs.search_vec, to_tsquery('english', query)) AS rank
+        ts_rank(ccs.search_vec, to_tsquery('simple', query)) AS rank
     FROM creeds_confessions_sections ccs
-    JOIN creeds_confessions cc ON cc.id = ccs.work_id
-    WHERE ccs.search_vec @@ to_tsquery('english', query)
+    JOIN creeds_confessions          cc  ON cc.id = ccs.work_id
+    WHERE ccs.search_vec @@ to_tsquery('simple', query)
     ORDER BY rank DESC
     LIMIT lim;
 $$;
@@ -464,6 +483,62 @@ RETURNS TABLE (
 $$;
 
 -- ============================================================
+-- 4b. CONCÍLIOS DA IGREJA (migration 2026-06-25_councils.sql)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS councils (
+    id          TEXT PRIMARY KEY,
+    name        TEXT NOT NULL,
+    name_pt     TEXT,
+    year        TEXT,
+    year_end    TEXT,
+    location    TEXT,
+    tradition   TEXT NOT NULL,   -- 'ecumenical' | 'catholic' | 'orthodox' | 'protestant' | 'reformed'
+    type        TEXT NOT NULL,   -- 'ecumenical' | 'regional' | 'synod'
+    description TEXT,
+    source_url  TEXT,
+    license     TEXT NOT NULL DEFAULT 'public_domain',
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS council_canons (
+    id          BIGSERIAL PRIMARY KEY,
+    council_id  TEXT NOT NULL REFERENCES councils(id) ON DELETE CASCADE,
+    canon_num   INT NOT NULL,
+    language    TEXT NOT NULL DEFAULT 'en',
+    title       TEXT,
+    text        TEXT NOT NULL,
+    notes       TEXT,
+    search_vec  TSVECTOR GENERATED ALWAYS AS (
+        to_tsvector('simple', coalesce(title, '') || ' ' || text)
+    ) STORED,
+    UNIQUE (council_id, canon_num, language)
+);
+
+CREATE INDEX IF NOT EXISTS council_canons_council_idx
+    ON council_canons (council_id, language, canon_num);
+CREATE INDEX IF NOT EXISTS council_canons_search_idx
+    ON council_canons USING GIN (search_vec);
+
+CREATE OR REPLACE FUNCTION search_councils(query TEXT, lim INT DEFAULT 20)
+RETURNS TABLE (
+    council_id TEXT, canon_num INT, language TEXT,
+    title TEXT, text TEXT, council_name TEXT, year TEXT, rank REAL
+) LANGUAGE SQL AS $$
+    SELECT
+        cc.council_id, cc.canon_num, cc.language,
+        cc.title, cc.text,
+        c.name AS council_name,
+        c.year,
+        ts_rank(cc.search_vec, to_tsquery('simple', query)) AS rank
+    FROM council_canons cc
+    JOIN councils c ON c.id = cc.council_id
+    WHERE cc.search_vec @@ to_tsquery('simple', query)
+    ORDER BY rank DESC
+    LIMIT lim;
+$$;
+
+-- ============================================================
 -- 5. ROW LEVEL SECURITY (básico — ajustar conforme auth)
 -- ============================================================
 
@@ -482,6 +557,8 @@ ALTER TABLE biblical_places              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE lexicon_entries              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interlinear_words            ENABLE ROW LEVEL SECURITY;
 ALTER TABLE patristic_citations          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE councils                     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE council_canons               ENABLE ROW LEVEL SECURITY;
 
 -- Leitura pública para todos os textos (são domínio público)
 CREATE POLICY "public_read_verses"     ON verses              FOR SELECT USING (true);

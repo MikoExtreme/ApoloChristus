@@ -1,155 +1,123 @@
 # Christianity Data Pipeline
 
-Pipeline de ingestão de dados para a aplicação de Cristianismo (ApoloChristus).
-Busca textos de 3 fontes distintas e carrega-os no Supabase.
+Pipeline de ingestão de dados do ApoloChristus: recolhe textos de fontes
+públicas, normaliza-os em JSON e carrega-os no Supabase (PostgreSQL).
 
-Todos os fetchers foram validados contra as fontes reais (não é código
-gerado nunca testado) — ver notas técnicas e de licenciamento abaixo, que
-documentam exatamente o que foi corrigido e porquê.
+Cada fetcher foi validado contra a fonte real. A licença de cada obra fica
+registada na coluna `license` (ver "Licenciamento" no fim).
 
 ## Estrutura
 
 ```
 christianity-data-pipeline/
-├── fetchers/
-│   ├── bible_fetcher.py          # Bíblia: wldeh/bible-api + thiagobodruk/biblia
-│   ├── patristics_fetcher.py     # Pais da Igreja: New Advent
-│   ├── apocrypha_fetcher.py      # Apócrifos: Early Christian Writings
-│   └── patristic_catalog.json    # Catálogo completo de 65 autores / 341 obras
-├── scripts/
-│   └── load_to_supabase.py       # Carrega os JSON normalizados para o Supabase
+├── fetchers/        # Um script por fonte; escrevem JSON em output/
+├── scripts/         # Carregador para o Supabase e utilitários de auditoria
 ├── models/
-│   └── schema.sql                # DDL completo (tabelas, índices, funções de pesquisa)
+│   ├── schema.sql   # DDL completo (tabelas, índices, funções de pesquisa, RLS)
+│   └── migrations/  # Alterações ao esquema, por data (aplicar por ordem)
+├── migrations/      # SQL de conteúdo (apologética)
 ├── requirements.txt
-└── output/                       # Dados fetched (criado automaticamente, não versionado)
-    ├── bible/
-    ├── patristics/
-    └── apocrypha/
+└── output/          # JSON gerado (não versionado, recriável)
 ```
 
 ## Setup
 
 ```bash
-# 1. Criar e ativar um venv dedicado (recomendado — evita conflitos com outros projetos)
 python -m venv .venv
-.venv/Scripts/activate        # Windows
-# source .venv/bin/activate   # Linux/Mac
-
-# 2. Instalar dependências
+.venv/Scripts/activate        # Windows  (Linux/Mac: source .venv/bin/activate)
 pip install -r requirements.txt
-
-# 3. Criar .env
-echo "SUPABASE_URL=https://xxxx.supabase.co" > .env
-echo "SUPABASE_SERVICE_KEY=eyJ..." >> .env
-# SUPABASE_SERVICE_KEY é a chave "service_role" (Project Settings → API →
-# Legacy anon, service_role API keys), NÃO a anon/publishable key — esta
-# precisa de bypassar RLS para o loader funcionar. Nunca a exponhas no
-# frontend nem a commites.
-
-# 4. Criar as tabelas no Supabase
-# Cola o conteúdo de models/schema.sql no SQL Editor do Supabase e corre.
 ```
 
-## Uso
+Cria `christianity-data-pipeline/.env`:
 
-### Passo 1 — Bíblia
-
-```bash
-python fetchers/bible_fetcher.py
+```
+SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_SERVICE_KEY=...      # chave service_role (Project Settings → API)
 ```
 
-Por omissão corre só `pt-jfaal` (rápido, ficheiro único) para teste. Edita o
-`if __name__ == "__main__":` no fim do ficheiro e chama `run()` sem
-argumentos para todas as 5 versões.
+A chave **`service_role`** ignora o Row Level Security, por isso o carregador
+precisa dela para escrever. Usa-a **só aqui**: nunca no frontend (o Vite
+embute as variáveis `VITE_*` no site) e nunca no Git. O frontend usa a chave
+`anon`, que só consegue ler.
 
-| ID | Nome | Língua | Licença | Fonte |
-|----|------|--------|---------|-------|
-| en-kjv | King James Version (inclui deuterocanónicos) | EN | Domínio público | wldeh/bible-api |
-| en-asv | American Standard Version | EN | Domínio público | wldeh/bible-api |
-| grc-grctr | Textus Receptus (NT) | Grego | Domínio público | wldeh/bible-api |
-| hbo-wlc | Westminster Leningrad Codex (AT) | Hebraico | Domínio público | wldeh/bible-api |
-| pt-jfaal | Almeida 1911 (João Ferreira de Almeida) | PT | Domínio público | BibliaJFAAL/JFAAL |
+Depois, no SQL Editor do Supabase, corre `models/schema.sql` e as migrações de
+`models/migrations/` por ordem de data. As migrações `2026-10-04_*` fecham a
+escrita às chaves públicas e acertam a licença da versão `pt-arc`.
 
-**Nota importante**: não existe nenhuma versão Almeida no `wldeh/bible-api`
-— só inglês, grego e hebraico. O português vem de uma fonte diferente
-(`BibliaJFAAL/JFAAL`, ficheiro `original/1911-JFAAtualizada.json`,
-digitalização da edição de 1911 da tradução de João Ferreira de Almeida).
+## Fetchers
 
-**Histórico**: as versões `pt-aa` e `pt-acf` (de `thiagobodruk/biblia`)
-foram removidas em 2026-06-22 após investigação confirmar que nenhuma das
-duas é domínio público — a ACF é propriedade reservada da Sociedade
-Bíblica Trinitariana do Brasil, e a AA desse repositório é atribuída à
-Imprensa Bíblica Brasileira pelo próprio README da fonte (a licença
-CC BY-NC do repo cobre só a compilação, não as traduções em si).
+| Script | Conteúdo | Fonte |
+|--------|----------|-------|
+| `bible_fetcher.py` | Bíblia: KJV (com deuterocanónicos), ASV, Textus Receptus, Westminster Leningrad Codex, Almeida 1911 | wldeh/bible-api, BibliaJFAAL/JFAAL |
+| `bible_pt_arc_fetcher.py` | Almeida Revista e Corrigida (licença **a confirmar**) | christos-c/bible-corpus |
+| `crossrefs_fetcher.py` | Referências cruzadas (votos ≥ 3) | OpenBible.info |
+| `strongs_fetcher.py` | Léxico de Strong (hebraico, aramaico, grego) | STEPBible-Data |
+| `interlinear_fetcher.py` | Interlinear palavra a palavra, AT e NT | STEPBible-Data |
+| `patristics_fetcher.py` | 65 autores, 341 obras (ANF/NPNF) | New Advent |
+| `patristics_pt_genuine_fetcher.py` | 3 obras patrísticas em português (Atanásio, Hermas, Justino) | cristianismo.org.br, monergismo.com |
+| `citations_fetcher.py` | Citações bíblicas nos Pais (extrai do texto já carregado, não é fetch externo) | — |
+| `apocrypha_fetcher.py` | 39 apócrifos e textos gnósticos | Early Christian Writings |
+| `apocrypha_pt_fetcher.py` | Evangelho de Tomé em PT (**não apresentado no site**, ver Licenciamento) | saindodamatrix.com.br |
+| `creeds_fetcher.py` | 19 credos e confissões (EN) | CCEL, *Creeds of Christendom* |
+| `creeds_pt_fetcher.py`, `creeds_mt_replacements_fetcher.py` | Credos em português | Vários sites denominacionais |
+| `councils_fetcher.py`, `more_councils_fetcher.py`, `westminster_vatican_fetcher.py` | Concílios e cânones | New Advent, Fordham Sourcebook, outros |
+| `glossary_fetcher.py` | ~20 800 termos de 5 dicionários bíblicos | neuu-org/bible-dictionary-dataset |
+| `geography_fetcher.py`, `geography_confidence_fetcher.py` | 1 232 lugares bíblicos com coordenadas e confiança | OpenBible.info |
 
-### Passo 2 — Pais da Igreja
+`patristic_catalog.json` é o catálogo gerado a partir do índice real do New Advent.
 
-```bash
-python fetchers/patristics_fetcher.py
-```
-
-**65 autores, 341 obras** (catálogo completo gerado a partir do índice real
-em `newadvent.org/fathers/`, guardado em `fetchers/patristic_catalog.json`).
-Cobre apostólicos, ante-nicenos, nicenos e pós-nicenos — essencialmente
-toda a coleção ANF/NPNF disponível no New Advent.
-
-Demora ~35-50 minutos a correr por completo (muitas obras grandes como
-"A Cidade de Deus" ou as Homilias de Crisóstomo expandem em centenas de
-subpáginas, seguidas recursivamente).
-
-### Passo 3 — Apócrifos
+## Fluxo típico
 
 ```bash
+python fetchers/bible_fetcher.py           # escreve JSON em output/bible/
+python fetchers/patristics_fetcher.py      # ~35-50 min (obras grandes expandem em centenas de páginas)
 python fetchers/apocrypha_fetcher.py
+python scripts/load_to_supabase.py         # carrega tudo para o Supabase
 ```
 
-**39 obras** de Early Christian Writings: evangelhos apócrifos, actos
-apócrifos, epístolas, apocalipses, fragmentos gnósticos, e o Testamento
-dos Doze Patriarcas. Não inclui 1 Enoque nem o Livro dos Jubileus — não
-estão disponíveis nesta fonte (ver Notas legais).
+O carregador é **idempotente**: usa `upsert` com `on_conflict` nas chaves
+naturais de cada tabela, por isso podes repetir fetchers e carga sem duplicar
+dados — e é assim que se repõe o conteúdo se for preciso.
 
-### Passo 4 — Carregar para o Supabase
+O conteúdo de apologética não vem de nenhuma fonte externa: é texto original,
+em `migrations/apologetics.sql` e `migrations/apologetics_additions.sql`.
 
-```bash
-python scripts/load_to_supabase.py
-```
+## Scripts utilitários
 
-Idempotente — usa `upsert` com `on_conflict` nas chaves naturais de cada
-tabela, por isso podes correr os fetchers e o loader várias vezes sem criar
-duplicados.
+| Script | Função |
+|--------|--------|
+| `audit_db.py` | Contagens e verificações gerais da base de dados |
+| `verify_pt_content.py`, `verify_citations_fn.py` | Verificam conteúdo PT e a função de citações |
+| `fix_councils.py`, `discover_*.py`, `probe_council_urls.py` | Apoio à construção do catálogo de concílios e de fontes PT |
+| `load_two_fathers.py`, `translate_*.py`, `investigate_kjv.py` | Scripts pontuais de sessões anteriores |
 
-## Fontes de dados
+## Armadilhas já encontradas
 
-| Fonte | URL | Chave? | Conteúdo |
-|-------|-----|--------|---------|
-| wldeh/bible-api | github.com/wldeh/bible-api | Não | Bíblia: inglês, grego, hebraico (usa `raw.githubusercontent.com`, o CDN jsdelivr está bloqueado por tamanho do repo) |
-| BibliaJFAAL/JFAAL | github.com/BibliaJFAAL/JFAAL | Não | Bíblia: português (Almeida 1911, domínio público confirmado) |
-| New Advent | newadvent.org/fathers | Não | Pais da Igreja (ANF/NPNF) |
-| Early Christian Writings | earlychristianwritings.com | Não | Apócrifos e textos gnósticos |
+- **`upsert` sem `on_conflict`** usa a chave primária (sequencial, nunca em conflito) e duplica linhas em silêncio. Indica sempre a chave natural.
+- **`upsert` parcial** falha em tabelas com colunas `NOT NULL` sem valor por omissão, mesmo para linhas existentes. Usa `UPDATE` ou uma função RPC.
+- **Windows:** `Path.write_text()` precisa de `encoding="utf-8"`, senão corrompe os acentos.
+- A API de conteúdos do GitHub duplica entradas pasta+ficheiro; filtra por extensão ao contar.
+- O PostgREST limita a 1000 linhas por pedido: pagina sempre que a tabela for maior.
 
-## Notas legais — licenciamento
+## Licenciamento
 
-A coluna `license` em cada tabela (`public_domain` \| `check_rights`)
-reflete o que foi possível confirmar durante o desenvolvimento, **não**
-uma garantia legal formal. Antes de publicar a app publicamente, confirma:
+O campo `license` de cada obra regista o que foi possível confirmar, **não** uma
+garantia legal:
 
-- **en-kjv, en-asv, grc-grctr, hbo-wlc, pt-jfaal**: domínio público, sem dúvida.
-- **Pais da Igreja (New Advent)**: as traduções ANF/NPNF usadas são do
-  séc. XIX, genuinamente em domínio público.
-- **Apócrifos**: varia por obra. As traduções **Roberts-Donaldson**
-  (séc. XIX, Ante-Nicene Christian Library) são domínio público
-  confirmado. Muitos textos gnósticos/Nag Hammadi (descobertos em 1945,
-  ex: Evangelho de Tomé, Evangelho da Verdade) só têm traduções
-  académicas modernas (M.R. James 1924, Patterson/Meyer, Robert Grant) —
-  estas ficam marcadas `check_rights` e precisam de confirmação/licença
-  antes de publicação pública. Uma delas (`gospel_thomas`) tem inclusive
-  um aviso de copyright explícito no próprio texto fonte.
+| Valor | Significado |
+|-------|-------------|
+| `public_domain` | Domínio público confirmado (traduções do séc. XIX, Almeida 1911, KJV, ASV…) |
+| `licensed` | Licença aberta com atribuição (CC BY 4.0: OpenBible, STEPBible, NEUU) |
+| `original` | Conteúdo escrito para o projeto (apologética) |
+| `check_rights` | Sem licença declarada ou tradução moderna — a confirmar |
 
-## Limitações conhecidas / por fazer
+Obras com tradução moderna e direitos de autor (Evangelho de Tomé em EN e PT,
+Evangelho da Verdade) estão na base de dados mas **escondidas pela aplicação**
+(`frontend/src/lib/content/restrictedWorks.ts`). 1 Enoque e o Livro dos Jubileus
+não estão incluídos: nenhuma das fontes usadas os tem.
 
-- Sem morfologia/interlinear hebraico-grego (Fase 1 do `PLAN.md`).
-- Sem deuterocanónicos marcados como tal (o `en-kjv` já os tem como
-  livros — Tobias, Judite, Sabedoria, etc. — só falta a flag no schema).
-- 1 Enoque e Livro dos Jubileus precisam de outra fonte.
-- Sem cross-references entre versículos, nem citações patrísticas
-  ligadas a versículos (Fase 1/2 do `PLAN.md`).
+## Limitações conhecidas
+
+- Sem Vulgata nem Septuaginta como textos completos, e sem o comentário de Matthew Henry.
+- Só 3 obras patrísticas e o Evangelho de Tomé têm tradução portuguesa genuína; nos restantes casos o site mostra o inglês (as traduções automáticas foram removidas por falta de qualidade).
+- 182 lugares bíblicos não têm pontuação de confiança (o nome não coincidiu entre os dois conjuntos de dados).

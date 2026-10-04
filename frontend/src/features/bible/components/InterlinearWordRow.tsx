@@ -1,13 +1,13 @@
-import { Link } from "react-router-dom"
 import type { InterlinearWordRow as InterlinearWordRowType } from "@/types/database.types"
 
 interface InterlinearWordRowProps {
   words: InterlinearWordRowType[]
   clickable: boolean
+  showGloss?: boolean
   onWordClick: (strongNumber: string) => void
 }
 
-export function InterlinearWordRow({ words, clickable, onWordClick }: InterlinearWordRowProps) {
+export function InterlinearWordRow({ words, clickable, showGloss = false, onWordClick }: InterlinearWordRowProps) {
   if (words.length === 0) return null
 
   return (
@@ -25,10 +25,8 @@ export function InterlinearWordRow({ words, clickable, onWordClick }: Interlinea
               {word.original_word}
             </button>
             {word.transliteration && <p className="text-[10px] text-muted-foreground">{word.transliteration}</p>}
-            {strong && (
-              <Link to={`/lexicon/${strong}`} className="text-[10px] text-muted-foreground hover:underline">
-                {strong}
-              </Link>
+            {showGloss && word.gloss && (
+              <p className="text-[10px] font-medium text-primary/80 italic">{word.gloss}</p>
             )}
           </div>
         )

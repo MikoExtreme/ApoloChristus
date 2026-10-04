@@ -1,0 +1,421 @@
+================================================================================
+  APOLO CHRISTUS — ESTADO COMPLETO DO PROJECTO
+  Última actualização: 27 de Junho de 2026
+  Leitura estimada: 15 minutos
+  Propósito: briefing completo para Claude em sessão nova
+================================================================================
+
+LEITURA OBRIGATÓRIA ANTES DE COMEÇAR
+--------------------------------------
+Este ficheiro substitui todos os relatórios anteriores como fonte de verdade.
+Antes de qualquer acção, ler a secção ATENÇÃO: PENDENTES para não duplicar
+trabalho ou quebrar o que já está feito.
+
+
+================================================================================
+SECÇÃO 1 — VISÃO E PROBLEMA A RESOLVER
+================================================================================
+
+O ApoloChristus resolve 3 problemas que os utilizadores cristãos/investigadores
+enfrentam ao estudar online:
+
+  PROBLEMA 1 — ONDE PROCURAR
+    Fontes dispersas: Bíblia num site, Padres da Igreja noutro, credos noutro.
+    Solução: uma única plataforma com todas as fontes primárias organizadas.
+
+  PROBLEMA 2 — O QUE PROCURAR
+    Sem pesquisa cruzada entre secções (ex: encontrar a mesma passagem
+    no texto bíblico, num comentário patrístico e num credo simultaneamente).
+    Solução: pesquisa unificada global + scoped por secção.
+
+  PROBLEMA 3 — É FIÁVEL?
+    Sem indicação de licença, fonte ou qualidade de tradução.
+    Solução: campo SourceAttribution em cada peça de conteúdo + licenças
+    explícitas (public_domain | open_license | machine_translated | original_content).
+
+Audiência: utilizadores portugueses/lusófonos cristãos (todas as denominações)
+e agnósticos/céticos a investigar apologética. Daí os 4 temas visuais.
+
+
+================================================================================
+SECÇÃO 2 — ARQUITECTURA TÉCNICA
+================================================================================
+
+REPOSITÓRIO
+  Local: C:\Users\pedro\Desktop\ApoloChristus\ApoloChristus\
+  Estrutura:
+    frontend/                    ← app React (esta é a pasta de trabalho principal)
+    christianity-data-pipeline/  ← scripts Python + schema SQL
+    models/                      ← schema.sql, migrations/
+    fetchers/                    ← scripts de scraping/carregamento
+    scripts/                     ← utilitários
+
+BACKEND
+  Plataforma: Supabase (PostgreSQL)
+  Autenticação: anon key (leitura pública, sem contas de utilizador)
+  RLS: desactivado nas tabelas de conteúdo (leitura pública)
+  Segredo: a SUPABASE_ANON_KEY está em frontend/.env (NUNCA commitar)
+
+FRONTEND
+  Stack: React 18 + Vite + TypeScript
+  Pasta: frontend/src/
+  Dev server: npm run dev (porta 5173)
+  Routing: react-router-dom v7 (createBrowserRouter)
+  Dados: @tanstack/react-query v5 (cache, loading, error automáticos)
+  Estado: zustand (tema + toggles do leitor)
+  i18n: react-i18next (PT + EN, namespaces por secção)
+  Mapa: leaflet + react-leaflet v4
+  UI: Tailwind CSS v4 + shadcn/ui (componentes em components/ui/)
+  Fontes: @fontsource/{inter, lora, playfair-display, eb-garamond}
+
+FICHEIROS CRÍTICOS (não alterar sem perceber o contexto)
+  frontend/src/types/database.types.ts   ← tipos TS escritos à mão do schema SQL
+                                           REGRA: usar `type`, nunca `interface`
+                                           (interface faz queries resolverem para never)
+  frontend/src/lib/supabase/client.ts    ← singleton do cliente Supabase
+  frontend/src/lib/supabase/queries/*.ts ← ÚNICO lugar que chama supabase.from()
+                                           um ficheiro por domínio
+  frontend/src/lib/theme/themes.css      ← variáveis CSS + padrões + tipografia
+  frontend/src/routes/RootLayout.tsx     ← layout raiz (nav + outlet)
+
+
+================================================================================
+SECÇÃO 3 — BASE DE DADOS: TABELAS E ESTADO
+================================================================================
+
+BÍBLIA
+  bible_versions      — versões disponíveis (PT: AA, NVI, NVT... EN: KJV, ESV, NIV...)
+  bible_books         — livros (nome PT+EN, abreviatura, testamento)
+  bible_verses        — versículos (work_id, book, chapter, verse, text)
+  interlinear_words   — palavras com Strong's number e transliteração
+  cross_references    — referências cruzadas entre versículos
+  patristic_citations — citações patrísticas de versículos bíblicos
+  Estado: COMPLETO. Múltiplas versões PT e EN carregadas.
+
+PATRÍSTICOS
+  patristic_works     — obras (id, author_id, title, language, license,
+                         translated_from_work_id para PT)
+  patristic_sections  — secções de cada obra (work_id, section_num, title, text)
+  Estado:
+    EN: ~300 obras de 65 autores (séc. I ao XV)
+    PT: 3 obras genuínas (Atanásio, Hermas, Justino)
+    MT (Argos): REMOVIDAS em 25-Jun-2026 (qualidade inaceitável)
+    Fallback: frontend mostra EN quando PT não existe
+
+APÓCRIFOS
+  apocryphal_works    — obras (id, category, title, language, license,
+                         translated_from_work_id para PT)
+  apocryphal_sections — secções de cada obra
+  Estado:
+    EN: completo
+    PT: 1 obra (Evangelho de Tomé — tradução Rohden, 350 secções)
+
+CREDOS E CONFISSÕES
+  creeds_confessions_works    — obras (id, tradition, century, title_pt/en)
+  creeds_confessions_sections — secções (work_id, section_num, language, text)
+  Estado:
+    EN: 19 obras completas
+    PT: 18 obras com PT genuíno
+    Sem PT: Catecismo Ortodoxo Maior (mostra EN por omissão)
+
+GLOSSÁRIO
+  glossary_terms      — termos com definição PT+EN, categoria, etimologia
+  Estado: COMPLETO
+
+LÉXICO (STRONG'S)
+  lexicon_entries     — entradas H (hebraico) e G (grego) do Strong's
+  Estado: COMPLETO (~8700 entradas H + ~5600 G)
+
+GEOGRAFIA BÍBLICA
+  geographical_places — lugares com coordenadas, descrição PT+EN, period
+  Estado: COMPLETO
+
+APOLOGÉTICA (NOVA SECÇÃO)
+  apologetics_arguments — argumentos por categoria
+    Campos: id, category (ENUM), order_in_category, title_en/pt,
+            subtitle_en/pt, logical_form_en/pt (JSONB), explanation_en/pt,
+            historical_origin, license
+    ENUM categories: existence_of_god | gospel_reliability | resurrection
+  Estado:
+    17 argumentos NA BD (apologetics.sql executado)
+    +13 argumentos PENDENTES (apologetics_additions.sql NÃO executado)
+
+
+================================================================================
+SECÇÃO 4 — FRONTEND: ROTAS E PÁGINAS
+================================================================================
+
+ROTAS IMPLEMENTADAS
+  /                                → HomePage (hub com 8 secções + pesquisa)
+  /bible                           → BibleLandingPage
+  /bible/:versionId                → BibleBookListPage
+  /bible/:versionId/:book/:chapter → BibleReaderPage (5 toggles)
+  /patristics                      → PatristicsLandingPage
+  /patristics/:period              → PatristicsAuthorListPage
+  /patristics/:period/:authorId    → PatristicsWorkListPage
+  /patristics/:period/:authorId/:workId → PatristicsSectionPage (PT/EN)
+  /apocrypha                       → ApocryphLandingPage
+  /apocrypha/:category             → ApocryphaWorkListPage
+  /apocrypha/:category/:workId     → ApocryphaSectionPage (PT/EN)
+  /creeds                          → CreedsLandingPage
+  /creeds/:workId                  → CreedsSectionPage (PT/EN)
+  /glossary                        → GlossaryPage (índice A-Z + pesquisa)
+  /glossary/:term                  → GlossaryTermPage
+  /lexicon                         → LexiconLandingPage (H/G + pesquisa)
+  /lexicon/:dStrong                → LexiconEntryPage
+  /geography                       → GeographyPage (lista + mapa Leaflet)
+  /geography/:placeId              → GeographyPlacePage
+  /timeline                        → TimelinePage (PLACEHOLDER)
+  /councils                        → CouncilsPage (PLACEHOLDER)
+  /apologetics                     → ApologeticsPage (lista de categorias)
+  /apologetics/:category           → ApologeticsCategoryPage (lista de argumentos)
+  /search?q=...&scope=...          → SearchResultsPage
+
+LEITOR BÍBLICO (TOGGLES)
+  Interlinear, Cross-references, Citações patrísticas, Concordância,
+  Modo paralelo (máx. 2 colunas). Todos independentes via query params.
+
+FUNCIONALIDADES TRANSVERSAIS
+  - Pesquisa global e scoped (SearchBar em nav + em cada secção)
+  - Troca de idioma PT/EN (LanguageSwitcher)
+  - Troca de tema (ThemeSwitcher — 4 temas)
+  - Posição de leitura memorizada (localStorage — "continuar a ler")
+  - Marcadores locais (localStorage — BookmarksPanel)
+  - Breadcrumbs reutilizáveis em todas as drill-downs
+  - SourceAttribution em cada página de conteúdo
+  - Aviso de tradução automática (MachineTranslationWarning)
+  - Highlight do versículo quando se chega via pesquisa
+
+
+================================================================================
+SECÇÃO 5 — SISTEMA DE TEMAS (COMPLETO)
+================================================================================
+
+4 TEMAS: catholic | orthodox | protestant | agnostic
+Controlados por: data-theme no elemento <html>
+Store: useThemeStore (zustand + persist em localStorage)
+
+CAMADA 1 — CORES (CSS custom properties)
+  Cada tema tem: --background, --foreground, --card, --primary, --secondary,
+                 --muted, --accent, --border, --input, --ring
+  Ficheiro: frontend/src/lib/theme/themes.css
+
+CAMADA 2 — PADRÃO DE FUNDO + DIVISOR
+  Padrões de fundo (SVG data URI em body):
+    Católico:    Losangos góticos (40px, cardinal #6B1A1F, 11%)
+    Ortodoxo:    Estrela de 8 pontas (48px, bizantino #2D1B5E, 7%)
+    Protestante: Grelha de pontos (20px, navy #1C2E5E, 14%)
+    Agnóstico:   Grelha de linhas (20px, slate #475569, 15%)
+
+  OrnamentalDivider (tema-aware via useThemeStore):
+    Católico:    Cruz pattée (braços alargados)
+    Ortodoxo:    Cruz ☦ de 3 barras com suppedaneum diagonal
+    Protestante: Cruz latina simples
+    Agnóstico:   Três traços horizontais decrescentes
+
+CAMADA 3 — TIPOGRAFIA
+  Fontes instaladas: inter, lora, playfair-display, eb-garamond
+  Override --font-serif por tema:
+    Católico:    Playfair Display (serifas dramáticas, alto contraste)
+    Ortodoxo:    EB Garamond (manuscrito histórico)
+    Protestante: Lora (sóbrio, legível)
+    Agnóstico:   → var(--font-sans) = Inter (sem serifa em TUDO)
+  Letter-spacing headings:
+    Católico: +0.03em | Ortodoxo: +0.005em | Protestante: -0.015em | Agnóstico: -0.025em
+
+NOTA TÉCNICA: o wrapper em RootLayout.tsx NÃO tem bg-background (foi removido
+propositadamente para deixar os padrões do body aparecer). O body tem bg-background
+via index.css. NÃO RECOLOCAR bg-background no wrapper do RootLayout.
+
+
+================================================================================
+SECÇÃO 6 — REGRAS E CONVENÇÕES IMPORTANTES
+================================================================================
+
+TIPOS TYPESCRIPT
+  SEMPRE usar `type`, nunca `interface` em database.types.ts.
+  Interface faz as queries Supabase resolverem silenciosamente para never.
+
+QUERIES SUPABASE
+  Só em frontend/src/lib/supabase/queries/*.ts.
+  Componentes NUNCA chamam supabase.from() directamente.
+
+CONTEÚDO E DIREITOS DE AUTOR
+  Todo o conteúdo em explanation_en/pt é escrito originalmente.
+  historical_origin contém apenas referências bibliográficas (não texto).
+  Traduções automáticas (Argos) foram removidas — qualidade inaceitável.
+  Só usar fontes com licença verificada (domínio público, CC, scraping permitido).
+
+SEGREDOS
+  frontend/.env contém VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.
+  NUNCA commitar este ficheiro. Está no .gitignore.
+  NUNCA escrever a chave em chat ou em qualquer ficheiro de código.
+
+CSS / TAILWIND
+  Versão: Tailwind v4 (usa @import "tailwindcss", não @tailwind directives).
+  O ficheiro themes.css usa @layer base.
+  Tokens de cor mapeados via @theme inline em index.css.
+
+AUTONOMIA
+  O utilizador prefere trabalho autónomo sem confirmações em cada passo.
+  Só parar para confirmar em acções destrutivas ou irreversíveis.
+
+
+================================================================================
+SECÇÃO 7 — ATENÇÃO: PENDENTES OBRIGATÓRIOS
+================================================================================
+
+★ PENDENTE 1 — EXECUTAR apologetics_additions.sql
+  Ficheiro: christianity-data-pipeline/migrations/apologetics_additions.sql
+  Acção: abrir Supabase SQL Editor → colar o conteúdo → Run without RLS
+  Efeito: adiciona +13 argumentos (totais: 11 Existência, 8 Evangelhos, 11 Ressurreição)
+  Impacto se não feito: ApologeticsPage mostra 5/5/7 em vez dos totais reais
+
+★ PENDENTE 2 — PÁGINA DE DETALHE DE ARGUMENTO
+  Rota: /apologetics/:category/:argumentId
+  Não existe — clicar num argumento não leva a lado nenhum
+  Precisa de: query getArgumentById(), página com logical_form + explanation completos
+
+★ PENDENTE 3 — CREDENCIAIS .env
+  frontend/.env tem placeholders — app não carrega dados reais sem as credenciais
+  reais do projecto Supabase
+
+★ PENDENTE 4 — TIMELINE E COUNCILS
+  /timeline e /councils são placeholders sem conteúdo
+  Não há schema de BD para estes ainda
+
+
+================================================================================
+SECÇÃO 8 — PRÓXIMOS PASSOS (PRIORIZADO)
+================================================================================
+
+─── ESSENCIAIS (sem isto o site está incompleto) ───────────────────────────────
+
+P1  Executar apologetics_additions.sql no Supabase
+P2  Criar página de detalhe de argumento (/apologetics/:category/:argumentId)
+    - Mostrar: título, subtítulo, forma lógica (numbered list), explicação completa,
+      origem histórica, referências
+P3  Página de Concílios — schema + conteúdo + frontend (está no nav mas vazia)
+P4  Timeline histórica — schema + conteúdo + frontend (está no nav mas vazia)
+
+─── CONTEÚDO (mais dados = mais valor) ─────────────────────────────────────────
+
+C1  Mais traduções PT genuínas para Patrísticos (só 3 de ~300 têm PT)
+    - Fontes: monergismo.com, ccel.org (algumas têm PT), patristica.net
+C2  Mais argumentos de Apologética (as 3 categorias podem ter 15-20 cada)
+C3  Mais obras no Léxico com notas exegéticas
+C4  Concílios: ao menos os 7 Ecuménicos (325-787 d.C.)
+C5  Timeline: eventos do AT, NT, Igreja Primitiva, Reforma
+
+─── FUNCIONALIDADES (melhoram a experiência) ───────────────────────────────────
+
+F1  Dark mode por tema — cada tradição com variante escura
+    (actualmente só existe light mode)
+F2  Contas de utilizador (Supabase Auth)
+    - Favoritos sincronizados em vez de apenas localStorage
+    - Notas pessoais em versículos/argumentos
+    - Progresso de leitura na cloud
+F3  Full-text search RPC para Apócrifos e Glossário
+    (actualmente a pesquisa nessas secções mostra "não disponível")
+F4  Comparação de argumentos — ver dois argumentos lado a lado
+F5  Export/partilha — copiar argumento com referências formatadas
+F6  Pesquisa dentro de um argumento / filtro por categoria de argumento
+F7  Audio player — leitura de textos em voz alta (TTS)
+F8  Modo de impressão — CSS para imprimir versículos/argumentos limpamente
+F9  PWA / instalação como app no telemóvel (manifest.json + service worker)
+
+─── MELHORIAS TÉCNICAS ─────────────────────────────────────────────────────────
+
+T1  Gerar tipos TypeScript via `supabase gen types typescript` (substituir os manuais)
+    Requer: supabase login (feito pelo utilizador) + supabase gen types --project-id <ref>
+T2  Testes de UI básicos (Playwright ou Vitest UI)
+T3  Lazy loading de rotas (actualmente tudo no mesmo bundle)
+T4  Optimização de imagens / preload de fontes críticas
+T5  CI/CD — deploy automático (Vercel ou Netlify) quando se faz push ao main
+T6  Verificar responsividade em mobile real (telemóvel físico)
+T7  Acessibilidade (WCAG 2.1 AA) — audit com axe-core
+T8  SEO básico — meta tags, Open Graph, sitemap.xml
+
+─── MELHORIAS VISUAIS ──────────────────────────────────────────────────────────
+
+V1  Animações de transição entre argumentos (framer-motion já instalado)
+V2  Skeleton loading states mais polish
+V3  Imagens/ícones por secção na HomePage em vez de só texto
+V4  Cards de argumentos mais visuais (destaque da forma lógica)
+V5  Mapa de geografia com clusters melhorados e popups mais ricos
+
+─── APOLOGÉTICA (secção nova, muito por fazer) ──────────────────────────────────
+
+A1  Executar apologetics_additions.sql (P1 acima)
+A2  Página de detalhe de argumento (P2 acima)
+A3  Mais categorias:
+      - historicidade_de_jesus (existe histórico? fontes extra-bíblicas)
+      - problema_do_mal (teodiceia — argumentos para o sofrimento)
+      - exclusividade_crista (porque Jesus e não outra religião?)
+A4  Interligação argumento ↔ versículo bíblico
+    (clicar em "1 Cor 15:3-8" dentro de um argumento abre o leitor)
+A5  Modos de visualização: card / lista / árvore lógica
+A6  Quiz/flashcards — treino dos argumentos
+
+
+================================================================================
+SECÇÃO 9 — ESTRUTURA DE FICHEIROS CHAVE (referência rápida)
+================================================================================
+
+frontend/src/
+  App.tsx                              ← QueryClientProvider + RouterProvider
+  main.tsx                             ← imports de fontes e CSS
+  index.css                            ← Tailwind v4, tokens, body styles
+  routes/
+    router.tsx                         ← todas as rotas
+    RootLayout.tsx                     ← nav + outlet (SEM bg-background no wrapper)
+    HomePage.tsx
+    bible/                             ← BibleLandingPage, BibleReaderPage, etc.
+    patristics/
+    apocrypha/
+    creeds/
+    glossary/
+    lexicon/
+    geography/
+    apologetics/
+      ApologeticsPage.tsx              ← lista de 3 categorias (contadores dinâmicos)
+      ApologeticsCategoryPage.tsx      ← lista de argumentos de uma categoria
+      [falta: ApologeticsArgumentPage] ← *** NÃO EXISTE AINDA ***
+  features/
+    bible/components/                  ← ReaderToolbar, VerseList, ParallelColumnView...
+    search/components/SearchBar.tsx
+    theme/
+      store/useThemeStore.ts           ← Theme = "catholic"|"orthodox"|"protestant"|"agnostic"
+      components/ThemeSwitcher.tsx
+  components/
+    layout/
+      NavBar.tsx
+      OrnamentalDivider.tsx            ← tema-aware (lê useThemeStore)
+      SourceAttribution.tsx
+      Breadcrumbs.tsx
+    ui/                                ← primitivas shadcn/ui
+  lib/
+    supabase/
+      client.ts
+      queries/
+        bible.ts | patristics.ts | apocrypha.ts | creeds.ts
+        glossary.ts | lexicon.ts | geography.ts | search.ts
+        apologetics.ts                 ← getArgumentsByCategory + getArgumentCountsByCategory
+    theme/themes.css                   ← cores + padrões + tipografia por tema
+    i18n/i18n.ts + locales/{en,pt}/
+  types/database.types.ts              ← tipos manuais (usar `type`, não `interface`)
+
+christianity-data-pipeline/
+  models/schema.sql                    ← schema completo da BD
+  models/migrations/                   ← migrações SQL
+  migrations/
+    apologetics.sql                    ← ✓ executado
+    apologetics_additions.sql          ← ★ PENDENTE
+  fetchers/                            ← scripts Python de carregamento
+  scripts/                             ← utilitários
+
+
+================================================================================
+FIM DO DOCUMENTO
+Actualizar este ficheiro sempre que uma sessão concluir trabalho significativo.
+================================================================================

@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useLocation } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { getAuthorById, getWorksForAuthor } from "@/lib/supabase/queries/patristics"
@@ -8,6 +8,8 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 export function PatristicsWorkPage() {
   const { period, authorId } = useParams<{ period: string; authorId: string }>()
   const { t } = useTranslation(["common", "patristics"])
+  const location = useLocation()
+  const fromTimeline = Boolean((location.state as { fromTimeline?: boolean } | null)?.fromTimeline)
   const { data: author } = useQuery({
     queryKey: ["patristic-author", authorId],
     queryFn: () => getAuthorById(authorId!),
@@ -23,6 +25,7 @@ export function PatristicsWorkPage() {
     <div className="mx-auto max-w-3xl px-4 py-12">
       <Breadcrumbs
         items={[
+          ...(fromTimeline ? [{ label: t("nav.timeline"), to: "/timeline" }] : []),
           { label: t("nav.patristics"), to: "/patristics" },
           { label: t(`patristics:periods.${period}`), to: `/patristics/${period}` },
           { label: author?.name_pt ?? authorId ?? "" },

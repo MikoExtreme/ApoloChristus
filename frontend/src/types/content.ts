@@ -8,10 +8,8 @@ export type SearchScope =
   | "creeds"
   | "glossary"
   | "lexicon"
+  | "councils"
 
-// Scopes sem função de pesquisa full-text no backend ainda (ver
-// lib/supabase/queries/search.ts) — usado para mostrar um estado
-// explícito de "não disponível" em vez de uma lista vazia silenciosa.
 export const SEARCHABLE_SCOPES: SearchScope[] = [
   "bible",
   "patristics",
@@ -19,6 +17,7 @@ export const SEARCHABLE_SCOPES: SearchScope[] = [
   "apocrypha",
   "creeds",
   "glossary",
+  "councils",
 ]
 
 export type SearchResult =
@@ -77,5 +76,16 @@ export type SearchResult =
       term: string
       source: string
       definition: string
+      rank: number
+    }
+  | {
+      type: "council-canon"
+      councilId: string
+      canonNum: number
+      language: string
+      title: string | null
+      text: string
+      councilName: string
+      year: string | null
       rank: number
     }

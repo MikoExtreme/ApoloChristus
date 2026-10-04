@@ -10,5 +10,9 @@
   "coordinates": "Coordinates",
   "comment": "Comment",
   "verses": "Verses",
-  "sources": "Academic sources"
+  "sources": "Academic sources",
+  "selectedCount": "{{count}} selected",
+  "selectedCount_other": "{{count}} selected",
+  "clearSelection": "Clear selection",
+  "compareHint": "Click several places to compare them on the map"
 }

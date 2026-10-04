@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useLocation } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { getWorksByCategory } from "@/lib/supabase/queries/apocrypha"
@@ -8,6 +8,8 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 export function ApocryphaWorkPage() {
   const { category } = useParams<{ category: string }>()
   const { t, i18n } = useTranslation(["common", "apocrypha"])
+  const location = useLocation()
+  const fromTimeline = Boolean((location.state as { fromTimeline?: boolean } | null)?.fromTimeline)
   const { data: works, isLoading } = useQuery({
     queryKey: ["apocrypha-works", category],
     queryFn: () => getWorksByCategory(category!),
@@ -18,6 +20,7 @@ export function ApocryphaWorkPage() {
     <div className="mx-auto max-w-3xl px-4 py-12">
       <Breadcrumbs
         items={[
+          ...(fromTimeline ? [{ label: t("nav.timeline"), to: "/timeline" }] : []),
           { label: t("nav.apocrypha"), to: "/apocrypha" },
           { label: t(`apocrypha:categories.${category}`) },
         ]}

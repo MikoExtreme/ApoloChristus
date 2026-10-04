@@ -1,0 +1,25 @@
+{
+  "title": "Linha do Tempo",
+  "subtitle": "Concílios, credos, pais da Igreja e escritos apócrifos ordenados cronologicamente.",
+  "filter": {
+    "all": "Todos",
+    "council": "Concílios",
+    "creed": "Credos & Confissões",
+    "father": "Pais da Igreja",
+    "apocrypha": "Apócrifos"
+  },
+  "eras": {
+    "apostolic": "Apostólica",
+    "ante_nicene": "Pré-nicena",
+    "nicene": "Nicena",
+    "medieval": "Medieval",
+    "reformation": "Reforma & Modernidade"
+  },
+  "categories": {
+    "council": "Concílio",
+    "creed": "Credo",
+    "father": "Pai da Igreja",
+    "apocrypha": "Apócrifo"
+  },
+  "noDates": "Sem itens datáveis para este filtro."
+}

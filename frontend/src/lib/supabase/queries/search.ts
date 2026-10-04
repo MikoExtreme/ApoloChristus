@@ -4,6 +4,7 @@ import { searchLexicon } from "@/lib/supabase/queries/lexicon"
 import { searchApocrypha } from "@/lib/supabase/queries/apocrypha"
 import { searchCreeds } from "@/lib/supabase/queries/creeds"
 import { searchGlossary } from "@/lib/supabase/queries/glossary"
+import { searchCouncils } from "@/lib/supabase/queries/councils"
 import type { SearchResult, SearchScope } from "@/types/content"
 
 // Único sítio que sabe quais RPCs de pesquisa já existem — ver
@@ -116,6 +117,26 @@ export async function runSearch(scope: SearchScope, query: string): Promise<Sear
             term: r.term,
             source: r.source,
             definition: r.definition,
+            rank: r.rank,
+          })
+        )
+      )
+    )
+  }
+
+  if (scope === "all" || scope === "councils") {
+    tasks.push(
+      searchCouncils(query).then((rows) =>
+        rows.map(
+          (r): SearchResult => ({
+            type: "council-canon",
+            councilId: r.council_id,
+            canonNum: r.canon_num,
+            language: r.language,
+            title: r.title,
+            text: r.text,
+            councilName: r.council_name,
+            year: r.year,
             rank: r.rank,
           })
         )

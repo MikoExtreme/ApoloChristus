@@ -1,6 +1,10 @@
 {
   "title": "Apocrypha",
   "browseByCategory": "Browse by category",
+  "restricted": {
+    "title": "Work unavailable",
+    "description": "The only available translation of this work is protected by copyright, so it is not shown here."
+  },
   "categories": {
     "apocalypse": "Apocalypse",
     "apocryphal_acts": "Apocryphal Acts",

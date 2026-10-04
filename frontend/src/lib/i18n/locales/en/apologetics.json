@@ -1,0 +1,20 @@
+{
+  "title": "Apologetics",
+  "subtitle": "Arguments for the existence of God, the reliability of the Gospels, and the historical case for the Resurrection.",
+  "browseByCategory": "Browse by category",
+  "argumentCount_one": "{{count}} argument",
+  "argumentCount_other": "{{count}} arguments",
+  "historicalOrigin": "Historical origin",
+  "premises": "Premises",
+  "conclusion": "Conclusion",
+  "categories": {
+    "existence_of_god": "Existence of God",
+    "gospel_reliability": "Reliability of the Gospels",
+    "resurrection": "The Resurrection"
+  },
+  "categorySubtitles": {
+    "existence_of_god": "Classical and contemporary philosophical arguments for the existence of a creator.",
+    "gospel_reliability": "Historical criteria used to assess the reliability of the Gospel accounts.",
+    "resurrection": "The maximum facts case for the bodily resurrection of Jesus of Nazareth."
+  }
+}

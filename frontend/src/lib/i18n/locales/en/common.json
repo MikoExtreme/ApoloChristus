@@ -7,9 +7,12 @@
     "patristics": "Church Fathers",
     "apocrypha": "Apocrypha",
     "creeds": "Creeds & Confessions",
+    "councils": "Councils",
     "glossary": "Glossary",
     "lexicon": "Lexicon",
-    "geography": "Geography"
+    "geography": "Geography",
+    "timeline": "Timeline",
+    "apologetics": "Apologetics"
   },
   "search": {
     "placeholder": "Search...",
@@ -18,6 +21,8 @@
   },
   "theme": {
     "label": "Theme",
+    "switchToDark": "Dark mode",
+    "switchToLight": "Light mode",
     "catholic": "Catholic",
     "orthodox": "Orthodox",
     "protestant": "Protestant"
@@ -39,5 +44,37 @@
     "machine_translated": "Machine translation (unreviewed)"
   },
   "machineTranslationWarning": "This Portuguese translation was generated automatically (no reliable free Portuguese translation of this work is known to exist) and may contain errors or inaccuracies. For careful reading, consult the original English text.",
-  "archaicSpellingNote": "This version is João Ferreira de Almeida's 1911 translation, predating the Portuguese orthographic reform. Words like \"creou\", \"fórma\", or \"vasia\" are not errors — they reflect the spelling conventions of the period."
+  "home": {
+    "eyebrow": "Primary sources of Christianity",
+    "explore": "Explore the sections",
+    "featured": {
+      "label": "Featured",
+      "cta": "Explore the arguments"
+    },
+    "stats": {
+      "verses": "Bible verses",
+      "patristicWorks": "Patristic works",
+      "lexiconEntries": "Lexicon entries",
+      "places": "Biblical places"
+    },
+    "desc": {
+      "bible": "Read and compare multiple versions of the Scriptures in English and Portuguese.",
+      "patristics": "Writings of the Church Fathers from the 1st to the 15th century.",
+      "apocrypha": "Apocryphal texts of the Old and New Testament.",
+      "creeds": "Historic creeds, confessions and catechisms of the Church.",
+      "councils": "Canons of the ecumenical and regional councils.",
+      "glossary": "Biblical and theological glossary with detailed definitions.",
+      "lexicon": "Strong's lexicon of biblical Hebrew and Greek.",
+      "geography": "Map and list of places mentioned in the Scriptures.",
+      "timeline": "Chronological timeline of councils, creeds and Church Fathers.",
+      "apologetics": "Arguments for the existence of God, the Gospels, and the Resurrection."
+    }
+  },
+  "archaicSpellingNote": "This version is João Ferreira de Almeida's 1911 translation, predating the Portuguese orthographic reform. Words like \"creou\", \"fórma\", or \"vasia\" are not errors — they reflect the spelling conventions of the period.",
+  "footer": {
+    "scripturesTradition": "Scripture & Tradition",
+    "study": "Study Tools",
+    "licenseNote": "All content comes from public-domain or openly licensed sources, with source attribution on every page.",
+    "rights": "ApoloChristus — public-domain content unless otherwise noted."
+  }
 }

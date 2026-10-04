@@ -1,5 +1,6 @@
 {
   "title": "Search",
+  "breadcrumb": "Search results",
   "resultsFor": "Results for \"{{query}}\"",
   "noResults": "No results."
 }

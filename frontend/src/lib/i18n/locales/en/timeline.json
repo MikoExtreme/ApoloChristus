@@ -1,0 +1,25 @@
+{
+  "title": "Historical Timeline",
+  "subtitle": "Councils, creeds, church fathers and apocryphal writings arranged chronologically.",
+  "filter": {
+    "all": "All",
+    "council": "Councils",
+    "creed": "Creeds & Confessions",
+    "father": "Church Fathers",
+    "apocrypha": "Apocrypha"
+  },
+  "eras": {
+    "apostolic": "Apostolic",
+    "ante_nicene": "Ante-Nicene",
+    "nicene": "Nicene",
+    "medieval": "Medieval",
+    "reformation": "Reformation & Modern"
+  },
+  "categories": {
+    "council": "Council",
+    "creed": "Creed",
+    "father": "Father",
+    "apocrypha": "Apocrypha"
+  },
+  "noDates": "No datable items found for this filter."
+}

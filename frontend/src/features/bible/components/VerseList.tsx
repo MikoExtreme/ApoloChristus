@@ -13,6 +13,7 @@ interface VerseListProps {
   onStrongClick: (strongNumber: string) => void
   highlightedVerse?: number
   parallelCandidateVersionId?: string
+  dropCapChapter1?: boolean
 }
 
 export function VerseList({
@@ -27,6 +28,7 @@ export function VerseList({
   onStrongClick,
   highlightedVerse,
   parallelCandidateVersionId,
+  dropCapChapter1 = false,
 }: VerseListProps) {
   return (
     <div className="flex flex-col">
@@ -44,6 +46,7 @@ export function VerseList({
           onStrongClick={onStrongClick}
           highlighted={verse.verse === highlightedVerse}
           parallelCandidateVersionId={parallelCandidateVersionId}
+          dropCap={dropCapChapter1 && verse.verse === 1}
         />
       ))}
     </div>

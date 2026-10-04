@@ -22,6 +22,9 @@ import { ApocryphaSectionPage } from "@/routes/apocrypha/ApocryphaSectionPage"
 import { CreedsLandingPage } from "@/routes/creeds/CreedsLandingPage"
 import { CreedsSectionPage } from "@/routes/creeds/CreedsSectionPage"
 
+import { CouncilsLandingPage } from "@/routes/councils/CouncilsLandingPage"
+import { CouncilCanonsPage } from "@/routes/councils/CouncilCanonsPage"
+
 import { GlossaryLandingPage } from "@/routes/glossary/GlossaryLandingPage"
 import { GlossaryTermPage } from "@/routes/glossary/GlossaryTermPage"
 
@@ -33,6 +36,9 @@ import { GeographyMapPage } from "@/routes/geography/GeographyMapPage"
 import { GeographyPlacePage } from "@/routes/geography/GeographyPlacePage"
 
 import { SearchResultsPage } from "@/routes/search/SearchResultsPage"
+import { TimelinePage } from "@/routes/timeline/TimelinePage"
+import { ApologeticsPage } from "@/routes/apologetics/ApologeticsPage"
+import { ApologeticsCategoryPage } from "@/routes/apologetics/ApologeticsCategoryPage"
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +66,9 @@ export const router = createBrowserRouter([
       { path: "creeds", element: <CreedsLandingPage /> },
       { path: "creeds/:workId", element: <CreedsSectionPage /> },
 
+      { path: "councils", element: <CouncilsLandingPage /> },
+      { path: "councils/:councilId", element: <CouncilCanonsPage /> },
+
       { path: "glossary", element: <GlossaryLandingPage /> },
       { path: "glossary/:term", element: <GlossaryTermPage /> },
 
@@ -71,6 +80,9 @@ export const router = createBrowserRouter([
       { path: "geography/:name", element: <GeographyPlacePage /> },
 
       { path: "search", element: <SearchResultsPage /> },
+      { path: "timeline", element: <TimelinePage /> },
+      { path: "apologetics", element: <ApologeticsPage /> },
+      { path: "apologetics/:category", element: <ApologeticsCategoryPage /> },
 
       { path: "*", element: <NotFoundPage /> },
     ],

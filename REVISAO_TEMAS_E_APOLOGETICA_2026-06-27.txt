@@ -1,0 +1,218 @@
+================================================================================
+  APOLO CHRISTUS — REVISÃO DE SESSÃO
+  Data: 27 de Junho de 2026
+  Âmbito: Secção de Apologética + Sistema de Temas Visual Completo
+================================================================================
+
+CONTEXTO
+--------
+Esta sessão teve dois focos principais: (1) criação de conteúdo original para
+a nova secção de Apologética e (2) melhoria visual profunda do sistema de
+temas — passando de paletas de cor puras para um sistema com 3 camadas visuais
+distintas por denominação (padrão de fundo, divisor ornamental, tipografia).
+
+
+================================================================================
+PARTE 1 — SECÇÃO DE APOLOGÉTICA
+================================================================================
+
+1.1 TABELA E SCHEMA (sessão anterior, confirmado nesta)
+-------------------------------------------------------
+Criada tabela `apologetics_arguments` no Supabase com:
+  - id (text, slug único)
+  - category (ENUM: existence_of_god | gospel_reliability | resurrection)
+  - order_in_category (int)
+  - title_en / title_pt (text)
+  - subtitle_en / subtitle_pt (text)
+  - logical_form_en / logical_form_pt (JSONB — array de strings)
+  - explanation_en / explanation_pt (text longo)
+  - historical_origin (text — referências bibliográficas)
+  - license (text — 'original_content')
+
+SQL em: christianity-data-pipeline/migrations/apologetics.sql (JÁ EXECUTADO)
+
+Todo o conteúdo foi escrito originalmente para evitar questões de direitos de
+autor. Referências a livros no campo historical_origin são apenas citações
+bibliográficas, não reprodução de conteúdo.
+
+
+1.2 ARGUMENTOS INICIAIS (17 — JÁ NA BD)
+-----------------------------------------
+Existência de Deus (5):
+  - kalam_cosmological       — Argumento Cosmológico de Kalam
+  - ontological              — Argumento Ontológico (Anselmo/Plantinga)
+  - fine_tuning              — Argumento do Ajuste Fino (Princípio Antrópico)
+  - moral_argument           — Argumento Moral (C.S. Lewis)
+  - contingency              — Argumento da Contingência (Leibniz/Aquino)
+
+Fiabilidade dos Evangelhos (5):
+  - eyewitness_testimony     — Testemunho Ocular
+  - criterion_embarrassment  — Critério do Embaraço
+  - criterion_dissimilarity  — Critério da Dessemelhança
+  - multiple_attestation     — Atestação Múltipla
+  - onomastic_congruence     — Congruência Onomástica (nomes históricos)
+
+Ressurreição (7):
+  - minimal_facts            — Método dos Factos Mínimos (Habermas)
+  - empty_tomb               — Túmulo Vazio
+  - post_resurrection_appearances — Aparições Pós-Ressurreição
+  - pauline_creed            — Credo Paulino (1 Cor 15:3-8, data ~35 d.C.)
+  - conversion_james_paul    — Conversão de Tiago e Paulo
+  - hallucination_theory     — Refutação da Teoria da Alucinação
+  - swoon_theory             — Refutação da Teoria do Desmaio
+
+
+1.3 ARGUMENTOS ADICIONAIS (13 — PENDENTES DE EXECUÇÃO)
+-------------------------------------------------------
+FICHEIRO: christianity-data-pipeline/migrations/apologetics_additions.sql
+STATUS: *** AINDA NÃO EXECUTADO NO SUPABASE ***
+
+Existência de Deus (+6, orders 6-11):
+  - teleological             — Argumento Teleológico (Platão→Paley)
+  - irreducible_complexity   — Complexidade Irredutível (olho; Behe)
+  - dna_information          — Argumento da Informação Biológica (DNA; Meyer)
+  - argument_from_reason     — Argumento da Razão (C.S. Lewis/Plantinga)
+  - argument_from_life       — Argumento da Abiogénese (Pasteur/Borel)
+  - argument_from_love       — Argumento da Experiência Imaterial (Amor)
+
+Fiabilidade dos Evangelhos (+3, orders 6-8):
+  - manuscript_evidence      — 5700+ MSS gregos, precisão 99.5% (F.F. Bruce)
+  - undesigned_coincidences  — Coincidências Não-Intencionais (Blunt 1847)
+  - luke_as_historian        — Lucas como Historiador (politarcas, Delfos)
+
+Ressurreição (+4, orders 8-11):
+  - joseph_of_arimathea      — Túmulo de José de Arimateia (verificável)
+  - cultural_background      — Expectativa de Messias Guerreiro vs. Servo
+  - early_proclamation       — Proclamação em Jerusalém ~50 dias depois
+  - disciples_transformation — Transformação dos Discípulos (Mc 14→At 2)
+
+
+1.4 FRONTEND — CONTADORES DINÂMICOS
+-------------------------------------
+Ficheiro alterado: frontend/src/lib/supabase/queries/apologetics.ts
+  + Nova função: getArgumentCountsByCategory()
+    - Faz SELECT category FROM apologetics_arguments
+    - Agrupa e conta em JS
+    - Retorna Record<ApologeticsCategory, number>
+
+Ficheiro alterado: frontend/src/routes/apologetics/ApologeticsPage.tsx
+  - Removido CATEGORY_COUNTS (hardcoded {5, 5, 7})
+  - Usa useQuery({ queryKey: ["apologetics-counts"], queryFn: ... })
+  - Número mostrado actualiza-se automaticamente quando BD muda
+
+
+1.5 SOBRE OS LIVROS REFERENCIADOS
+-----------------------------------
+Pergunta do utilizador: "as referências a livros são de acesso gratuito?"
+
+Domínio público (gratuitos):
+  Platão, Aristóteles, Aquino, Paley (Natural Theology 1802),
+  Pasteur (1859), Borel (1913), J.J. Blunt (1847), W. Ramsay (1895),
+  F.F. Bruce (The NT Documents — disponível grátis pela Eerdmans)
+
+Protegidos (pagos):
+  Behe, Meyer, Flew, C.S. Lewis, Plantinga, McGrew, Wright, Sanders,
+  Dunn, Hemer, Evans, Aland
+
+Conclusão: não há problema — o site cita estes livros como notas de rodapé
+(historical_origin), não reproduz o seu conteúdo. Todo o texto explicativo
+em explanation_en/pt é original.
+
+
+================================================================================
+PARTE 2 — SISTEMA DE TEMAS VISUAL (3 FASES)
+================================================================================
+
+2.1 FASE 1 — PADRÕES DE FUNDO
+--------------------------------
+Ficheiro: frontend/src/lib/theme/themes.css (secção adicionada no final)
+Técnica: SVG data URI em background-image no body, por tema
+
+  Católico:   Grelha de losangos góticos (40×40px, vermelho cardinalício 11%)
+  Ortodoxo:   Estrela de 8 pontas / motivo bizantino (48×48px, roxo 7%)
+  Protestante: Grelha de pontos (20×20px, navy 14%)
+  Agnóstico:  Grelha fina de linhas (20×20px, slate 15%)
+
+Bug encontrado e corrigido: o wrapper <div class="min-h-svh bg-background">
+em RootLayout.tsx cobria o padrão do body com cor sólida.
+  Fix: Removido bg-background do wrapper (body já tem a cor via index.css).
+
+
+2.2 FASE 2 — DIVISOR ORNAMENTAL POR TEMA
+------------------------------------------
+Ficheiro: frontend/src/components/layout/OrnamentalDivider.tsx
+Antes: losango genérico igual em todos os temas
+Depois: símbolo diferente por tema, lido via useThemeStore
+
+  Católico:   Cruz pattée (braços alargam nas pontas — motivo heráldico)
+  Ortodoxo:   Cruz de 3 barras ☦ com suppedaneum diagonal
+  Protestante: Cruz latina simples (sola scriptura — sem ornamento)
+  Agnóstico:  Três traços horizontais decrescentes (secular, sem símbolo)
+
+
+2.3 FASE 3 — TIPOGRAFIA POR TEMA
+----------------------------------
+Instaladas via npm:
+  @fontsource/playfair-display (400, 600, 700, 400-italic)
+  @fontsource/eb-garamond (400, 600, 400-italic)
+
+Importadas em: frontend/src/main.tsx
+
+Configuração em themes.css (--font-serif override por tema):
+  Católico:    --font-serif: 'Playfair Display'  (serifas dramáticas, alto contraste)
+  Ortodoxo:    --font-serif: 'EB Garamond'       (estilo manuscrito histórico/clássico)
+  Protestante: --font-serif: 'Lora'              (sóbrio, legível — padrão anterior)
+  Agnóstico:   --font-serif: var(--font-sans)    (→ Inter; racional, sem serifa em tudo)
+
+Letter-spacing por tema (em h1-h4):
+  Católico:    +0.03em   (generoso, gótico)
+  Ortodoxo:    +0.005em  (compacto, denso)
+  Protestante: -0.015em  (fechado, limpo)
+  Agnóstico:   -0.025em  (moderno, racional; font-weight: 600)
+
+Line-height extra: Protestante body → 1.75 (ênfase na leitura)
+
+
+2.4 FIX EXTRA — INPUT TRANSPARENTE
+-------------------------------------
+Ficheiro: frontend/src/components/ui/input.tsx
+Problema: bg-transparent no Input fazia o padrão aparecer dentro da caixa.
+Fix: bg-transparent → bg-background
+
+
+================================================================================
+FICHEIROS ALTERADOS/CRIADOS NESTA SESSÃO
+================================================================================
+
+Frontend:
+  ~ frontend/src/lib/supabase/queries/apologetics.ts   (+ getArgumentCountsByCategory)
+  ~ frontend/src/routes/apologetics/ApologeticsPage.tsx (contadores dinâmicos)
+  ~ frontend/src/lib/theme/themes.css                  (padrões + tipografia)
+  ~ frontend/src/components/layout/OrnamentalDivider.tsx (tema-aware)
+  ~ frontend/src/routes/RootLayout.tsx                 (removido bg-background)
+  ~ frontend/src/components/ui/input.tsx               (bg-transparent → bg-background)
+  ~ frontend/src/main.tsx                              (imports novos fontes)
+
+Pipeline:
+  + christianity-data-pipeline/migrations/apologetics_additions.sql (PENDENTE)
+
+Dependências:
+  + @fontsource/playfair-display
+  + @fontsource/eb-garamond
+
+
+================================================================================
+ESTADO ACTUAL DO SITE (pós-sessão)
+================================================================================
+
+  Bíblia:        múltiplas versões PT e EN — completo
+  Patrísticos:   EN completo; PT em 3 obras genuínas
+  Apócrifos:     EN completo; PT no Evangelho de Tomé
+  Credos:        EN completo; PT genuíno em 18/19 obras
+  Glossário:     completo
+  Léxico:        completo
+  Geografia:     completo
+  Apologética:   17 argumentos na BD; +13 pendentes de execução SQL
+  Temas:         sistema completo de 3 camadas (cor + padrão/divisor + tipografia)
+
+================================================================================

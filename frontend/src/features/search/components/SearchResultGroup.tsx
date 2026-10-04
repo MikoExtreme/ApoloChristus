@@ -85,6 +85,19 @@ function SearchResultItem({ result }: SearchResultItemProps) {
           </Card>
         </Link>
       )
+    case "council-canon":
+      return (
+        <Link to={`/councils/${result.councilId}#canon-${result.canonNum}`}>
+          <Card className="hover:bg-muted/50">
+            <CardContent className="py-3">
+              <Badge variant="secondary">
+                {result.councilName}{result.year ? ` (${result.year})` : ""} — Canon {result.canonNum}
+              </Badge>
+              <p className="mt-2 font-serif">{result.text.slice(0, 200)}{result.text.length > 200 ? "…" : ""}</p>
+            </CardContent>
+          </Card>
+        </Link>
+      )
   }
 }
 
@@ -102,6 +115,8 @@ function resultKey(result: SearchResult): string {
       return `creed-${result.workId}-${result.sectionNum}-${result.language}`
     case "glossary-term":
       return `glossary-${result.term}-${result.source}`
+    case "council-canon":
+      return `council-${result.councilId}-${result.canonNum}-${result.language}`
   }
 }
 

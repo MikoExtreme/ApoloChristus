@@ -13,6 +13,8 @@ import { useReadingHistoryStore } from "@/features/bible/store/useReadingHistory
 import { ReaderToolbar } from "@/features/bible/components/ReaderToolbar"
 import { VerseList } from "@/features/bible/components/VerseList"
 import { ParallelColumnView } from "@/features/bible/components/ParallelColumnView"
+import { InterlinearParallelView } from "@/features/bible/components/InterlinearParallelView"
+import { INTERLINEAR_PARALLEL_VALUE } from "@/features/bible/components/ReaderToolbar"
 import { ConcordanceDrawer } from "@/features/bible/components/ConcordanceDrawer"
 import { SourceAttribution } from "@/components/layout/SourceAttribution"
 import { ArchaicSpellingNote } from "@/components/layout/ArchaicSpellingNote"
@@ -128,59 +130,73 @@ export function BibleChapterPage() {
           { label: `${book ? bookDisplayName(book, i18n.language) : book} ${chapter}` },
         ]}
       />
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="font-serif text-3xl text-foreground">
-          {book ? bookDisplayName(book, i18n.language) : book} {chapter}
-        </h1>
-        <div className="flex flex-wrap items-center gap-2">
+      <h1 className="font-serif text-3xl text-foreground">
+        {book ? bookDisplayName(book, i18n.language) : book} {chapter}
+      </h1>
+
+      {/* Painel de navegação e ferramentas do leitor */}
+      <div className="mt-5 flex flex-col gap-4 rounded-xl border border-border bg-card/70 px-4 py-4">
+        <div className="flex flex-wrap items-end gap-3">
           {books && book && (
-            <Select value={book} onValueChange={(v) => v && jumpToBook(v)}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue>{(value: string) => bookDisplayName(value, i18n.language)}</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {books.map((b) => (
-                  <SelectItem key={b.book} value={b.book}>
-                    {bookDisplayName(b.book, i18n.language)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {t("bible:reader.book")}
+              </span>
+              <Select value={book} onValueChange={(v) => v && jumpToBook(v)}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue>{(value: string) => bookDisplayName(value, i18n.language)}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {books.map((b) => (
+                    <SelectItem key={b.book} value={b.book}>
+                      {bookDisplayName(b.book, i18n.language)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           )}
           {!!chapterCount && (
-            <Select value={String(chapter)} onValueChange={(v) => v && jumpToChapter(v)}>
-              <SelectTrigger className="w-[80px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: chapterCount }, (_, i) => i + 1).map((n) => (
-                  <SelectItem key={n} value={String(n)}>
-                    {n}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {t("bible:reader.chapter")}
+              </span>
+              <Select value={String(chapter)} onValueChange={(v) => v && jumpToChapter(v)}>
+                <SelectTrigger className="w-[90px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: chapterCount }, (_, i) => i + 1).map((n) => (
+                    <SelectItem key={n} value={String(n)}>
+                      {n}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           )}
-          {chapter > 1 && (
-            <Link to={`/bible/${versionId}/${book}/${chapter - 1}`}>
-              <Button variant="outline" size="sm">
-                ← {chapter - 1}
-              </Button>
-            </Link>
-          )}
-          {!!chapterCount && chapter < chapterCount && (
-            <Link to={`/bible/${versionId}/${book}/${chapter + 1}`}>
-              <Button variant="outline" size="sm">
-                {chapter + 1} →
-              </Button>
-            </Link>
-          )}
+          <div className="ml-auto flex items-center gap-1.5">
+            {chapter > 1 ? (
+              <Link to={`/bible/${versionId}/${book}/${chapter - 1}`}>
+                <Button variant="outline" size="sm" aria-label={t("bible:reader.previousChapter")}>
+                  ← {book ? bookDisplayName(book, i18n.language) : ""} {chapter - 1}
+                </Button>
+              </Link>
+            ) : null}
+            {!!chapterCount && chapter < chapterCount && (
+              <Link to={`/bible/${versionId}/${book}/${chapter + 1}`}>
+                <Button variant="outline" size="sm" aria-label={t("bible:reader.nextChapter")}>
+                  {book ? bookDisplayName(book, i18n.language) : ""} {chapter + 1} →
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
 
-      {versions && versionId && verses && verses[0] && (
-        <ReaderToolbar versions={versions} currentVersionId={versionId} testament={verses[0].testament} />
-      )}
+        {versions && versionId && verses && verses[0] && (
+          <ReaderToolbar versions={versions} currentVersionId={versionId} testament={verses[0].testament} />
+        )}
+      </div>
 
       {isLoading && <p className="mt-6 text-muted-foreground">{t("common.loading")}</p>}
 
@@ -191,7 +207,9 @@ export function BibleChapterPage() {
       )}
 
       <div className="mt-4">
-        {showParallel && book ? (
+        {showParallel && book && parallelVersions[0] === INTERLINEAR_PARALLEL_VALUE ? (
+          <InterlinearParallelView translationVersionId={versionId} book={book} chapter={chapter} />
+        ) : showParallel && book ? (
           <ParallelColumnView versionIds={[versionId, ...parallelVersions]} book={book} chapter={chapter} />
         ) : (
           verses && (
@@ -207,6 +225,7 @@ export function BibleChapterPage() {
               onStrongClick={(strong) => concordanceMode === "original" && openConcordance(strong)}
               highlightedVerse={highlightedVerse}
               parallelCandidateVersionId={parallelCandidateVersionId}
+              dropCapChapter1={chapter === 1}
             />
           )
         )}

@@ -10,5 +10,9 @@
   "coordinates": "Coordenadas",
   "comment": "Comentário",
   "verses": "Versículos",
-  "sources": "Fontes académicas"
+  "sources": "Fontes académicas",
+  "selectedCount": "{{count}} selecionado",
+  "selectedCount_other": "{{count}} selecionados",
+  "clearSelection": "Limpar seleção",
+  "compareHint": "Clica em vários locais para os comparar no mapa"
 }

@@ -10,6 +10,7 @@ import { PatristicCitationsPanel } from "@/features/bible/components/PatristicCi
 import { bookDisplayName } from "@/features/bible/lib/bookNames"
 import { useBookmarksStore } from "@/features/bible/store/useBookmarksStore"
 import { useReaderStore } from "@/features/bible/store/useReaderStore"
+import { DropCap } from "@/components/layout/DropCap"
 import type { VerseRow, CrossReferenceRow, InterlinearWordRow as InterlinearWordRowType } from "@/types/database.types"
 
 interface VerseLineProps {
@@ -24,6 +25,7 @@ interface VerseLineProps {
   onStrongClick: (strongNumber: string) => void
   highlighted: boolean
   parallelCandidateVersionId?: string
+  dropCap?: boolean
 }
 
 export function VerseLine({
@@ -38,6 +40,7 @@ export function VerseLine({
   onStrongClick,
   highlighted,
   parallelCandidateVersionId,
+  dropCap = false,
 }: VerseLineProps) {
   const { t, i18n } = useTranslation("bible")
   const navigate = useNavigate()
@@ -134,7 +137,9 @@ export function VerseLine({
                 <span key={i}>{token}</span>
               )
             )
-          : verse.text}
+          : dropCap
+            ? <DropCap text={verse.text} />
+            : verse.text}
       </p>
 
       {showInterlinear && (

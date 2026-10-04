@@ -1,6 +1,10 @@
 {
   "title": "Apócrifos",
   "browseByCategory": "Navega por categoria",
+  "restricted": {
+    "title": "Obra indisponível",
+    "description": "A única tradução disponível desta obra está protegida por direitos de autor, por isso não é apresentada aqui."
+  },
   "categories": {
     "apocalypse": "Apocalipse",
     "apocryphal_acts": "Atos apócrifos",

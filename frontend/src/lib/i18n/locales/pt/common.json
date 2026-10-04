@@ -7,9 +7,12 @@
     "patristics": "Pais da Igreja",
     "apocrypha": "Apócrifos",
     "creeds": "Credos & Confissões",
+    "councils": "Concílios",
     "glossary": "Glossário",
     "lexicon": "Léxico",
-    "geography": "Geografia"
+    "geography": "Geografia",
+    "timeline": "Linha do Tempo",
+    "apologetics": "Apologética"
   },
   "search": {
     "placeholder": "Pesquisar...",
@@ -18,6 +21,8 @@
   },
   "theme": {
     "label": "Tema",
+    "switchToDark": "Modo escuro",
+    "switchToLight": "Modo claro",
     "catholic": "Católico",
     "orthodox": "Ortodoxo",
     "protestant": "Protestante"
@@ -39,5 +44,37 @@
     "machine_translated": "Tradução automática (não revista)"
   },
   "machineTranslationWarning": "Esta tradução para português foi gerada automaticamente (não há, até à data, uma tradução portuguesa fiável e gratuita conhecida desta obra) e pode conter erros ou imprecisões. Para leitura rigorosa, consulta o texto original em inglês.",
-  "archaicSpellingNote": "Esta versão é a tradução de 1911 de João Ferreira de Almeida, anterior ao acordo ortográfico. Palavras como \"creou\", \"fórma\" ou \"vasia\" não são erros — refletem a ortografia portuguesa da época."
+  "home": {
+    "eyebrow": "Fontes primárias do Cristianismo",
+    "explore": "Explorar as secções",
+    "featured": {
+      "label": "Em destaque",
+      "cta": "Explorar argumentos"
+    },
+    "stats": {
+      "verses": "Versículos bíblicos",
+      "patristicWorks": "Obras patrísticas",
+      "lexiconEntries": "Entradas do léxico",
+      "places": "Lugares bíblicos"
+    },
+    "desc": {
+      "bible": "Lê e compara múltiplas versões das Escrituras em português e inglês.",
+      "patristics": "Escritos dos Pais da Igreja dos séculos I ao XV.",
+      "apocrypha": "Textos apócrifos do Antigo e Novo Testamento.",
+      "creeds": "Credos, confissões e catecismos históricos da Igreja.",
+      "councils": "Cânones dos concílios ecuménicos e regionais.",
+      "glossary": "Glossário bíblico e teológico com definições detalhadas.",
+      "lexicon": "Léxico Strong do hebraico e grego bíblicos.",
+      "geography": "Mapa e lista dos lugares mencionados nas Escrituras.",
+      "timeline": "Linha cronológica de concílios, credos e Pais da Igreja.",
+      "apologetics": "Argumentos para a existência de Deus, os Evangelhos e a Ressurreição."
+    }
+  },
+  "archaicSpellingNote": "Esta versão é a tradução de 1911 de João Ferreira de Almeida, anterior ao acordo ortográfico. Palavras como \"creou\", \"fórma\" ou \"vasia\" não são erros — refletem a ortografia portuguesa da época.",
+  "footer": {
+    "scripturesTradition": "Escrituras e Tradição",
+    "study": "Ferramentas de Estudo",
+    "licenseNote": "Todo o conteúdo provém de fontes em domínio público ou com licença aberta, com atribuição de fonte em cada página.",
+    "rights": "ApoloChristus — conteúdo em domínio público, salvo indicação em contrário."
+  }
 }

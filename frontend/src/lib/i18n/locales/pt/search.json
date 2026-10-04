@@ -1,5 +1,6 @@
 {
   "title": "Pesquisa",
+  "breadcrumb": "Resultados da pesquisa",
   "resultsFor": "Resultados para \"{{query}}\"",
   "noResults": "Sem resultados."
 }
